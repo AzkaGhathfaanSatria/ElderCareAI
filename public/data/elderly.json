@@ -1,0 +1,110 @@
+{
+  "elderly": {
+    "id": "ELD001",
+    "name": "Budi Santoso",
+    "age": 68,
+    "monitoringStatus": "Aktif",
+    "wearableStatus": "Terhubung",
+    "iotStatus": "Aktif"
+  },
+  "health": {
+    "heartRate": 95,
+    "heartRateUnit": "BPM",
+    "activity": 82,
+    "activityUnit": "%",
+    "sleep": 7.2,
+    "sleepUnit": "Jam",
+    "risk": "Rendah"
+  },
+  "activityHistory": [
+    {
+      "day": "Sen",
+      "value": 65
+    },
+    {
+      "day": "Sel",
+      "value": 72
+    },
+    {
+      "day": "Rab",
+      "value": 58
+    },
+    {
+      "day": "Kam",
+      "value": 82
+    },
+    {
+      "day": "Jum",
+      "value": 75
+    },
+    {
+      "day": "Sab",
+      "value": 88
+    },
+    {
+      "day": "Min",
+      "value": 82
+    }
+  ],
+  "alert": {
+    "hasAlert": true,
+    "type": "Perubahan Pola Aktivitas",
+    "description": "Sistem mendeteksi perubahan aktivitas yang berbeda dari baseline perilaku lansia.",
+    "detected": "15 menit yang lalu",
+    "level": "Sedang"
+  },
+  "devices": [
+    {
+      "name": "Smart Wearable",
+      "description": "Data detak jantung dan aktivitas",
+      "status": "Terhubung"
+    },
+    {
+      "name": "Sensor IoT Rumah",
+      "description": "Data aktivitas lingkungan",
+      "status": "Aktif"
+    }
+  ],
+  "anomalyHistory": [
+  {
+    "date": "10 September 2026",
+    "time": "20:15",
+    "type": "Perubahan Aktivitas",
+    "description": "Aktivitas fisik lebih rendah dari baseline perilaku.",
+    "level": "Sedang",
+    "period": "7 Hari"
+  },
+  {
+    "date": "8 September 2026",
+    "time": "18:42",
+    "type": "Pola Tidur",
+    "description": "Durasi tidur sedikit berbeda dari pola normal.",
+    "level": "Rendah",
+    "period": "7 Hari"
+  },
+  {
+    "date": "5 September 2026",
+    "time": "09:20",
+    "type": "Mobilitas",
+    "description": "Pergerakan pagi hari lebih rendah dibandingkan baseline.",
+    "level": "Rendah",
+    "period": "7 Hari"
+  },
+  {
+    "date": "20 Agustus 2026",
+    "time": "08:15",
+    "type": "Aktivitas",
+    "description": "Aktivitas pagi lebih rendah dibandingkan pola normal.",
+    "level": "Rendah",
+    "period": "30 Hari"
+  },
+  {
+    "date": "2 Juli 2026",
+    "time": "21:10",
+    "type": "Pola Tidur",
+    "description": "Waktu tidur berbeda dari baseline perilaku.",
+    "level": "Rendah",
+    "period": "3 Bulan"
+  }
+]
+}
