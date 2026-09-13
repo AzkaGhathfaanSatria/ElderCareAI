@@ -2,45 +2,44 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Sidebar from "../components/layout/Sidebar";
+import type { ElderCareData, FetchState, Period } from "../types/elderCare";
+import { fetchElderCareData } from "../services/elderCareApi";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Select from "../components/ui/Select";
+import Badge from "../components/ui/Badge";
 
 function ElderlyDetail() {
   const navigate = useNavigate();
 
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [state, setState] = useState<FetchState<ElderCareData>>({
+    status: "loading",
+  });
 
-  const [selectedPeriod, setSelectedPeriod] = useState("7 Hari");
+  const [selectedPeriod, setSelectedPeriod] =
+    useState<Period>("7 Hari");
 
   useEffect(() => {
-    const fetchElderlyData = async () => {
+    const loadData = async (): Promise<void> => {
+      setState({ status: "loading" });
+
       try {
-        setLoading(true);
-        setError("");
+        const result = await fetchElderCareData();
+        setState({ status: "success", data: result });
+      } catch (error: unknown) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Gagal mengambil data lansia.";
 
-        const response = await fetch("/data/elderly.json");
-
-        if (!response.ok) {
-          throw new Error("Gagal mengambil data lansia.");
-        }
-
-        const result = await response.json();
-
-        setData(result);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
+        setState({ status: "error", message });
       }
     };
 
-    fetchElderlyData();
+    void loadData();
   }, []);
 
-  if (loading) {
+  if (state.status === "loading") {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-100">
         <section
@@ -58,7 +57,7 @@ function ElderlyDetail() {
     );
   }
 
-  if (error) {
+  if (state.status === "error") {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
         <section
@@ -75,7 +74,7 @@ function ElderlyDetail() {
           </h1>
 
           <p className="mt-2 text-sm text-slate-500">
-            {error}
+            {state.message}
           </p>
 
           <Button
@@ -97,7 +96,13 @@ function ElderlyDetail() {
     alert,
     devices,
     anomalyHistory,
-  } = data;
+  } = state.data;
+
+  const periodOptions: readonly Period[] = [
+    "7 Hari",
+    "30 Hari",
+    "3 Bulan",
+  ];
 
   const filteredHistory = anomalyHistory.filter(
     (item) => item.period === selectedPeriod
@@ -174,17 +179,17 @@ function ElderlyDetail() {
                       </p>
 
                       <div className="mt-3 flex flex-wrap gap-2">
-                        <span className="rounded-lg bg-green-50 px-3 py-1.5 text-xs font-semibold text-green-600">
+                        <Badge variant="success">
                           Monitoring {elderly.monitoringStatus}
-                        </span>
+                        </Badge>
 
-                        <span className="rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-600">
+                        <Badge variant="info">
                           Wearable {elderly.wearableStatus}
-                        </span>
+                        </Badge>
 
-                        <span className="rounded-lg bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-600">
+                        <Badge variant="info">
                           IoT {elderly.iotStatus}
-                        </span>
+                        </Badge>
                       </div>
                     </div>
                   </div>
@@ -224,9 +229,12 @@ function ElderlyDetail() {
                   {health.heartRateUnit}
                 </p>
 
-                <span className="mt-3 inline-block rounded-lg bg-green-50 px-3 py-1.5 text-xs font-semibold text-green-600">
+                <Badge
+                  variant="success"
+                  className="mt-3"
+                >
                   Normal
-                </span>
+                </Badge>
               </Card>
 
               <Card className="p-5">
@@ -242,9 +250,12 @@ function ElderlyDetail() {
                   Aktivitas hari ini
                 </p>
 
-                <span className="mt-3 inline-block rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-600">
+                <Badge
+                  variant="info"
+                  className="mt-3"
+                >
                   Aktif
-                </span>
+                </Badge>
               </Card>
 
               <Card className="p-5">
@@ -260,9 +271,12 @@ function ElderlyDetail() {
                   {health.sleepUnit}
                 </p>
 
-                <span className="mt-3 inline-block rounded-lg bg-green-50 px-3 py-1.5 text-xs font-semibold text-green-600">
+                <Badge
+                  variant="success"
+                  className="mt-3"
+                >
                   Baik
-                </span>
+                </Badge>
               </Card>
 
               <Card className="p-5">
@@ -278,9 +292,12 @@ function ElderlyDetail() {
                   Hasil analisis AI
                 </p>
 
-                <span className="mt-3 inline-block rounded-lg bg-green-50 px-3 py-1.5 text-xs font-semibold text-green-600">
+                <Badge
+                  variant="success"
+                  className="mt-3"
+                >
                   Aman
-                </span>
+                </Badge>
               </Card>
             </section>
 
@@ -311,9 +328,9 @@ function ElderlyDetail() {
                       </p>
                     </div>
 
-                    <span className="rounded-lg bg-green-50 px-3 py-1.5 text-xs font-semibold text-green-600">
+                    <Badge variant="success">
                       Normal
-                    </span>
+                    </Badge>
                   </article>
 
                   <article className="flex items-center justify-between rounded-lg bg-slate-50 p-4">
@@ -327,9 +344,9 @@ function ElderlyDetail() {
                       </p>
                     </div>
 
-                    <span className="rounded-lg bg-green-50 px-3 py-1.5 text-xs font-semibold text-green-600">
+                    <Badge variant="success">
                       Normal
-                    </span>
+                    </Badge>
                   </article>
 
                   <article className="flex items-center justify-between rounded-lg bg-orange-50 p-4">
@@ -343,9 +360,9 @@ function ElderlyDetail() {
                       </p>
                     </div>
 
-                    <span className="rounded-lg bg-orange-100 px-3 py-1.5 text-xs font-semibold text-orange-600">
+                    <Badge variant="warning">
                       Berubah
-                    </span>
+                    </Badge>
                   </article>
                 </div>
               </Card>
@@ -378,9 +395,9 @@ function ElderlyDetail() {
                         </p>
                       </div>
 
-                      <span className="rounded-lg bg-green-50 px-3 py-1.5 text-xs font-semibold text-green-600">
+                      <Badge variant="success">
                         {device.status}
-                      </span>
+                      </Badge>
                     </article>
                   ))}
                 </div>
@@ -404,11 +421,7 @@ function ElderlyDetail() {
                   <Select
                     value={selectedPeriod}
                     onValueChange={setSelectedPeriod}
-                    options={[
-                      "7 Hari",
-                      "30 Hari",
-                      "3 Bulan",
-                    ]}
+                    options={periodOptions}
                     label="Periode"
                   />
                 </header>
@@ -444,15 +457,17 @@ function ElderlyDetail() {
                             </div>
                           </div>
 
-                          <span
-                            className={`w-fit rounded-lg px-3 py-1.5 text-xs font-semibold ${
-                              item.level === "Sedang"
-                                ? "bg-orange-50 text-orange-600"
-                                : "bg-green-50 text-green-600"
-                            }`}
+                          <Badge
+                            variant={
+                              item.level === "Tinggi"
+                                ? "danger"
+                                : item.level === "Sedang"
+                                  ? "warning"
+                                  : "success"
+                            }
                           >
                             Risiko {item.level}
-                          </span>
+                          </Badge>
                         </div>
                       </article>
                     ))
@@ -524,9 +539,9 @@ function ElderlyDetail() {
                         </div>
                       </div>
 
-                      <span className="w-fit rounded-lg bg-orange-100 px-3 py-1.5 text-xs font-semibold text-orange-600">
+                      <Badge variant="warning">
                         Risiko {alert.level}
-                      </span>
+                      </Badge>
                     </div>
                   </article>
                 ) : (

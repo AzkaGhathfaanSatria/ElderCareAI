@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 function Sidebar() {
@@ -7,7 +7,7 @@ function Sidebar() {
 
   const [collapsed, setCollapsed] = useState(false);
 
-  const menuItems = [
+  const menuItems: Array<{ label: string; path: string | null; icon: ReactNode }> = [
     {
       label: "Dashboard",
       path: "/dashboard",

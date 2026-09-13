@@ -1,36 +1,86 @@
-import { useState } from "react";
+import {
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+} from "react";
 import { useNavigate } from "react-router-dom";
+
+import { LoginSchema, type LoginInput } from "../schemas/authSchema";
+
+type LoginFormState =
+  | { status: "idle" }
+  | { status: "submitting" }
+  | { status: "success" }
+  | { status: "error"; message: string };
 
 function Login() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  const handleSubmit = (event) => {
+  const [formState, setFormState] = useState<LoginFormState>({
+    status: "idle",
+  });
+
+  const loading = formState.status === "submitting";
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError("");
 
-    if (!email || !password) {
-      setError("Email dan password wajib diisi.");
+    setFormState({ status: "idle" });
+
+    const formData: LoginInput = {
+      email,
+      password,
+    };
+
+    const validation = LoginSchema.safeParse(formData);
+
+    if (!validation.success) {
+      const firstError =
+        validation.error.issues[0]?.message ??
+        "Data login tidak valid.";
+
+      setFormState({
+        status: "error",
+        message: firstError,
+      });
+
       return;
     }
 
-    setLoading(true);
+    setFormState({ status: "submitting" });
 
-    setTimeout(() => {
+    try {
+      await new Promise<void>((resolve) => {
+        window.setTimeout(resolve, 1000);
+      });
+
       if (
-        email === "admin@eldercare.ai" &&
-        password === "123456"
+        validation.data.email === "admin@eldercare.ai" &&
+        validation.data.password === "123456"
       ) {
+        setFormState({ status: "success" });
         navigate("/dashboard");
-      } else {
-        setError("Email atau password salah.");
-        setLoading(false);
+        return;
       }
-    }, 1000);
+
+      setFormState({
+        status: "error",
+        message: "Email atau password salah.",
+      });
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Terjadi kesalahan saat proses login.";
+
+      setFormState({
+        status: "error",
+        message,
+      });
+    }
   };
 
   return (
@@ -60,13 +110,13 @@ function Login() {
         {/* Login Form */}
         <form onSubmit={handleSubmit} noValidate>
           {/* Error */}
-          {error && (
+          {formState.status === "error" && (
             <div
               role="alert"
               aria-live="polite"
               className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600"
             >
-              {error}
+              {formState.message}
             </div>
           )}
 
@@ -84,7 +134,9 @@ function Login() {
               name="email"
               type="email"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                setEmail(event.target.value)
+              }
               placeholder="Masukkan email"
               autoComplete="email"
               aria-label="Email pengguna"
@@ -106,7 +158,9 @@ function Login() {
               name="password"
               type="password"
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                setPassword(event.target.value)
+              }
               placeholder="Masukkan password"
               autoComplete="current-password"
               aria-label="Password pengguna"

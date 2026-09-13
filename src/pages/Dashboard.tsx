@@ -2,42 +2,84 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Sidebar from "../components/layout/Sidebar";
+import type { ElderCareData, FetchState } from "../types/elderCare";
+import { fetchElderCareData } from "../services/elderCareApi";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
+import Badge from "../components/ui/Badge";
 
 function Dashboard() {
   const navigate = useNavigate();
 
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [state, setState] = useState<FetchState<ElderCareData>>({
+    status: "loading",
+  });
+
+  const [selectedActivityDay, setSelectedActivityDay] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
-    const fetchElderlyData = async () => {
+    const loadData = async (): Promise<void> => {
+      setState({ status: "loading" });
+
       try {
-        setLoading(true);
-        setError("");
+        const result = await fetchElderCareData();
+        setState({ status: "success", data: result });
+      } catch (error: unknown) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Gagal mengambil data monitoring.";
 
-        const response = await fetch("/data/elderly.json");
-
-        if (!response.ok) {
-          throw new Error("Gagal mengambil data monitoring.");
-        }
-
-        const result = await response.json();
-
-        setData(result);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
+        setState({ status: "error", message });
       }
     };
 
-    fetchElderlyData();
+    void loadData();
   }, []);
 
-  if (loading) {
+  useEffect(() => {
+    if (state.status !== "success") {
+      return;
+    }
+
+    const activityContainer =
+      document.querySelector<HTMLElement>("[data-activity-list]");
+
+    if (!activityContainer) {
+      return;
+    }
+
+    const handleActivityClick = (event: MouseEvent): void => {
+      const target = event.target;
+
+      if (!(target instanceof Element)) {
+        return;
+      }
+
+      const activityButton =
+        target.closest<HTMLButtonElement>("[data-activity-day]");
+
+      if (!activityButton || !activityContainer.contains(activityButton)) {
+        return;
+      }
+
+      const day = activityButton.dataset.activityDay;
+
+      if (day) {
+        setSelectedActivityDay(day);
+      }
+    };
+
+    activityContainer.addEventListener("click", handleActivityClick);
+
+    return () => {
+      activityContainer.removeEventListener("click", handleActivityClick);
+    };
+  }, [state.status]);
+
+  if (state.status === "loading") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-100">
         <div
@@ -55,7 +97,7 @@ function Dashboard() {
     );
   }
 
-  if (error) {
+  if (state.status === "error") {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
         <section
@@ -72,7 +114,7 @@ function Dashboard() {
           </h1>
 
           <p className="mt-2 text-sm text-slate-500">
-            {error}
+            {state.message}
           </p>
 
           <Button
@@ -88,7 +130,11 @@ function Dashboard() {
     );
   }
 
-  const { elderly, health, activityHistory, alert } = data;
+  const { elderly, health, activityHistory, alert } = state.data;
+
+  const selectedActivity = activityHistory.find(
+    (item) => item.day === selectedActivityDay
+  );
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -176,9 +222,9 @@ function Dashboard() {
                     </p>
                   </div>
 
-                  <span className="rounded-lg bg-green-50 px-3 py-2 text-xs font-semibold text-green-600">
+                  <Badge variant="success">
                     Normal
-                  </span>
+                  </Badge>
                 </div>
               </Card>
 
@@ -198,9 +244,9 @@ function Dashboard() {
                     </p>
                   </div>
 
-                  <span className="rounded-lg bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-600">
+                  <Badge variant="info">
                     Aktif
-                  </span>
+                  </Badge>
                 </div>
               </Card>
 
@@ -220,9 +266,9 @@ function Dashboard() {
                     </p>
                   </div>
 
-                  <span className="rounded-lg bg-green-50 px-3 py-2 text-xs font-semibold text-green-600">
+                  <Badge variant="success">
                     Baik
-                  </span>
+                  </Badge>
                 </div>
               </Card>
 
@@ -242,9 +288,9 @@ function Dashboard() {
                     </p>
                   </div>
 
-                  <span className="rounded-lg bg-green-50 px-3 py-2 text-xs font-semibold text-green-600">
+                  <Badge variant="success">
                     Aman
-                  </span>
+                  </Badge>
                 </div>
               </Card>
             </section>
@@ -264,9 +310,9 @@ function Dashboard() {
                 </header>
 
                 <div
+                  data-activity-list
                   className="flex h-64 items-end justify-between gap-2 border-b border-slate-200 px-2"
                   aria-label="Grafik aktivitas selama tujuh hari"
-                  role="img"
                 >
                   {activityHistory.map((item) => (
                     <div
@@ -277,8 +323,15 @@ function Dashboard() {
                         {item.value}%
                       </span>
 
-                      <div
-                        className="w-full max-w-10 rounded-t-lg bg-blue-500 transition hover:bg-blue-600"
+                      <button
+                        type="button"
+                        data-activity-day={item.day}
+                        aria-label={`Aktivitas ${item.day} ${item.value}%`}
+                        className={`w-full max-w-10 rounded-t-lg bg-blue-500 transition hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 ${
+                          selectedActivityDay === item.day
+                            ? "ring-2 ring-blue-700"
+                            : ""
+                        }`}
                         style={{
                           height: `${item.value}%`,
                         }}
@@ -291,6 +344,17 @@ function Dashboard() {
                     </div>
                   ))}
                 </div>
+
+                {selectedActivity && (
+                  <div
+                    className="mt-4 rounded-lg bg-blue-50 px-4 py-3 text-sm text-blue-700"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    Aktivitas hari {selectedActivity.day}:{" "}
+                    <strong>{selectedActivity.value}%</strong>
+                  </div>
+                )}
               </Card>
 
               {/* Alert */}
@@ -308,9 +372,9 @@ function Dashboard() {
                     </div>
 
                     {alert.hasAlert && (
-                      <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-600">
+                      <Badge variant="danger">
                         1 Baru
-                      </span>
+                      </Badge>
                     )}
                   </div>
                 </header>
@@ -410,13 +474,13 @@ function Dashboard() {
                   </div>
 
                   <div className="flex flex-wrap gap-2">
-                    <span className="rounded-lg bg-green-50 px-3 py-2 text-xs font-medium text-green-600">
+                    <Badge variant="success">
                       Wearable {elderly.wearableStatus}
-                    </span>
+                    </Badge>
 
-                    <span className="rounded-lg bg-blue-50 px-3 py-2 text-xs font-medium text-blue-600">
+                    <Badge variant="info">
                       IoT {elderly.iotStatus}
-                    </span>
+                    </Badge>
 
                     <Button
                       variant="primary"
