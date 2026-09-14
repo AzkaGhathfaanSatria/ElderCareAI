@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+
 import "../index.css";
+import QueryProvider from "../providers/QueryProvider";
 
 export const metadata: Metadata = {
   title: "ElderCare AI",
@@ -13,7 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      <body>{children}</body>
+      <body>
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }

@@ -9,13 +9,18 @@ import { useRouter } from "next/navigation";
 
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
+
 import {
   ElderlyRegistrationSchema,
   type ElderlyRegistrationInput,
 } from "../schemas/elderlyRegistrationSchema";
 
+import { useElderlyMutation } from "../hooks/useElderlyMutation";
+
 function ElderlyRegistration() {
   const router = useRouter();
+
+  const elderlyMutation = useElderlyMutation();
 
   const [form, setForm] = useState<ElderlyRegistrationInput>({
     name: "",
@@ -30,7 +35,8 @@ function ElderlyRegistration() {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+
+  const isLoading = elderlyMutation.isPending;
 
   const handleChange = (
     event: ChangeEvent<
@@ -63,16 +69,12 @@ function ElderlyRegistration() {
         result.error.issues[0]?.message ??
           "Data registrasi lansia tidak valid."
       );
+
       return;
     }
 
-    setIsLoading(true);
-
     try {
-      // Simulasi pengiriman data ke API
-      await new Promise<void>((resolve) => {
-        window.setTimeout(resolve, 1200);
-      });
+      await elderlyMutation.mutateAsync(result.data);
 
       setSuccess(
         "Data lansia berhasil didaftarkan. Mengarahkan ke halaman data lansia..."
@@ -81,12 +83,12 @@ function ElderlyRegistration() {
       window.setTimeout(() => {
         router.push("/elderly");
       }, 1200);
-    } catch {
+    } catch (error: unknown) {
       setError(
-        "Gagal menyimpan data lansia. Silakan coba lagi."
+        error instanceof Error
+          ? error.message
+          : "Gagal menyimpan data lansia. Silakan coba lagi."
       );
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -326,12 +328,15 @@ function ElderlyRegistration() {
                     <option value="">
                       Pilih tipe perangkat
                     </option>
+
                     <option value="smartwatch">
                       Smartwatch
                     </option>
+
                     <option value="fitness_band">
                       Fitness Band
                     </option>
+
                     <option value="health_tracker">
                       Health Tracker
                     </option>
@@ -403,9 +408,11 @@ function ElderlyRegistration() {
                     <option value="">
                       Pilih tipe sensor
                     </option>
+
                     <option value="gerak">
                       Sensor Gerak
                     </option>
+
                     <option value="pintu">
                       Sensor Pintu
                     </option>

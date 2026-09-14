@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import Sidebar from "../components/layout/Sidebar";
@@ -9,20 +8,103 @@ import ActivityChart from "../components/dashboard/ActivityChart";
 import AlertSummary from "../components/dashboard/AlertSummary";
 import ElderlyMonitoringCard from "../components/dashboard/ElderlyMonitoringCard";
 
-import type { ElderCareData } from "../types/elderCare";
+import { useElderCareQuery } from "../hooks/useElderCareQuery";
+import { useUIStore } from "../store/useUIStore";
 
-interface DashboardProps {
-  data: ElderCareData;
-}
+import Button from "../components/ui/Button";
 
-function Dashboard({ data }: DashboardProps) {
+function Dashboard() {
   const router = useRouter();
 
-  const [selectedActivityDay, setSelectedActivityDay] = useState<
-    string | null
-  >(null);
+  const selectedActivityDay = useUIStore(
+    (state) => state.selectedActivityDay
+  );
 
-  const { elderly, health, activityHistory, alert } = data;
+  const setSelectedActivityDay = useUIStore(
+    (state) => state.setSelectedActivityDay
+  );
+
+  const monitoringQuery = useElderCareQuery();
+
+  if (monitoringQuery.isPending) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
+        <section
+          className="rounded-xl bg-white px-8 py-6 text-center shadow-sm"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-blue-600" />
+
+          <p className="text-sm font-medium text-slate-600">
+            Memuat dashboard...
+          </p>
+        </section>
+      </main>
+    );
+  }
+
+  if (monitoringQuery.isError) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
+        <section
+          className="w-full max-w-md rounded-xl border border-red-200 bg-white p-6 text-center shadow-sm"
+          role="alert"
+          aria-live="assertive"
+        >
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 font-bold text-red-600">
+            !
+          </div>
+
+          <h1 className="text-lg font-bold text-slate-800">
+            Gagal Memuat Dashboard
+          </h1>
+
+          <p className="mt-2 text-sm text-slate-500">
+            {monitoringQuery.error?.message ??
+              "Gagal mengambil data dashboard."}
+          </p>
+
+          <Button
+            variant="primary"
+            size="sm"
+            className="mt-5"
+            onClick={() => {
+              void monitoringQuery.refetch();
+            }}
+          >
+            Coba Lagi
+          </Button>
+        </section>
+      </main>
+    );
+  }
+
+  if (!monitoringQuery.data) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
+        <section
+          className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm"
+          role="status"
+        >
+          <h1 className="text-lg font-bold text-slate-800">
+            Data Tidak Tersedia
+          </h1>
+
+          <p className="mt-2 text-sm text-slate-500">
+            Data dashboard belum tersedia.
+          </p>
+        </section>
+      </main>
+    );
+  }
+
+  const {
+    elderly,
+    health,
+    activityHistory,
+    alert,
+  } = monitoringQuery.data;
 
   return (
     <div className="min-h-screen bg-slate-100">

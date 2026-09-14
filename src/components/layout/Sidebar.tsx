@@ -1,13 +1,16 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { useRouter, usePathname } from "next/navigation";
+
+import { useUIStore } from "../../store/useUIStore";
 
 function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const [collapsed, setCollapsed] = useState(false);
+  const collapsed = useUIStore((state) => state.collapsed);
+  const setCollapsed = useUIStore((state) => state.setCollapsed);
 
   const menuItems: Array<{
     label: string;
@@ -93,7 +96,6 @@ function Sidebar() {
       }`}
       aria-label="Navigasi utama"
     >
-      {/* HEADER */}
       <header
         className={`shrink-0 border-b border-slate-800 ${
           collapsed ? "px-3 py-4" : "px-5 py-4"
@@ -106,7 +108,6 @@ function Sidebar() {
               : "items-center justify-between"
           }`}
         >
-          {/* LOGO */}
           <div className="flex items-center gap-3">
             <div
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-lg font-bold shadow-sm"
@@ -117,9 +118,7 @@ function Sidebar() {
 
             {!collapsed && (
               <div>
-                <h1 className="text-sm font-bold">
-                  ElderCare AI
-                </h1>
+                <h1 className="text-sm font-bold">ElderCare AI</h1>
 
                 <p className="text-[11px] text-slate-400">
                   Monitoring System
@@ -128,7 +127,6 @@ function Sidebar() {
             )}
           </div>
 
-          {/* TOMBOL PERKECIL */}
           {!collapsed && (
             <button
               type="button"
@@ -152,7 +150,6 @@ function Sidebar() {
             </button>
           )}
 
-          {/* TOMBOL PERBESAR */}
           {collapsed && (
             <button
               type="button"
@@ -178,7 +175,6 @@ function Sidebar() {
         </div>
       </header>
 
-      {/* NAVIGASI */}
       <nav
         className={`flex-1 overflow-y-auto ${
           collapsed ? "px-3 py-6" : "p-4"
@@ -194,8 +190,7 @@ function Sidebar() {
         <div className={collapsed ? "space-y-3" : "space-y-1"}>
           {menuItems.map((item) => {
             const isActive =
-              item.path !== null &&
-              pathname === item.path;
+              item.path !== null && pathname === item.path;
 
             return (
               <button
@@ -208,9 +203,7 @@ function Sidebar() {
                 }}
                 disabled={!item.path}
                 aria-label={`Menu ${item.label}`}
-                aria-current={
-                  isActive ? "page" : undefined
-                }
+                aria-current={isActive ? "page" : undefined}
                 title={collapsed ? item.label : undefined}
                 className={`flex w-full items-center rounded-xl transition ${
                   collapsed
@@ -226,24 +219,19 @@ function Sidebar() {
               >
                 <span
                   className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
-                    isActive
-                      ? "bg-blue-500"
-                      : "bg-slate-800"
+                    isActive ? "bg-blue-500" : "bg-slate-800"
                   }`}
                 >
                   {item.icon}
                 </span>
 
-                {!collapsed && (
-                  <span>{item.label}</span>
-                )}
+                {!collapsed && <span>{item.label}</span>}
               </button>
             );
           })}
         </div>
       </nav>
 
-      {/* PROFIL ADMIN */}
       <footer
         className={`shrink-0 border-t border-slate-800 ${
           collapsed ? "p-3" : "p-4"

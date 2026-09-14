@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import Sidebar from "../components/layout/Sidebar";
@@ -12,53 +11,25 @@ import DeviceStatus from "../components/elderly/DeviceStatus";
 import AnomalyHistory from "../components/elderly/AnomalyHistory";
 import CurrentAlert from "../components/elderly/CurrentAlert";
 
-import type {
-  ElderCareData,
-  FetchState,
-  Period,
-} from "../types/elderCare";
+import { useElderCareQuery } from "../hooks/useElderCareQuery";
+import { useUIStore } from "../store/useUIStore";
 
-import { fetchElderCareData } from "../services/elderCareApi";
 import Button from "../components/ui/Button";
 
 function ElderlyDetail() {
   const router = useRouter();
 
-  const [state, setState] = useState<FetchState<ElderCareData>>({
-    status: "loading",
-  });
+  const selectedPeriod = useUIStore(
+    (state) => state.selectedPeriod
+  );
 
-  const [selectedPeriod, setSelectedPeriod] =
-    useState<Period>("7 Hari");
+  const setSelectedPeriod = useUIStore(
+    (state) => state.setSelectedPeriod
+  );
 
-  useEffect(() => {
-    const loadData = async (): Promise<void> => {
-      setState({ status: "loading" });
+  const monitoringQuery = useElderCareQuery();
 
-      try {
-        const result = await fetchElderCareData();
-
-        setState({
-          status: "success",
-          data: result,
-        });
-      } catch (error: unknown) {
-        const message =
-          error instanceof Error
-            ? error.message
-            : "Gagal mengambil data lansia.";
-
-        setState({
-          status: "error",
-          message,
-        });
-      }
-    };
-
-    void loadData();
-  }, []);
-
-  if (state.status === "loading") {
+  if (monitoringQuery.isPending) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-100">
         <section
@@ -76,7 +47,7 @@ function ElderlyDetail() {
     );
   }
 
-  if (state.status === "error") {
+  if (monitoringQuery.isError) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
         <section
@@ -93,17 +64,39 @@ function ElderlyDetail() {
           </h1>
 
           <p className="mt-2 text-sm text-slate-500">
-            {state.message}
+            {monitoringQuery.error?.message ??
+              "Gagal mengambil data lansia."}
           </p>
 
           <Button
             variant="primary"
             size="sm"
             className="mt-5"
-            onClick={() => window.location.reload()}
+            onClick={() => {
+              void monitoringQuery.refetch();
+            }}
           >
             Coba Lagi
           </Button>
+        </section>
+      </main>
+    );
+  }
+
+  if (!monitoringQuery.data) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
+        <section
+          className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm"
+          role="status"
+        >
+          <h1 className="text-lg font-bold text-slate-800">
+            Data Tidak Tersedia
+          </h1>
+
+          <p className="mt-2 text-sm text-slate-500">
+            Data lansia belum tersedia.
+          </p>
         </section>
       </main>
     );
@@ -115,7 +108,7 @@ function ElderlyDetail() {
     alert,
     devices,
     anomalyHistory,
-  } = state.data;
+  } = monitoringQuery.data;
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -123,7 +116,6 @@ function ElderlyDetail() {
         <Sidebar />
 
         <main className="min-w-0 flex-1">
-          {/* Header */}
           <header className="flex min-h-16 items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 py-3 sm:px-6 lg:px-8">
             <div>
               <p className="text-sm text-slate-500">
@@ -136,7 +128,6 @@ function ElderlyDetail() {
             </div>
 
             <div className="flex items-center gap-3">
-              {/* Tambah Data Lansia */}
               <Button
                 variant="primary"
                 size="sm"
@@ -147,7 +138,6 @@ function ElderlyDetail() {
                 Tambah Data Lansia
               </Button>
 
-              {/* User */}
               <div className="hidden text-right sm:block">
                 <p className="text-sm font-semibold text-slate-700">
                   Administrator
@@ -167,7 +157,6 @@ function ElderlyDetail() {
             </div>
           </header>
 
-          {/* Content */}
           <div className="p-4 sm:p-6 lg:p-8">
             <div className="mb-6">
               <Button
@@ -199,7 +188,6 @@ function ElderlyDetail() {
             <CurrentAlert alert={alert} />
           </div>
 
-          {/* Footer */}
           <footer className="border-t border-slate-200 bg-white px-4 py-5 text-center sm:px-6 lg:px-8">
             <p className="text-xs text-slate-400">
               ElderCare AI — Smart Elderly Monitoring System
