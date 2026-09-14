@@ -9,6 +9,7 @@ export async function fetchElderCareData(): Promise<ElderCareData> {
   }
 
   const rawData: unknown = await response.json();
+
   const result = ElderCareDataSchema.safeParse(rawData);
 
   if (!result.success) {

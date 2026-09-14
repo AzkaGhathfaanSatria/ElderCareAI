@@ -1,13 +1,19 @@
+"use client";
+
 import { useState, type ReactNode } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useRouter, usePathname } from "next/navigation";
 
 function Sidebar() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const [collapsed, setCollapsed] = useState(false);
 
-  const menuItems: Array<{ label: string; path: string | null; icon: ReactNode }> = [
+  const menuItems: Array<{
+    label: string;
+    path: string | null;
+    icon: ReactNode;
+  }> = [
     {
       label: "Dashboard",
       path: "/dashboard",
@@ -189,7 +195,7 @@ function Sidebar() {
           {menuItems.map((item) => {
             const isActive =
               item.path !== null &&
-              location.pathname === item.path;
+              pathname === item.path;
 
             return (
               <button
@@ -197,7 +203,7 @@ function Sidebar() {
                 type="button"
                 onClick={() => {
                   if (item.path) {
-                    navigate(item.path);
+                    router.push(item.path);
                   }
                 }}
                 disabled={!item.path}
