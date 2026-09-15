@@ -1,17 +1,10 @@
 "use client";
 
-import {
-  useState,
-  type ChangeEvent,
-  type FormEvent,
-} from "react";
 import { useRouter } from "next/navigation";
+import { type ChangeEvent, type FormEvent, useState } from "react";
 
 import Button from "../components/ui/Button";
-import {
-  RegisterSchema,
-  type RegisterInput,
-} from "../schemas/registerSchema";
+import { type RegisterInput, RegisterSchema } from "../schemas/registerSchema";
 
 function Register() {
   const router = useRouter();
@@ -28,9 +21,7 @@ function Register() {
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
 
     setForm((current) => ({
@@ -61,10 +52,7 @@ function Register() {
     const result = RegisterSchema.safeParse(form);
 
     if (!result.success) {
-      setError(
-        result.error.issues[0]?.message ??
-          "Data registrasi tidak valid."
-      );
+      setError(result.error.issues[0]?.message ?? "Data registrasi tidak valid.");
       return;
     }
 
@@ -75,9 +63,7 @@ function Register() {
         window.setTimeout(resolve, 1000);
       });
 
-      setSuccess(
-        "Registrasi berhasil. Mengarahkan ke halaman login..."
-      );
+      setSuccess("Registrasi berhasil. Mengarahkan ke halaman login...");
 
       window.setTimeout(() => {
         router.push("/login");
@@ -122,9 +108,7 @@ function Register() {
                   E
                 </div>
 
-                <span className="text-lg font-bold tracking-tight">
-                  ElderCare AI
-                </span>
+                <span className="text-lg font-bold tracking-tight">ElderCare AI</span>
               </div>
 
               <p className="mb-3 text-sm font-medium text-blue-100">
@@ -136,9 +120,8 @@ function Register() {
               </h1>
 
               <p className="mt-5 max-w-md text-sm leading-6 text-blue-100">
-                Buat akun untuk mengakses sistem pemantauan lansia,
-                memahami perubahan aktivitas, dan mendapatkan
-                peringatan dini.
+                Buat akun untuk mengakses sistem pemantauan lansia, memahami perubahan aktivitas,
+                dan mendapatkan peringatan dini.
               </p>
             </div>
 
@@ -150,9 +133,7 @@ function Register() {
                 </div>
 
                 <div>
-                  <p className="text-sm font-semibold">
-                    Satu akun untuk monitoring
-                  </p>
+                  <p className="text-sm font-semibold">Satu akun untuk monitoring</p>
 
                   <p className="mt-1 text-xs text-blue-100">
                     Akses informasi lansia dari satu tempat.
@@ -166,13 +147,10 @@ function Register() {
                 </div>
 
                 <div>
-                  <p className="text-sm font-semibold">
-                    Monitoring terintegrasi
-                  </p>
+                  <p className="text-sm font-semibold">Monitoring terintegrasi</p>
 
                   <p className="mt-1 text-xs text-blue-100">
-                    Data wearable dan sensor IoT dapat dipantau
-                    bersama.
+                    Data wearable dan sensor IoT dapat dipantau bersama.
                   </p>
                 </div>
               </div>
@@ -183,28 +161,20 @@ function Register() {
                 </div>
 
                 <div>
-                  <p className="text-sm font-semibold">
-                    Mendukung perawatan lansia
-                  </p>
+                  <p className="text-sm font-semibold">Mendukung perawatan lansia</p>
 
                   <p className="mt-1 text-xs text-blue-100">
-                    Membantu keluarga dan tenaga medis mengambil
-                    tindakan lebih cepat.
+                    Membantu keluarga dan tenaga medis mengambil tindakan lebih cepat.
                   </p>
                 </div>
               </div>
             </div>
 
-            <p className="relative mt-10 text-xs text-blue-200">
-              ElderCare AI © 2026
-            </p>
+            <p className="relative mt-10 text-xs text-blue-200">ElderCare AI © 2026</p>
           </section>
 
           {/* Register Section */}
-          <section
-            className="flex items-center p-6 sm:p-10"
-            aria-labelledby="register-title"
-          >
+          <section className="flex items-center p-6 sm:p-10" aria-labelledby="register-title">
             <div className="w-full">
               {/* Mobile Logo */}
               <div className="mb-7 lg:hidden">
@@ -214,33 +184,23 @@ function Register() {
                   </div>
 
                   <div>
-                    <p className="font-bold text-slate-800">
-                      ElderCare AI
-                    </p>
+                    <p className="font-bold text-slate-800">ElderCare AI</p>
 
-                    <p className="text-xs text-slate-400">
-                      Smart Elderly Monitoring System
-                    </p>
+                    <p className="text-xs text-slate-400">Smart Elderly Monitoring System</p>
                   </div>
                 </div>
               </div>
 
               {/* Heading */}
               <header className="mb-7">
-                <p className="mb-2 text-sm font-medium text-blue-600">
-                  Buat akun baru
-                </p>
+                <p className="mb-2 text-sm font-medium text-blue-600">Buat akun baru</p>
 
-                <h2
-                  id="register-title"
-                  className="text-2xl font-bold text-slate-800 sm:text-3xl"
-                >
+                <h2 id="register-title" className="text-2xl font-bold text-slate-800 sm:text-3xl">
                   Daftarkan akun Anda
                 </h2>
 
                 <p className="mt-2 text-sm leading-6 text-slate-500">
-                  Lengkapi informasi berikut untuk mulai menggunakan
-                  ElderCare AI.
+                  Lengkapi informasi berikut untuk mulai menggunakan ElderCare AI.
                 </p>
               </header>
 
@@ -281,17 +241,10 @@ function Register() {
               )}
 
               {/* Form */}
-              <form
-                onSubmit={handleSubmit}
-                noValidate
-                className="space-y-5"
-              >
+              <form onSubmit={handleSubmit} noValidate className="space-y-5">
                 {/* Name */}
                 <div>
-                  <label
-                    htmlFor="name"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
-                  >
+                  <label htmlFor="name" className="mb-2 block text-sm font-semibold text-slate-700">
                     Nama Lengkap
                   </label>
 
@@ -436,15 +389,11 @@ function Register() {
                         </div>
 
                         {form.role === "keluarga" && (
-                          <span className="text-sm font-bold text-blue-600">
-                            ✓
-                          </span>
+                          <span className="text-sm font-bold text-blue-600">✓</span>
                         )}
                       </div>
 
-                      <p className="text-sm font-semibold text-slate-700">
-                        Keluarga/Caregiver
-                      </p>
+                      <p className="text-sm font-semibold text-slate-700">Keluarga/Caregiver</p>
 
                       <p className="mt-1 text-xs leading-5 text-slate-400">
                         Memantau dan mengelola data lansia.
@@ -454,9 +403,7 @@ function Register() {
                     {/* Medical Staff */}
                     <button
                       type="button"
-                      onClick={() =>
-                        handleRoleChange("tenaga_medis")
-                      }
+                      onClick={() => handleRoleChange("tenaga_medis")}
                       aria-pressed={form.role === "tenaga_medis"}
                       className={`rounded-xl border p-4 text-left transition ${
                         form.role === "tenaga_medis"
@@ -476,15 +423,11 @@ function Register() {
                         </div>
 
                         {form.role === "tenaga_medis" && (
-                          <span className="text-sm font-bold text-blue-600">
-                            ✓
-                          </span>
+                          <span className="text-sm font-bold text-blue-600">✓</span>
                         )}
                       </div>
 
-                      <p className="text-sm font-semibold text-slate-700">
-                        Tenaga Medis
-                      </p>
+                      <p className="text-sm font-semibold text-slate-700">Tenaga Medis</p>
 
                       <p className="mt-1 text-xs leading-5 text-slate-400">
                         Memantau kondisi dan peringatan lansia.

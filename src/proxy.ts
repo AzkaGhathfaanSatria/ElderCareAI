@@ -1,12 +1,12 @@
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 export function proxy(request: NextRequest) {
   console.log(
     "PROXY JALAN:",
     request.nextUrl.pathname,
     "COOKIE:",
-    request.cookies.get("eldercare_token")?.value
+    request.cookies.get("eldercare_token")?.value,
   );
 
   const token = request.cookies.get("eldercare_token")?.value;

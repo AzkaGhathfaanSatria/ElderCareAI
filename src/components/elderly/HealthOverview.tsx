@@ -1,6 +1,6 @@
 import type { Health } from "../../types/elderCare";
-import Card from "../ui/Card";
 import Badge from "../ui/Badge";
+import Card from "../ui/Card";
 
 interface HealthOverviewProps {
   health: Health;
@@ -13,17 +13,11 @@ function HealthOverview({ health }: HealthOverviewProps) {
       aria-label="Ringkasan kondisi kesehatan lansia"
     >
       <Card className="p-5">
-        <p className="text-sm text-slate-500">
-          Detak Jantung
-        </p>
+        <p className="text-sm text-slate-500">Detak Jantung</p>
 
-        <p className="mt-3 text-3xl font-bold text-slate-800">
-          {health.heartRate}
-        </p>
+        <p className="mt-3 text-3xl font-bold text-slate-800">{health.heartRate}</p>
 
-        <p className="mt-1 text-xs text-slate-400">
-          {health.heartRateUnit}
-        </p>
+        <p className="mt-1 text-xs text-slate-400">{health.heartRateUnit}</p>
 
         <Badge variant="success" className="mt-3">
           Normal
@@ -31,17 +25,11 @@ function HealthOverview({ health }: HealthOverviewProps) {
       </Card>
 
       <Card className="p-5">
-        <p className="text-sm text-slate-500">
-          Aktivitas
-        </p>
+        <p className="text-sm text-slate-500">Aktivitas</p>
 
-        <p className="mt-3 text-3xl font-bold text-slate-800">
-          {health.activity}%
-        </p>
+        <p className="mt-3 text-3xl font-bold text-slate-800">{health.activity}%</p>
 
-        <p className="mt-1 text-xs text-slate-400">
-          Aktivitas hari ini
-        </p>
+        <p className="mt-1 text-xs text-slate-400">Aktivitas hari ini</p>
 
         <Badge variant="info" className="mt-3">
           Aktif
@@ -49,17 +37,11 @@ function HealthOverview({ health }: HealthOverviewProps) {
       </Card>
 
       <Card className="p-5">
-        <p className="text-sm text-slate-500">
-          Durasi Tidur
-        </p>
+        <p className="text-sm text-slate-500">Durasi Tidur</p>
 
-        <p className="mt-3 text-3xl font-bold text-slate-800">
-          {health.sleep}
-        </p>
+        <p className="mt-3 text-3xl font-bold text-slate-800">{health.sleep}</p>
 
-        <p className="mt-1 text-xs text-slate-400">
-          {health.sleepUnit}
-        </p>
+        <p className="mt-1 text-xs text-slate-400">{health.sleepUnit}</p>
 
         <Badge variant="success" className="mt-3">
           Baik
@@ -67,17 +49,11 @@ function HealthOverview({ health }: HealthOverviewProps) {
       </Card>
 
       <Card className="p-5">
-        <p className="text-sm text-slate-500">
-          Tingkat Risiko
-        </p>
+        <p className="text-sm text-slate-500">Tingkat Risiko</p>
 
-        <p className="mt-3 text-3xl font-bold text-slate-800">
-          {health.risk}
-        </p>
+        <p className="mt-3 text-3xl font-bold text-slate-800">{health.risk}</p>
 
-        <p className="mt-1 text-xs text-slate-400">
-          Hasil analisis AI
-        </p>
+        <p className="mt-1 text-xs text-slate-400">Hasil analisis AI</p>
 
         <Badge variant="success" className="mt-3">
           Aman

@@ -12,20 +12,14 @@ function ActivityChart({
   selectedActivityDay,
   onActivitySelect,
 }: ActivityChartProps) {
-  const selectedActivity = activityHistory.find(
-    (item) => item.day === selectedActivityDay
-  );
+  const selectedActivity = activityHistory.find((item) => item.day === selectedActivityDay);
 
   return (
     <Card className="p-6 xl:col-span-2">
       <header className="mb-6">
-        <h2 className="text-lg font-bold text-slate-800">
-          Aktivitas Lansia
-        </h2>
+        <h2 className="text-lg font-bold text-slate-800">Aktivitas Lansia</h2>
 
-        <p className="mt-1 text-sm text-slate-500">
-          Persentase aktivitas selama 7 hari terakhir
-        </p>
+        <p className="mt-1 text-sm text-slate-500">Persentase aktivitas selama 7 hari terakhir</p>
       </header>
 
       <div
@@ -38,9 +32,7 @@ function ActivityChart({
             key={item.day}
             className="flex h-full flex-1 flex-col items-center justify-end gap-2"
           >
-            <span className="text-xs font-medium text-slate-500">
-              {item.value}%
-            </span>
+            <span className="text-xs font-medium text-slate-500">{item.value}%</span>
 
             <button
               type="button"
@@ -66,8 +58,7 @@ function ActivityChart({
           role="status"
           aria-live="polite"
         >
-          Aktivitas hari {selectedActivity.day}:{" "}
-          <strong>{selectedActivity.value}%</strong>
+          Aktivitas hari {selectedActivity.day}: <strong>{selectedActivity.value}%</strong>
         </div>
       )}
     </Card>

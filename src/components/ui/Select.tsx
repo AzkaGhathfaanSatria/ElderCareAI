@@ -15,7 +15,7 @@ function Select<T extends string>({
 }: SelectProps<T>) {
   return (
     <div className="flex items-center gap-2">
-      <label className="text-xs text-slate-500">{label}</label>
+      <span className="text-xs text-slate-500">{label}</span>
 
       <SelectPrimitive.Root
         value={value}

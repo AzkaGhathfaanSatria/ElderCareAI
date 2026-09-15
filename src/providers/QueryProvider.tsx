@@ -7,9 +7,7 @@ interface QueryProviderProps {
   children: React.ReactNode;
 }
 
-export default function QueryProvider({
-  children,
-}: QueryProviderProps) {
+export default function QueryProvider({ children }: QueryProviderProps) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -19,12 +17,8 @@ export default function QueryProvider({
             refetchOnWindowFocus: false,
           },
         },
-      })
+      }),
   );
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
-  );
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }

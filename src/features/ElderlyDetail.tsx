@@ -1,31 +1,23 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-
-import Sidebar from "../components/layout/Sidebar";
-
+import AnomalyHistory from "../components/elderly/AnomalyHistory";
+import BehaviorBaseline from "../components/elderly/BehaviorBaseline";
+import CurrentAlert from "../components/elderly/CurrentAlert";
+import DeviceStatus from "../components/elderly/DeviceStatus";
 import ElderlyProfile from "../components/elderly/ElderlyProfile";
 import HealthOverview from "../components/elderly/HealthOverview";
-import BehaviorBaseline from "../components/elderly/BehaviorBaseline";
-import DeviceStatus from "../components/elderly/DeviceStatus";
-import AnomalyHistory from "../components/elderly/AnomalyHistory";
-import CurrentAlert from "../components/elderly/CurrentAlert";
-
+import Sidebar from "../components/layout/Sidebar";
+import Button from "../components/ui/Button";
 import { useElderCareQuery } from "../hooks/useElderCareQuery";
 import { useUIStore } from "../store/useUIStore";
-
-import Button from "../components/ui/Button";
 
 function ElderlyDetail() {
   const router = useRouter();
 
-  const selectedPeriod = useUIStore(
-    (state) => state.selectedPeriod
-  );
+  const selectedPeriod = useUIStore((state) => state.selectedPeriod);
 
-  const setSelectedPeriod = useUIStore(
-    (state) => state.setSelectedPeriod
-  );
+  const setSelectedPeriod = useUIStore((state) => state.setSelectedPeriod);
 
   const monitoringQuery = useElderCareQuery();
 
@@ -39,9 +31,7 @@ function ElderlyDetail() {
         >
           <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-blue-600" />
 
-          <p className="text-sm font-medium text-slate-600">
-            Memuat data lansia...
-          </p>
+          <p className="text-sm font-medium text-slate-600">Memuat data lansia...</p>
         </section>
       </main>
     );
@@ -59,13 +49,10 @@ function ElderlyDetail() {
             !
           </div>
 
-          <h1 className="text-lg font-bold text-slate-800">
-            Gagal Memuat Data
-          </h1>
+          <h1 className="text-lg font-bold text-slate-800">Gagal Memuat Data</h1>
 
           <p className="mt-2 text-sm text-slate-500">
-            {monitoringQuery.error?.message ??
-              "Gagal mengambil data lansia."}
+            {monitoringQuery.error?.message ?? "Gagal mengambil data lansia."}
           </p>
 
           <Button
@@ -90,25 +77,15 @@ function ElderlyDetail() {
           className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm"
           role="status"
         >
-          <h1 className="text-lg font-bold text-slate-800">
-            Data Tidak Tersedia
-          </h1>
+          <h1 className="text-lg font-bold text-slate-800">Data Tidak Tersedia</h1>
 
-          <p className="mt-2 text-sm text-slate-500">
-            Data lansia belum tersedia.
-          </p>
+          <p className="mt-2 text-sm text-slate-500">Data lansia belum tersedia.</p>
         </section>
       </main>
     );
   }
 
-  const {
-    elderly,
-    health,
-    alert,
-    devices,
-    anomalyHistory,
-  } = monitoringQuery.data;
+  const { elderly, health, alert, devices, anomalyHistory } = monitoringQuery.data;
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -118,13 +95,9 @@ function ElderlyDetail() {
         <main className="min-w-0 flex-1">
           <header className="flex min-h-16 items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 py-3 sm:px-6 lg:px-8">
             <div>
-              <p className="text-sm text-slate-500">
-                Data Lansia
-              </p>
+              <p className="text-sm text-slate-500">Data Lansia</p>
 
-              <h1 className="mt-0.5 text-lg font-bold text-slate-800">
-                Monitoring Lansia
-              </h1>
+              <h1 className="mt-0.5 text-lg font-bold text-slate-800">Monitoring Lansia</h1>
             </div>
 
             <div className="flex items-center gap-3">
@@ -139,13 +112,9 @@ function ElderlyDetail() {
               </Button>
 
               <div className="hidden text-right sm:block">
-                <p className="text-sm font-semibold text-slate-700">
-                  Administrator
-                </p>
+                <p className="text-sm font-semibold text-slate-700">Administrator</p>
 
-                <p className="text-xs text-slate-400">
-                  admin@eldercare.ai
-                </p>
+                <p className="text-xs text-slate-400">admin@eldercare.ai</p>
               </div>
 
               <div
@@ -189,9 +158,7 @@ function ElderlyDetail() {
           </div>
 
           <footer className="border-t border-slate-200 bg-white px-4 py-5 text-center sm:px-6 lg:px-8">
-            <p className="text-xs text-slate-400">
-              ElderCare AI — Smart Elderly Monitoring System
-            </p>
+            <p className="text-xs text-slate-400">ElderCare AI — Smart Elderly Monitoring System</p>
           </footer>
         </main>
       </div>

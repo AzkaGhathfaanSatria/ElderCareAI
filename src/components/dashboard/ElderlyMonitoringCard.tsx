@@ -8,22 +8,15 @@ interface ElderlyMonitoringCardProps {
   onViewDetail: () => void;
 }
 
-function ElderlyMonitoringCard({
-  elderly,
-  onViewDetail,
-}: ElderlyMonitoringCardProps) {
+function ElderlyMonitoringCard({ elderly, onViewDetail }: ElderlyMonitoringCardProps) {
   return (
     <section className="mt-6">
       <Card className="p-6">
         <header className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-lg font-bold text-slate-800">
-              Lansia yang Dipantau
-            </h2>
+            <h2 className="text-lg font-bold text-slate-800">Lansia yang Dipantau</h2>
 
-            <p className="mt-1 text-sm text-slate-500">
-              Data lansia yang sedang dalam pemantauan.
-            </p>
+            <p className="mt-1 text-sm text-slate-500">Data lansia yang sedang dalam pemantauan.</p>
           </div>
 
           <Button
@@ -46,24 +39,16 @@ function ElderlyMonitoringCard({
             </div>
 
             <div>
-              <h3 className="font-semibold text-slate-800">
-                {elderly.name}
-              </h3>
+              <h3 className="font-semibold text-slate-800">{elderly.name}</h3>
 
-              <p className="text-sm text-slate-500">
-                {elderly.age} tahun
-              </p>
+              <p className="text-sm text-slate-500">{elderly.age} tahun</p>
             </div>
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <Badge variant="success">
-              Wearable {elderly.wearableStatus}
-            </Badge>
+            <Badge variant="success">Wearable {elderly.wearableStatus}</Badge>
 
-            <Badge variant="info">
-              IoT {elderly.iotStatus}
-            </Badge>
+            <Badge variant="info">IoT {elderly.iotStatus}</Badge>
 
             <Button
               variant="primary"

@@ -1,6 +1,6 @@
 import type { Elderly } from "../../types/elderCare";
-import Card from "../ui/Card";
 import Badge from "../ui/Badge";
+import Card from "../ui/Card";
 
 interface ElderlyProfileProps {
   elderly: Elderly;
@@ -20,26 +20,18 @@ function ElderlyProfile({ elderly }: ElderlyProfileProps) {
             </div>
 
             <div>
-              <h1 className="text-2xl font-bold text-slate-800">
-                {elderly.name}
-              </h1>
+              <h1 className="text-2xl font-bold text-slate-800">{elderly.name}</h1>
 
               <p className="mt-1 text-sm text-slate-500">
                 {elderly.age} tahun • Lansia yang sedang dipantau
               </p>
 
               <div className="mt-3 flex flex-wrap gap-2">
-                <Badge variant="success">
-                  Monitoring {elderly.monitoringStatus}
-                </Badge>
+                <Badge variant="success">Monitoring {elderly.monitoringStatus}</Badge>
 
-                <Badge variant="info">
-                  Wearable {elderly.wearableStatus}
-                </Badge>
+                <Badge variant="info">Wearable {elderly.wearableStatus}</Badge>
 
-                <Badge variant="info">
-                  IoT {elderly.iotStatus}
-                </Badge>
+                <Badge variant="info">IoT {elderly.iotStatus}</Badge>
               </div>
             </div>
           </div>
@@ -47,13 +39,9 @@ function ElderlyProfile({ elderly }: ElderlyProfileProps) {
           <div className="text-left md:text-right">
             <p className="text-xs text-slate-400">ID Lansia</p>
 
-            <p className="mt-1 text-sm font-semibold text-slate-700">
-              {elderly.id}
-            </p>
+            <p className="mt-1 text-sm font-semibold text-slate-700">{elderly.id}</p>
 
-            <p className="mt-2 text-xs text-green-600">
-              Monitoring aktif
-            </p>
+            <p className="mt-2 text-xs text-green-600">Monitoring aktif</p>
           </div>
         </div>
       </Card>

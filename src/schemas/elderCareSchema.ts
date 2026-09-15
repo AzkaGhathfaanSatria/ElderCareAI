@@ -1,6 +1,5 @@
-import type { ElderlyId } from "../types/elderCare";
-
 import { z } from "zod";
+import type { ElderlyId } from "../types/elderCare";
 
 const ElderlyIdSchema = z
   .string()

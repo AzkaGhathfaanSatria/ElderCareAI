@@ -1,6 +1,6 @@
 import type { AlertData } from "../../types/elderCare";
-import Card from "../ui/Card";
 import Badge from "../ui/Badge";
+import Card from "../ui/Card";
 
 interface CurrentAlertProps {
   alert: AlertData;
@@ -11,9 +11,7 @@ function CurrentAlert({ alert }: CurrentAlertProps) {
     <section>
       <Card className="p-6">
         <header className="mb-5">
-          <h2 className="text-lg font-bold text-slate-800">
-            Peringatan Terkini
-          </h2>
+          <h2 className="text-lg font-bold text-slate-800">Peringatan Terkini</h2>
 
           <p className="mt-1 text-sm text-slate-500">
             Informasi peringatan berdasarkan hasil monitoring.
@@ -32,33 +30,20 @@ function CurrentAlert({ alert }: CurrentAlertProps) {
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-slate-800">
-                    {alert.type}
-                  </h3>
+                  <h3 className="font-semibold text-slate-800">{alert.type}</h3>
 
-                  <p className="mt-1 text-sm leading-6 text-slate-500">
-                    {alert.description}
-                  </p>
+                  <p className="mt-1 text-sm leading-6 text-slate-500">{alert.description}</p>
 
-                  <p className="mt-2 text-xs text-slate-400">
-                    Terdeteksi {alert.detected}
-                  </p>
+                  <p className="mt-2 text-xs text-slate-400">Terdeteksi {alert.detected}</p>
                 </div>
               </div>
 
-              <Badge variant="warning">
-                Risiko {alert.level}
-              </Badge>
+              <Badge variant="warning">Risiko {alert.level}</Badge>
             </div>
           </article>
         ) : (
-          <div
-            className="rounded-xl border border-green-200 bg-green-50 p-5"
-            aria-live="polite"
-          >
-            <p className="font-semibold text-green-700">
-              Tidak ada peringatan saat ini.
-            </p>
+          <div className="rounded-xl border border-green-200 bg-green-50 p-5" aria-live="polite">
+            <p className="font-semibold text-green-700">Tidak ada peringatan saat ini.</p>
           </div>
         )}
       </Card>

@@ -1,10 +1,7 @@
-import type {
-  AnomalyHistoryItem,
-  Period,
-} from "../../types/elderCare";
+import type { AnomalyHistoryItem, Period } from "../../types/elderCare";
+import Badge from "../ui/Badge";
 import Card from "../ui/Card";
 import Select from "../ui/Select";
-import Badge from "../ui/Badge";
 
 interface AnomalyHistoryProps {
   anomalyHistory: AnomalyHistoryItem[];
@@ -12,29 +9,17 @@ interface AnomalyHistoryProps {
   onPeriodChange: (period: Period) => void;
 }
 
-function AnomalyHistory({
-  anomalyHistory,
-  selectedPeriod,
-  onPeriodChange,
-}: AnomalyHistoryProps) {
-  const periodOptions: readonly Period[] = [
-    "7 Hari",
-    "30 Hari",
-    "3 Bulan",
-  ];
+function AnomalyHistory({ anomalyHistory, selectedPeriod, onPeriodChange }: AnomalyHistoryProps) {
+  const periodOptions: readonly Period[] = ["7 Hari", "30 Hari", "3 Bulan"];
 
-  const filteredHistory = anomalyHistory.filter(
-    (item) => item.period === selectedPeriod
-  );
+  const filteredHistory = anomalyHistory.filter((item) => item.period === selectedPeriod);
 
   return (
     <section className="mb-6">
       <Card className="p-6">
         <header className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-lg font-bold text-slate-800">
-              Riwayat Anomali
-            </h2>
+            <h2 className="text-lg font-bold text-slate-800">Riwayat Anomali</h2>
 
             <p className="mt-1 text-sm text-slate-500">
               Perubahan perilaku yang terdeteksi oleh sistem.
@@ -66,13 +51,9 @@ function AnomalyHistory({
                     </div>
 
                     <div>
-                      <h3 className="text-sm font-semibold text-slate-800">
-                        {item.type}
-                      </h3>
+                      <h3 className="text-sm font-semibold text-slate-800">{item.type}</h3>
 
-                      <p className="mt-1 text-xs leading-5 text-slate-500">
-                        {item.description}
-                      </p>
+                      <p className="mt-1 text-xs leading-5 text-slate-500">{item.description}</p>
 
                       <p className="mt-2 text-xs text-slate-400">
                         {item.date} • {item.time} WIB
@@ -106,18 +87,12 @@ function AnomalyHistory({
           )}
         </div>
 
-        <div
-          className="mt-5 rounded-lg bg-blue-50 p-4"
-          aria-live="polite"
-        >
-          <p className="text-sm font-semibold text-blue-700">
-            Analisis AI
-          </p>
+        <div className="mt-5 rounded-lg bg-blue-50 p-4" aria-live="polite">
+          <p className="text-sm font-semibold text-blue-700">Analisis AI</p>
 
           <p className="mt-1 text-xs leading-5 text-blue-600">
-            Sistem membandingkan aktivitas terkini dengan
-            baseline perilaku personal untuk mendeteksi
-            perubahan yang tidak biasa.
+            Sistem membandingkan aktivitas terkini dengan baseline perilaku personal untuk
+            mendeteksi perubahan yang tidak biasa.
           </p>
         </div>
       </Card>

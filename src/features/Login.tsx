@@ -1,13 +1,9 @@
 "use client";
 
-import {
-  useState,
-  type ChangeEvent,
-  type FormEvent,
-} from "react";
 import { useRouter } from "next/navigation";
+import { type ChangeEvent, type FormEvent, useState } from "react";
 
-import { LoginSchema, type LoginInput } from "../schemas/authSchema";
+import { type LoginInput, LoginSchema } from "../schemas/authSchema";
 
 type LoginFormState =
   | { status: "idle" }
@@ -40,9 +36,7 @@ function LoginPage() {
     const validation = LoginSchema.safeParse(formData);
 
     if (!validation.success) {
-      const firstError =
-        validation.error.issues[0]?.message ??
-        "Data login tidak valid.";
+      const firstError = validation.error.issues[0]?.message ?? "Data login tidak valid.";
 
       setFormState({
         status: "error",
@@ -59,14 +53,10 @@ function LoginPage() {
         window.setTimeout(resolve, 1000);
       });
 
-      if (
-        validation.data.email === "admin@eldercare.ai" &&
-        validation.data.password === "123456"
-      ) {
+      if (validation.data.email === "admin@eldercare.ai" && validation.data.password === "123456") {
         // Membuat cookie sebagai tanda bahwa pengguna sudah login.
         // Cookie ini akan dibaca oleh middleware.ts.
-        document.cookie =
-          "eldercare_token=logged_in; path=/; max-age=86400";
+        document.cookie = "eldercare_token=logged_in; path=/; max-age=86400";
 
         setFormState({ status: "success" });
 
@@ -81,9 +71,7 @@ function LoginPage() {
       });
     } catch (error: unknown) {
       const message =
-        error instanceof Error
-          ? error.message
-          : "Terjadi kesalahan saat proses login.";
+        error instanceof Error ? error.message : "Terjadi kesalahan saat proses login.";
 
       setFormState({
         status: "error",
@@ -126,9 +114,7 @@ function LoginPage() {
                   E
                 </div>
 
-                <span className="text-lg font-bold tracking-tight">
-                  ElderCare AI
-                </span>
+                <span className="text-lg font-bold tracking-tight">ElderCare AI</span>
               </div>
 
               <p className="mb-3 text-sm font-medium text-blue-100">
@@ -140,8 +126,8 @@ function LoginPage() {
               </h2>
 
               <p className="mt-5 max-w-md text-sm leading-6 text-blue-100">
-                Pantau aktivitas, kondisi kesehatan, dan perubahan perilaku
-                lansia melalui satu sistem monitoring yang terintegrasi.
+                Pantau aktivitas, kondisi kesehatan, dan perubahan perilaku lansia melalui satu
+                sistem monitoring yang terintegrasi.
               </p>
             </div>
 
@@ -153,9 +139,7 @@ function LoginPage() {
                 </div>
 
                 <div>
-                  <p className="text-sm font-semibold">
-                    Monitoring kesehatan
-                  </p>
+                  <p className="text-sm font-semibold">Monitoring kesehatan</p>
 
                   <p className="mt-1 text-xs text-blue-100">
                     Pantau detak jantung, aktivitas, dan pola tidur.
@@ -169,9 +153,7 @@ function LoginPage() {
                 </div>
 
                 <div>
-                  <p className="text-sm font-semibold">
-                    Deteksi perubahan perilaku
-                  </p>
+                  <p className="text-sm font-semibold">Deteksi perubahan perilaku</p>
 
                   <p className="mt-1 text-xs text-blue-100">
                     Identifikasi aktivitas yang berbeda dari pola normal.
@@ -185,9 +167,7 @@ function LoginPage() {
                 </div>
 
                 <div>
-                  <p className="text-sm font-semibold">
-                    Peringatan dini
-                  </p>
+                  <p className="text-sm font-semibold">Peringatan dini</p>
 
                   <p className="mt-1 text-xs text-blue-100">
                     Membantu keluarga dan tenaga medis merespons lebih cepat.
@@ -196,16 +176,11 @@ function LoginPage() {
               </div>
             </div>
 
-            <p className="relative mt-10 text-xs text-blue-200">
-              ElderCare AI © 2026
-            </p>
+            <p className="relative mt-10 text-xs text-blue-200">ElderCare AI © 2026</p>
           </section>
 
           {/* Login Section */}
-          <section
-            className="flex items-center p-6 sm:p-10"
-            aria-labelledby="login-title"
-          >
+          <section className="flex items-center p-6 sm:p-10" aria-labelledby="login-title">
             <div className="w-full">
               {/* Mobile Logo */}
               <div className="mb-8 lg:hidden">
@@ -215,27 +190,18 @@ function LoginPage() {
                   </div>
 
                   <div>
-                    <h1 className="font-bold text-slate-800">
-                      ElderCare AI
-                    </h1>
+                    <h1 className="font-bold text-slate-800">ElderCare AI</h1>
 
-                    <p className="text-xs text-slate-400">
-                      Smart Elderly Monitoring System
-                    </p>
+                    <p className="text-xs text-slate-400">Smart Elderly Monitoring System</p>
                   </div>
                 </div>
               </div>
 
               {/* Heading */}
               <header className="mb-8">
-                <p className="mb-2 text-sm font-medium text-blue-600">
-                  Selamat datang kembali
-                </p>
+                <p className="mb-2 text-sm font-medium text-blue-600">Selamat datang kembali</p>
 
-                <h1
-                  id="login-title"
-                  className="text-2xl font-bold text-slate-800 sm:text-3xl"
-                >
+                <h1 id="login-title" className="text-2xl font-bold text-slate-800 sm:text-3xl">
                   Masuk ke akun Anda
                 </h1>
 
@@ -357,13 +323,9 @@ function LoginPage() {
 
               {/* Demo Account */}
               <div className="mt-8 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <p className="text-xs font-semibold text-slate-600">
-                  Akun demo
-                </p>
+                <p className="text-xs font-semibold text-slate-600">Akun demo</p>
 
-                <p className="mt-1 text-xs text-slate-400">
-                  admin@eldercare.ai · 123456
-                </p>
+                <p className="mt-1 text-xs text-slate-400">admin@eldercare.ai · 123456</p>
               </div>
 
               {/* Footer */}

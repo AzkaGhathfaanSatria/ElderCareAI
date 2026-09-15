@@ -2,8 +2,7 @@ import Login from "../../features/Login";
 
 export const metadata = {
   title: "Login | ElderCare AI",
-  description:
-    "Masuk ke sistem ElderCare AI untuk melanjutkan pemantauan kesehatan lansia.",
+  description: "Masuk ke sistem ElderCare AI untuk melanjutkan pemantauan kesehatan lansia.",
 };
 
 export default function LoginPage() {

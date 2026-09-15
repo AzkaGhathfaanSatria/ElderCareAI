@@ -1,7 +1,7 @@
 "use client";
 
-import { type ReactNode } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import type { ReactNode } from "react";
 
 import { useUIStore } from "../../store/useUIStore";
 
@@ -97,15 +97,11 @@ function Sidebar() {
       aria-label="Navigasi utama"
     >
       <header
-        className={`shrink-0 border-b border-slate-800 ${
-          collapsed ? "px-3 py-4" : "px-5 py-4"
-        }`}
+        className={`shrink-0 border-b border-slate-800 ${collapsed ? "px-3 py-4" : "px-5 py-4"}`}
       >
         <div
           className={`flex ${
-            collapsed
-              ? "flex-col items-center gap-4"
-              : "items-center justify-between"
+            collapsed ? "flex-col items-center gap-4" : "items-center justify-between"
           }`}
         >
           <div className="flex items-center gap-3">
@@ -120,9 +116,7 @@ function Sidebar() {
               <div>
                 <h1 className="text-sm font-bold">ElderCare AI</h1>
 
-                <p className="text-[11px] text-slate-400">
-                  Monitoring System
-                </p>
+                <p className="text-[11px] text-slate-400">Monitoring System</p>
               </div>
             )}
           </div>
@@ -176,9 +170,7 @@ function Sidebar() {
       </header>
 
       <nav
-        className={`flex-1 overflow-y-auto ${
-          collapsed ? "px-3 py-6" : "p-4"
-        }`}
+        className={`flex-1 overflow-y-auto ${collapsed ? "px-3 py-6" : "p-4"}`}
         aria-label="Menu utama"
       >
         {!collapsed && (
@@ -189,8 +181,7 @@ function Sidebar() {
 
         <div className={collapsed ? "space-y-3" : "space-y-1"}>
           {menuItems.map((item) => {
-            const isActive =
-              item.path !== null && pathname === item.path;
+            const isActive = item.path !== null && pathname === item.path;
 
             return (
               <button
@@ -206,15 +197,13 @@ function Sidebar() {
                 aria-current={isActive ? "page" : undefined}
                 title={collapsed ? item.label : undefined}
                 className={`flex w-full items-center rounded-xl transition ${
-                  collapsed
-                    ? "h-11 justify-center"
-                    : "gap-3 px-3 py-3"
+                  collapsed ? "h-11 justify-center" : "gap-3 px-3 py-3"
                 } ${
                   isActive
                     ? "bg-blue-600 text-white shadow-sm"
                     : item.path
-                    ? "text-slate-300 hover:bg-slate-800 hover:text-white"
-                    : "cursor-default text-slate-500"
+                      ? "text-slate-300 hover:bg-slate-800 hover:text-white"
+                      : "cursor-default text-slate-500"
                 }`}
               >
                 <span
@@ -232,22 +221,12 @@ function Sidebar() {
         </div>
       </nav>
 
-      <footer
-        className={`shrink-0 border-t border-slate-800 ${
-          collapsed ? "p-3" : "p-4"
-        }`}
-      >
+      <footer className={`shrink-0 border-t border-slate-800 ${collapsed ? "p-3" : "p-4"}`}>
         <div
           className={`flex items-center rounded-xl bg-slate-800 ${
-            collapsed
-              ? "h-11 justify-center"
-              : "gap-3 p-3"
+            collapsed ? "h-11 justify-center" : "gap-3 p-3"
           }`}
-          title={
-            collapsed
-              ? "Administrator - admin@eldercare.ai"
-              : undefined
-          }
+          title={collapsed ? "Administrator - admin@eldercare.ai" : undefined}
         >
           <div
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-600"
@@ -258,13 +237,9 @@ function Sidebar() {
 
           {!collapsed && (
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium">
-                Administrator
-              </p>
+              <p className="truncate text-sm font-medium">Administrator</p>
 
-              <p className="truncate text-xs text-slate-400">
-                admin@eldercare.ai
-              </p>
+              <p className="truncate text-xs text-slate-400">admin@eldercare.ai</p>
             </div>
           )}
         </div>

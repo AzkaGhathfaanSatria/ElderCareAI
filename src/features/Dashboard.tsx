@@ -1,28 +1,21 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-
-import Sidebar from "../components/layout/Sidebar";
-import HealthSummary from "../components/dashboard/HealthSummary";
 import ActivityChart from "../components/dashboard/ActivityChart";
 import AlertSummary from "../components/dashboard/AlertSummary";
 import ElderlyMonitoringCard from "../components/dashboard/ElderlyMonitoringCard";
-
+import HealthSummary from "../components/dashboard/HealthSummary";
+import Sidebar from "../components/layout/Sidebar";
+import Button from "../components/ui/Button";
 import { useElderCareQuery } from "../hooks/useElderCareQuery";
 import { useUIStore } from "../store/useUIStore";
-
-import Button from "../components/ui/Button";
 
 function Dashboard() {
   const router = useRouter();
 
-  const selectedActivityDay = useUIStore(
-    (state) => state.selectedActivityDay
-  );
+  const selectedActivityDay = useUIStore((state) => state.selectedActivityDay);
 
-  const setSelectedActivityDay = useUIStore(
-    (state) => state.setSelectedActivityDay
-  );
+  const setSelectedActivityDay = useUIStore((state) => state.setSelectedActivityDay);
 
   const monitoringQuery = useElderCareQuery();
 
@@ -36,9 +29,7 @@ function Dashboard() {
         >
           <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-blue-600" />
 
-          <p className="text-sm font-medium text-slate-600">
-            Memuat dashboard...
-          </p>
+          <p className="text-sm font-medium text-slate-600">Memuat dashboard...</p>
         </section>
       </main>
     );
@@ -56,13 +47,10 @@ function Dashboard() {
             !
           </div>
 
-          <h1 className="text-lg font-bold text-slate-800">
-            Gagal Memuat Dashboard
-          </h1>
+          <h1 className="text-lg font-bold text-slate-800">Gagal Memuat Dashboard</h1>
 
           <p className="mt-2 text-sm text-slate-500">
-            {monitoringQuery.error?.message ??
-              "Gagal mengambil data dashboard."}
+            {monitoringQuery.error?.message ?? "Gagal mengambil data dashboard."}
           </p>
 
           <Button
@@ -87,24 +75,15 @@ function Dashboard() {
           className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm"
           role="status"
         >
-          <h1 className="text-lg font-bold text-slate-800">
-            Data Tidak Tersedia
-          </h1>
+          <h1 className="text-lg font-bold text-slate-800">Data Tidak Tersedia</h1>
 
-          <p className="mt-2 text-sm text-slate-500">
-            Data dashboard belum tersedia.
-          </p>
+          <p className="mt-2 text-sm text-slate-500">Data dashboard belum tersedia.</p>
         </section>
       </main>
     );
   }
 
-  const {
-    elderly,
-    health,
-    activityHistory,
-    alert,
-  } = monitoringQuery.data;
+  const { elderly, health, activityHistory, alert } = monitoringQuery.data;
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -114,9 +93,7 @@ function Dashboard() {
         <main className="min-w-0 flex-1">
           <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-6 lg:px-8">
             <div>
-              <p className="text-sm text-slate-500">
-                Sistem Pemantauan Kesehatan Lansia
-              </p>
+              <p className="text-sm text-slate-500">Sistem Pemantauan Kesehatan Lansia</p>
             </div>
 
             <div className="flex items-center gap-4">
@@ -132,19 +109,16 @@ function Dashboard() {
                 {alert.hasAlert && (
                   <span
                     className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500"
+                    role="status"
                     aria-label="Ada notifikasi baru"
                   />
                 )}
               </button>
 
               <div className="hidden text-right sm:block">
-                <p className="text-sm font-semibold text-slate-700">
-                  Administrator
-                </p>
+                <p className="text-sm font-semibold text-slate-700">Administrator</p>
 
-                <p className="text-xs text-slate-400">
-                  admin@eldercare.ai
-                </p>
+                <p className="text-xs text-slate-400">admin@eldercare.ai</p>
               </div>
 
               <div
@@ -163,8 +137,7 @@ function Dashboard() {
               </h1>
 
               <p className="mt-2 text-sm text-slate-500">
-                Pantau kondisi kesehatan dan aktivitas lansia secara
-                berkala.
+                Pantau kondisi kesehatan dan aktivitas lansia secara berkala.
               </p>
             </section>
 
@@ -177,22 +150,14 @@ function Dashboard() {
                 onActivitySelect={setSelectedActivityDay}
               />
 
-              <AlertSummary
-                alert={alert}
-                onViewDetail={() => router.push("/elderly")}
-              />
+              <AlertSummary alert={alert} onViewDetail={() => router.push("/elderly")} />
             </section>
 
-            <ElderlyMonitoringCard
-              elderly={elderly}
-              onViewDetail={() => router.push("/elderly")}
-            />
+            <ElderlyMonitoringCard elderly={elderly} onViewDetail={() => router.push("/elderly")} />
           </div>
 
           <footer className="border-t border-slate-200 bg-white px-4 py-5 text-center sm:px-6 lg:px-8">
-            <p className="text-xs text-slate-400">
-              ElderCare AI — Smart Elderly Monitoring System
-            </p>
+            <p className="text-xs text-slate-400">ElderCare AI — Smart Elderly Monitoring System</p>
           </footer>
         </main>
       </div>

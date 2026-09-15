@@ -1,5 +1,5 @@
-import type { HTMLAttributes, ReactNode } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
+import type { HTMLAttributes, ReactNode } from "react";
 
 const cardVariants = cva("rounded-xl bg-white transition", {
   variants: {
@@ -26,18 +26,9 @@ type CardProps = HTMLAttributes<HTMLElement> &
     children: ReactNode;
   };
 
-function Card({
-  children,
-  variant,
-  padding,
-  className = "",
-  ...props
-}: CardProps) {
+function Card({ children, variant, padding, className = "", ...props }: CardProps) {
   return (
-    <section
-      className={`${cardVariants({ variant, padding })} ${className}`}
-      {...props}
-    >
+    <section className={`${cardVariants({ variant, padding })} ${className}`} {...props}>
       {children}
     </section>
   );

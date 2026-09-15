@@ -1,21 +1,15 @@
 "use client";
 
-import {
-  useState,
-  type ChangeEvent,
-  type FormEvent,
-} from "react";
 import { useRouter } from "next/navigation";
+import { type ChangeEvent, type FormEvent, useState } from "react";
 
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
-
-import {
-  ElderlyRegistrationSchema,
-  type ElderlyRegistrationInput,
-} from "../schemas/elderlyRegistrationSchema";
-
 import { useElderlyMutation } from "../hooks/useElderlyMutation";
+import {
+  type ElderlyRegistrationInput,
+  ElderlyRegistrationSchema,
+} from "../schemas/elderlyRegistrationSchema";
 
 function ElderlyRegistration() {
   const router = useRouter();
@@ -39,9 +33,7 @@ function ElderlyRegistration() {
   const isLoading = elderlyMutation.isPending;
 
   const handleChange = (
-    event: ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value } = event.target;
 
@@ -54,9 +46,7 @@ function ElderlyRegistration() {
     setSuccess("");
   };
 
-  const handleSubmit = async (
-    event: FormEvent<HTMLFormElement>
-  ) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setError("");
@@ -65,10 +55,7 @@ function ElderlyRegistration() {
     const result = ElderlyRegistrationSchema.safeParse(form);
 
     if (!result.success) {
-      setError(
-        result.error.issues[0]?.message ??
-          "Data registrasi lansia tidak valid."
-      );
+      setError(result.error.issues[0]?.message ?? "Data registrasi lansia tidak valid.");
 
       return;
     }
@@ -76,18 +63,14 @@ function ElderlyRegistration() {
     try {
       await elderlyMutation.mutateAsync(result.data);
 
-      setSuccess(
-        "Data lansia berhasil didaftarkan. Mengarahkan ke halaman data lansia..."
-      );
+      setSuccess("Data lansia berhasil didaftarkan. Mengarahkan ke halaman data lansia...");
 
       window.setTimeout(() => {
         router.push("/elderly");
       }, 1200);
     } catch (error: unknown) {
       setError(
-        error instanceof Error
-          ? error.message
-          : "Gagal menyimpan data lansia. Silakan coba lagi."
+        error instanceof Error ? error.message : "Gagal menyimpan data lansia. Silakan coba lagi.",
       );
     }
   };
@@ -124,9 +107,7 @@ function ElderlyRegistration() {
                 E
               </span>
 
-              <span className="text-sm font-semibold text-blue-600">
-                ElderCare AI
-              </span>
+              <span className="text-sm font-semibold text-blue-600">ElderCare AI</span>
             </div>
 
             <h1 className="text-2xl font-bold tracking-tight text-slate-800 sm:text-3xl">
@@ -134,8 +115,8 @@ function ElderlyRegistration() {
             </h1>
 
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-              Lengkapi informasi lansia serta perangkat wearable dan
-              sensor IoT yang akan digunakan untuk pemantauan.
+              Lengkapi informasi lansia serta perangkat wearable dan sensor IoT yang akan digunakan
+              untuk pemantauan.
             </p>
           </div>
         </header>
@@ -190,9 +171,7 @@ function ElderlyRegistration() {
                   </div>
 
                   <div>
-                    <h2 className="font-bold text-slate-800">
-                      Data Lansia
-                    </h2>
+                    <h2 className="font-bold text-slate-800">Data Lansia</h2>
 
                     <p className="mt-1 text-xs text-slate-400">
                       Informasi dasar lansia yang akan dipantau.
@@ -204,10 +183,7 @@ function ElderlyRegistration() {
               <div className="grid gap-5 p-5 sm:grid-cols-2 sm:p-6">
                 {/* Nama */}
                 <div className="sm:col-span-2">
-                  <label
-                    htmlFor="name"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
-                  >
+                  <label htmlFor="name" className="mb-2 block text-sm font-semibold text-slate-700">
                     Nama Lengkap
                   </label>
 
@@ -296,13 +272,10 @@ function ElderlyRegistration() {
                   </div>
 
                   <div>
-                    <h2 className="font-bold text-slate-800">
-                      Perangkat Wearable
-                    </h2>
+                    <h2 className="font-bold text-slate-800">Perangkat Wearable</h2>
 
                     <p className="mt-1 text-xs text-slate-400">
-                      Hubungkan perangkat wearable untuk memantau data
-                      fisiologis.
+                      Hubungkan perangkat wearable untuk memantau data fisiologis.
                     </p>
                   </div>
                 </div>
@@ -325,21 +298,13 @@ function ElderlyRegistration() {
                     onChange={handleChange}
                     className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
                   >
-                    <option value="">
-                      Pilih tipe perangkat
-                    </option>
+                    <option value="">Pilih tipe perangkat</option>
 
-                    <option value="smartwatch">
-                      Smartwatch
-                    </option>
+                    <option value="smartwatch">Smartwatch</option>
 
-                    <option value="fitness_band">
-                      Fitness Band
-                    </option>
+                    <option value="fitness_band">Fitness Band</option>
 
-                    <option value="health_tracker">
-                      Health Tracker
-                    </option>
+                    <option value="health_tracker">Health Tracker</option>
                   </select>
                 </div>
 
@@ -376,13 +341,10 @@ function ElderlyRegistration() {
                   </div>
 
                   <div>
-                    <h2 className="font-bold text-slate-800">
-                      Sensor IoT Rumah
-                    </h2>
+                    <h2 className="font-bold text-slate-800">Sensor IoT Rumah</h2>
 
                     <p className="mt-1 text-xs text-slate-400">
-                      Tambahkan sensor untuk memantau aktivitas lansia
-                      di lingkungan rumah.
+                      Tambahkan sensor untuk memantau aktivitas lansia di lingkungan rumah.
                     </p>
                   </div>
                 </div>
@@ -405,17 +367,11 @@ function ElderlyRegistration() {
                     onChange={handleChange}
                     className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
                   >
-                    <option value="">
-                      Pilih tipe sensor
-                    </option>
+                    <option value="">Pilih tipe sensor</option>
 
-                    <option value="gerak">
-                      Sensor Gerak
-                    </option>
+                    <option value="gerak">Sensor Gerak</option>
 
-                    <option value="pintu">
-                      Sensor Pintu
-                    </option>
+                    <option value="pintu">Sensor Pintu</option>
                   </select>
                 </div>
 
@@ -461,9 +417,7 @@ function ElderlyRegistration() {
                   disabled={isLoading}
                   className="min-w-40 !rounded-xl"
                 >
-                  {isLoading
-                    ? "Menyimpan..."
-                    : "Simpan Data Lansia"}
+                  {isLoading ? "Menyimpan..." : "Simpan Data Lansia"}
                 </Button>
               </div>
             </Card>
@@ -471,9 +425,7 @@ function ElderlyRegistration() {
         </form>
 
         <footer className="mt-6 text-center">
-          <p className="text-xs text-slate-400">
-            ElderCare AI — Smart Elderly Monitoring System
-          </p>
+          <p className="text-xs text-slate-400">ElderCare AI — Smart Elderly Monitoring System</p>
         </footer>
       </div>
     </main>

@@ -17,13 +17,9 @@ function HealthSummary({ health }: HealthSummaryProps) {
 
         <div className="mt-3 flex items-end justify-between">
           <div>
-            <p className="text-3xl font-bold text-slate-800">
-              {health.heartRate}
-            </p>
+            <p className="text-3xl font-bold text-slate-800">{health.heartRate}</p>
 
-            <p className="mt-1 text-xs text-slate-400">
-              {health.heartRateUnit}
-            </p>
+            <p className="mt-1 text-xs text-slate-400">{health.heartRateUnit}</p>
           </div>
 
           <Badge variant="success">Normal</Badge>
@@ -35,9 +31,7 @@ function HealthSummary({ health }: HealthSummaryProps) {
 
         <div className="mt-3 flex items-end justify-between">
           <div>
-            <p className="text-3xl font-bold text-slate-800">
-              {health.activity}%
-            </p>
+            <p className="text-3xl font-bold text-slate-800">{health.activity}%</p>
 
             <p className="mt-1 text-xs text-slate-400">Hari ini</p>
           </div>
@@ -51,13 +45,9 @@ function HealthSummary({ health }: HealthSummaryProps) {
 
         <div className="mt-3 flex items-end justify-between">
           <div>
-            <p className="text-3xl font-bold text-slate-800">
-              {health.sleep}
-            </p>
+            <p className="text-3xl font-bold text-slate-800">{health.sleep}</p>
 
-            <p className="mt-1 text-xs text-slate-400">
-              {health.sleepUnit}
-            </p>
+            <p className="mt-1 text-xs text-slate-400">{health.sleepUnit}</p>
           </div>
 
           <Badge variant="success">Baik</Badge>
@@ -69,13 +59,9 @@ function HealthSummary({ health }: HealthSummaryProps) {
 
         <div className="mt-3 flex items-end justify-between">
           <div>
-            <p className="text-2xl font-bold text-slate-800">
-              {health.risk}
-            </p>
+            <p className="text-2xl font-bold text-slate-800">{health.risk}</p>
 
-            <p className="mt-1 text-xs text-slate-400">
-              Berdasarkan monitoring
-            </p>
+            <p className="mt-1 text-xs text-slate-400">Berdasarkan monitoring</p>
           </div>
 
           <Badge variant="success">Aman</Badge>
