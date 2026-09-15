@@ -30,6 +30,7 @@ function ActivityChart({
 
       <div
         className="flex h-64 items-end justify-between gap-2 border-b border-slate-200 px-2"
+        role="img"
         aria-label="Grafik aktivitas selama tujuh hari"
       >
         {activityHistory.map((item) => (
@@ -45,9 +46,7 @@ function ActivityChart({
               type="button"
               aria-label={`Aktivitas ${item.day} ${item.value}%`}
               className={`w-full max-w-10 rounded-t-lg bg-blue-500 transition hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 ${
-                selectedActivityDay === item.day
-                  ? "ring-2 ring-blue-700"
-                  : ""
+                selectedActivityDay === item.day ? "ring-2 ring-blue-700" : ""
               }`}
               style={{
                 height: `${item.value}%`,
