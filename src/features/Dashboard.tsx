@@ -5,7 +5,7 @@ import ActivityChart from "../components/dashboard/ActivityChart";
 import AlertSummary from "../components/dashboard/AlertSummary";
 import ElderlyMonitoringCard from "../components/dashboard/ElderlyMonitoringCard";
 import HealthSummary from "../components/dashboard/HealthSummary";
-import Sidebar from "../components/layout/Sidebar";
+import TopNav from "../components/layout/TopNav";
 import Button from "../components/ui/Button";
 import { useElderCareQuery } from "../hooks/useElderCareQuery";
 import { useUIStore } from "../store/useUIStore";
@@ -87,80 +87,37 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen bg-paper">
-      <div className="flex">
-        <Sidebar />
+      <TopNav hasNotification={alert.hasAlert} />
 
-        <main className="min-w-0 flex-1">
-          <header className="flex h-16 items-center justify-between border-b border-border bg-surface px-4 sm:px-6 lg:px-8">
-            <div>
-              <p className="text-sm text-muted">Sistem Pemantauan Kesehatan Lansia</p>
-            </div>
+      <main className="min-w-0">
+        <div className="p-4 sm:p-6 lg:p-8">
+          <section className="mb-8">
+            <h1 className="font-serif text-2xl text-ink sm:text-3xl">Dashboard Monitoring</h1>
 
-            <div className="flex items-center gap-4">
-              <button
-                type="button"
-                aria-label="Buka notifikasi"
-                className="relative rounded-lg p-2 text-muted transition hover:bg-paper hover:text-ink-soft"
-              >
-                <span className="text-lg" aria-hidden="true">
-                  ♢
-                </span>
+            <p className="mt-2 text-sm text-muted">
+              Pantau kondisi kesehatan dan aktivitas lansia secara berkala.
+            </p>
+          </section>
 
-                {alert.hasAlert && (
-                  <span
-                    className="absolute right-1 top-1 h-2 w-2 rounded-full bg-danger"
-                    role="status"
-                    aria-label="Ada notifikasi baru"
-                  />
-                )}
-              </button>
+          <HealthSummary health={health} />
 
-              <div className="hidden text-right sm:block">
-                <p className="text-sm font-semibold text-ink-soft">Administrator</p>
+          <section className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+            <ActivityChart
+              activityHistory={activityHistory}
+              selectedActivityDay={selectedActivityDay}
+              onActivitySelect={setSelectedActivityDay}
+            />
 
-                <p className="text-xs text-muted">admin@eldercare.ai</p>
-              </div>
+            <AlertSummary alert={alert} onViewDetail={() => router.push("/elderly")} />
+          </section>
 
-              <div
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/15 text-sm font-bold text-accent-dark"
-                aria-hidden="true"
-              >
-                A
-              </div>
-            </div>
-          </header>
+          <ElderlyMonitoringCard elderly={elderly} onViewDetail={() => router.push("/elderly")} />
+        </div>
 
-          <div className="p-4 sm:p-6 lg:p-8">
-            <section className="mb-8">
-              <h1 className="font-serif text-2xl text-ink sm:text-3xl">
-                Dashboard Monitoring
-              </h1>
-
-              <p className="mt-2 text-sm text-muted">
-                Pantau kondisi kesehatan dan aktivitas lansia secara berkala.
-              </p>
-            </section>
-
-            <HealthSummary health={health} />
-
-            <section className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-              <ActivityChart
-                activityHistory={activityHistory}
-                selectedActivityDay={selectedActivityDay}
-                onActivitySelect={setSelectedActivityDay}
-              />
-
-              <AlertSummary alert={alert} onViewDetail={() => router.push("/elderly")} />
-            </section>
-
-            <ElderlyMonitoringCard elderly={elderly} onViewDetail={() => router.push("/elderly")} />
-          </div>
-
-          <footer className="border-t border-border bg-surface px-4 py-5 text-center sm:px-6 lg:px-8">
-            <p className="text-xs text-muted">ElderCare AI — Smart Elderly Monitoring System</p>
-          </footer>
-        </main>
-      </div>
+        <footer className="border-t border-border bg-surface px-4 py-5 text-center sm:px-6 lg:px-8">
+          <p className="text-xs text-muted">ElderCare AI — Smart Elderly Monitoring System</p>
+        </footer>
+      </main>
     </div>
   );
 }
