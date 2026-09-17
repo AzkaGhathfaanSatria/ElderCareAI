@@ -76,50 +76,45 @@ function Register() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-slate-50">
-      {/* Decorative Background */}
+    <main className="relative min-h-screen bg-paper">
+      {/* Aksen dekoratif — garis titik-titik ala catatan tangan, senada dengan halaman Login */}
       <div
-        className="pointer-events-none absolute -left-32 -top-32 h-80 w-80 rounded-full bg-blue-100/70 blur-3xl"
+        className="pointer-events-none absolute inset-x-0 top-0 h-1.5 bg-[repeating-linear-gradient(90deg,var(--color-accent)_0,var(--color-accent)_10px,transparent_10px,transparent_20px)] opacity-60"
         aria-hidden="true"
       />
 
-      <div
-        className="pointer-events-none absolute -bottom-40 -right-32 h-96 w-96 rounded-full bg-cyan-100/70 blur-3xl"
-        aria-hidden="true"
-      />
-
-      <div className="relative flex min-h-screen items-center justify-center px-4 py-8">
-        <div className="grid w-full max-w-5xl overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl lg:grid-cols-2">
+      <div className="relative flex min-h-screen items-center justify-center px-4 py-10 sm:py-14">
+        <div className="grid w-full max-w-5xl overflow-hidden rounded-3xl border border-border bg-surface shadow-[var(--shadow-card-lg)] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
           {/* Branding Section */}
-          <section className="relative hidden overflow-hidden bg-blue-600 p-10 text-white lg:flex lg:flex-col lg:justify-between">
+          <section className="relative hidden overflow-hidden bg-ink p-10 text-paper lg:flex lg:flex-col lg:justify-between">
             <div
-              className="absolute -right-24 -top-24 h-64 w-64 rounded-full border-[40px] border-white/10"
+              className="absolute -right-24 -top-24 h-64 w-64 rounded-full border-[40px] border-paper/[0.06]"
               aria-hidden="true"
             />
 
             <div
-              className="absolute -bottom-32 -left-24 h-72 w-72 rounded-full border-[50px] border-white/10"
+              className="absolute -bottom-32 -left-24 h-72 w-72 rounded-full border-[50px] border-paper/[0.06]"
               aria-hidden="true"
             />
 
             <div className="relative">
               <div className="mb-8 flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-bold text-blue-600 shadow-sm">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent font-serif text-lg text-white shadow-sm">
                   E
                 </div>
 
-                <span className="text-lg font-bold tracking-tight">ElderCare AI</span>
+                <span className="font-serif text-lg">ElderCare AI</span>
               </div>
 
-              <p className="mb-3 text-sm font-medium text-blue-100">
+              <p className="mb-3 text-sm font-medium text-accent/90">
                 Bergabung dengan ElderCare AI
               </p>
 
-              <h1 className="max-w-md text-3xl font-bold leading-tight">
+              <h1 className="max-w-md font-serif text-3xl leading-tight">
                 Mulai pantau kesehatan lansia dengan lebih mudah.
               </h1>
 
-              <p className="mt-5 max-w-md text-sm leading-6 text-blue-100">
+              <p className="mt-5 max-w-md text-sm leading-6 text-paper/60">
                 Buat akun untuk mengakses sistem pemantauan lansia, memahami perubahan aktivitas,
                 dan mendapatkan peringatan dini.
               </p>
@@ -127,50 +122,50 @@ function Register() {
 
             {/* Feature Cards */}
             <div className="relative mt-10 space-y-3">
-              <div className="flex items-center gap-4 rounded-2xl bg-white/10 p-4 backdrop-blur-sm">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15 text-lg">
+              <div className="flex items-center gap-4 rounded-2xl bg-paper/[0.07] p-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent/20 text-lg text-accent">
                   +
                 </div>
 
                 <div>
                   <p className="text-sm font-semibold">Satu akun untuk monitoring</p>
 
-                  <p className="mt-1 text-xs text-blue-100">
+                  <p className="mt-1 text-xs text-paper/55">
                     Akses informasi lansia dari satu tempat.
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 rounded-2xl bg-white/10 p-4 backdrop-blur-sm">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15 text-lg">
+              <div className="flex items-center gap-4 rounded-2xl bg-paper/[0.07] p-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent/20 text-lg text-accent">
                   ◉
                 </div>
 
                 <div>
                   <p className="text-sm font-semibold">Monitoring terintegrasi</p>
 
-                  <p className="mt-1 text-xs text-blue-100">
+                  <p className="mt-1 text-xs text-paper/55">
                     Data wearable dan sensor IoT dapat dipantau bersama.
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 rounded-2xl bg-white/10 p-4 backdrop-blur-sm">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15 text-lg">
+              <div className="flex items-center gap-4 rounded-2xl bg-paper/[0.07] p-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent/20 text-lg text-accent">
                   ♥
                 </div>
 
                 <div>
                   <p className="text-sm font-semibold">Mendukung perawatan lansia</p>
 
-                  <p className="mt-1 text-xs text-blue-100">
+                  <p className="mt-1 text-xs text-paper/55">
                     Membantu keluarga dan tenaga medis mengambil tindakan lebih cepat.
                   </p>
                 </div>
               </div>
             </div>
 
-            <p className="relative mt-10 text-xs text-blue-200">ElderCare AI © 2026</p>
+            <p className="relative mt-10 text-xs text-paper/40">ElderCare AI © 2026</p>
           </section>
 
           {/* Register Section */}
@@ -179,27 +174,27 @@ function Register() {
               {/* Mobile Logo */}
               <div className="mb-7 lg:hidden">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-lg font-bold text-white shadow-sm">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-ink font-serif text-lg text-paper shadow-sm">
                     E
                   </div>
 
                   <div>
-                    <p className="font-bold text-slate-800">ElderCare AI</p>
+                    <p className="font-serif text-lg leading-none text-ink">ElderCare AI</p>
 
-                    <p className="text-xs text-slate-400">Smart Elderly Monitoring System</p>
+                    <p className="mt-1 text-xs text-muted">Smart Elderly Monitoring System</p>
                   </div>
                 </div>
               </div>
 
               {/* Heading */}
               <header className="mb-7">
-                <p className="mb-2 text-sm font-medium text-blue-600">Buat akun baru</p>
+                <p className="mb-2 text-sm font-medium text-accent-dark">Buat akun baru</p>
 
-                <h2 id="register-title" className="text-2xl font-bold text-slate-800 sm:text-3xl">
+                <h2 id="register-title" className="font-serif text-2xl text-ink sm:text-3xl">
                   Daftarkan akun Anda
                 </h2>
 
-                <p className="mt-2 text-sm leading-6 text-slate-500">
+                <p className="mt-2 text-sm leading-6 text-muted">
                   Lengkapi informasi berikut untuk mulai menggunakan ElderCare AI.
                 </p>
               </header>
@@ -207,12 +202,12 @@ function Register() {
               {/* Error */}
               {error && (
                 <div
-                  className="mb-5 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600"
+                  className="mb-5 flex items-start gap-3 rounded-xl border border-danger/25 bg-danger/6 px-4 py-3 text-sm text-danger"
                   role="alert"
                   aria-live="polite"
                 >
                   <span
-                    className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-xs font-bold"
+                    className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-danger/15 text-xs font-bold"
                     aria-hidden="true"
                   >
                     !
@@ -225,12 +220,12 @@ function Register() {
               {/* Success */}
               {success && (
                 <div
-                  className="mb-5 flex items-start gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-600"
+                  className="mb-5 flex items-start gap-3 rounded-xl border border-safe/25 bg-safe/10 px-4 py-3 text-sm text-safe"
                   role="status"
                   aria-live="polite"
                 >
                   <span
-                    className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-100 text-xs font-bold"
+                    className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-safe/15 text-xs font-bold"
                     aria-hidden="true"
                   >
                     ✓
@@ -244,124 +239,88 @@ function Register() {
               <form onSubmit={handleSubmit} noValidate className="space-y-5">
                 {/* Name */}
                 <div>
-                  <label htmlFor="name" className="mb-2 block text-sm font-semibold text-slate-700">
+                  <label htmlFor="name" className="mb-2 block text-sm font-semibold text-ink-soft">
                     Nama Lengkap
                   </label>
 
-                  <div className="relative">
-                    <span
-                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-                      aria-hidden="true"
-                    >
-                      ●
-                    </span>
-
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      value={form.name}
-                      onChange={handleChange}
-                      placeholder="Masukkan nama lengkap"
-                      autoComplete="name"
-                      className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
-                    />
-                  </div>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    value={form.name}
+                    onChange={handleChange}
+                    placeholder="Masukkan nama lengkap"
+                    autoComplete="name"
+                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
+                  />
                 </div>
 
                 {/* Email */}
                 <div>
                   <label
                     htmlFor="email"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
+                    className="mb-2 block text-sm font-semibold text-ink-soft"
                   >
                     Email
                   </label>
 
-                  <div className="relative">
-                    <span
-                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-                      aria-hidden="true"
-                    >
-                      @
-                    </span>
-
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      placeholder="contoh@email.com"
-                      autoComplete="email"
-                      className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
-                    />
-                  </div>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    placeholder="contoh@email.com"
+                    autoComplete="email"
+                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
+                  />
                 </div>
 
                 {/* Password */}
                 <div>
                   <label
                     htmlFor="password"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
+                    className="mb-2 block text-sm font-semibold text-ink-soft"
                   >
                     Password
                   </label>
 
-                  <div className="relative">
-                    <span
-                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-                      aria-hidden="true"
-                    >
-                      •
-                    </span>
-
-                    <input
-                      id="password"
-                      name="password"
-                      type="password"
-                      value={form.password}
-                      onChange={handleChange}
-                      placeholder="Minimal 6 karakter"
-                      autoComplete="new-password"
-                      className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
-                    />
-                  </div>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={form.password}
+                    onChange={handleChange}
+                    placeholder="Minimal 6 karakter"
+                    autoComplete="new-password"
+                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
+                  />
                 </div>
 
                 {/* Confirm Password */}
                 <div>
                   <label
                     htmlFor="confirmPassword"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
+                    className="mb-2 block text-sm font-semibold text-ink-soft"
                   >
                     Konfirmasi Password
                   </label>
 
-                  <div className="relative">
-                    <span
-                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-                      aria-hidden="true"
-                    >
-                      •
-                    </span>
-
-                    <input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type="password"
-                      value={form.confirmPassword}
-                      onChange={handleChange}
-                      placeholder="Masukkan ulang password"
-                      autoComplete="new-password"
-                      className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
-                    />
-                  </div>
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    value={form.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Masukkan ulang password"
+                    autoComplete="new-password"
+                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
+                  />
                 </div>
 
                 {/* Role */}
                 <fieldset>
-                  <legend className="mb-2 block text-sm font-semibold text-slate-700">
+                  <legend className="mb-2 block text-sm font-semibold text-ink-soft">
                     Pilih Role
                   </legend>
 
@@ -373,29 +332,29 @@ function Register() {
                       aria-pressed={form.role === "keluarga"}
                       className={`rounded-xl border p-4 text-left transition ${
                         form.role === "keluarga"
-                          ? "border-blue-500 bg-blue-50 ring-2 ring-blue-100"
-                          : "border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-white"
+                          ? "border-accent bg-accent/8 ring-2 ring-accent/15"
+                          : "border-border bg-paper hover:border-ink/25 hover:bg-surface"
                       }`}
                     >
                       <div className="mb-3 flex items-center justify-between">
                         <div
                           className={`flex h-9 w-9 items-center justify-center rounded-lg text-sm font-bold ${
                             form.role === "keluarga"
-                              ? "bg-blue-600 text-white"
-                              : "bg-slate-200 text-slate-500"
+                              ? "bg-accent text-white"
+                              : "bg-ink/8 text-muted"
                           }`}
                         >
                           K
                         </div>
 
                         {form.role === "keluarga" && (
-                          <span className="text-sm font-bold text-blue-600">✓</span>
+                          <span className="text-sm font-bold text-accent-dark">✓</span>
                         )}
                       </div>
 
-                      <p className="text-sm font-semibold text-slate-700">Keluarga/Caregiver</p>
+                      <p className="text-sm font-semibold text-ink-soft">Keluarga/Caregiver</p>
 
-                      <p className="mt-1 text-xs leading-5 text-slate-400">
+                      <p className="mt-1 text-xs leading-5 text-muted">
                         Memantau dan mengelola data lansia.
                       </p>
                     </button>
@@ -407,29 +366,29 @@ function Register() {
                       aria-pressed={form.role === "tenaga_medis"}
                       className={`rounded-xl border p-4 text-left transition ${
                         form.role === "tenaga_medis"
-                          ? "border-blue-500 bg-blue-50 ring-2 ring-blue-100"
-                          : "border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-white"
+                          ? "border-accent bg-accent/8 ring-2 ring-accent/15"
+                          : "border-border bg-paper hover:border-ink/25 hover:bg-surface"
                       }`}
                     >
                       <div className="mb-3 flex items-center justify-between">
                         <div
                           className={`flex h-9 w-9 items-center justify-center rounded-lg text-sm font-bold ${
                             form.role === "tenaga_medis"
-                              ? "bg-blue-600 text-white"
-                              : "bg-slate-200 text-slate-500"
+                              ? "bg-accent text-white"
+                              : "bg-ink/8 text-muted"
                           }`}
                         >
                           M
                         </div>
 
                         {form.role === "tenaga_medis" && (
-                          <span className="text-sm font-bold text-blue-600">✓</span>
+                          <span className="text-sm font-bold text-accent-dark">✓</span>
                         )}
                       </div>
 
-                      <p className="text-sm font-semibold text-slate-700">Tenaga Medis</p>
+                      <p className="text-sm font-semibold text-ink-soft">Tenaga Medis</p>
 
-                      <p className="mt-1 text-xs leading-5 text-slate-400">
+                      <p className="mt-1 text-xs leading-5 text-muted">
                         Memantau kondisi dan peringatan lansia.
                       </p>
                     </button>
@@ -439,8 +398,8 @@ function Register() {
                 {/* Submit */}
                 <Button
                   type="submit"
-                  variant="primary"
-                  className="w-full !rounded-xl !py-3.5"
+                  variant="accent"
+                  className="w-full !rounded-full !py-3.5"
                   disabled={isLoading}
                 >
                   {isLoading ? "Mendaftarkan..." : "Buat Akun"}
@@ -449,12 +408,12 @@ function Register() {
 
               {/* Login */}
               <div className="mt-6 text-center">
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-muted">
                   Sudah memiliki akun?{" "}
                   <button
                     type="button"
                     onClick={() => router.push("/login")}
-                    className="font-semibold text-blue-600 transition hover:text-blue-700"
+                    className="font-semibold text-ink underline decoration-accent decoration-2 underline-offset-4 transition hover:text-accent-dark"
                   >
                     Masuk sekarang
                   </button>
@@ -462,7 +421,7 @@ function Register() {
               </div>
 
               {/* Footer */}
-              <p className="mt-7 text-center text-xs text-slate-400">
+              <p className="mt-7 text-center text-xs text-muted">
                 Sistem Pemantauan Kesehatan Lansia
               </p>
             </div>

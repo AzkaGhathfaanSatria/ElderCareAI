@@ -76,15 +76,10 @@ function ElderlyRegistration() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-slate-50">
-      {/* Decorative Background */}
+    <main className="relative min-h-screen bg-paper">
+      {/* Aksen dekoratif — senada dengan halaman Login & Register */}
       <div
-        className="pointer-events-none absolute -left-32 -top-32 h-80 w-80 rounded-full bg-blue-100/70 blur-3xl"
-        aria-hidden="true"
-      />
-
-      <div
-        className="pointer-events-none absolute -bottom-40 -right-32 h-96 w-96 rounded-full bg-cyan-100/70 blur-3xl"
+        className="pointer-events-none absolute inset-x-0 top-0 h-1.5 bg-[repeating-linear-gradient(90deg,var(--color-accent)_0,var(--color-accent)_10px,transparent_10px,transparent_20px)] opacity-60"
         aria-hidden="true"
       />
 
@@ -103,18 +98,16 @@ function ElderlyRegistration() {
 
           <div className="mt-6">
             <div className="mb-2 flex items-center gap-2">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-sm font-bold text-white shadow-sm">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-ink font-serif text-sm text-paper shadow-sm">
                 E
               </span>
 
-              <span className="text-sm font-semibold text-blue-600">ElderCare AI</span>
+              <span className="text-sm font-semibold text-accent-dark">ElderCare AI</span>
             </div>
 
-            <h1 className="text-2xl font-bold tracking-tight text-slate-800 sm:text-3xl">
-              Tambah Data Lansia
-            </h1>
+            <h1 className="font-serif text-2xl text-ink sm:text-3xl">Tambah Data Lansia</h1>
 
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
               Lengkapi informasi lansia serta perangkat wearable dan sensor IoT yang akan digunakan
               untuk pemantauan.
             </p>
@@ -126,12 +119,12 @@ function ElderlyRegistration() {
           {/* Error */}
           {error && (
             <div
-              className="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600"
+              className="mb-6 flex items-start gap-3 rounded-xl border border-danger/25 bg-danger/6 px-4 py-3 text-sm text-danger"
               role="alert"
               aria-live="polite"
             >
               <span
-                className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-xs font-bold"
+                className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-danger/15 text-xs font-bold"
                 aria-hidden="true"
               >
                 !
@@ -144,12 +137,12 @@ function ElderlyRegistration() {
           {/* Success */}
           {success && (
             <div
-              className="mb-6 flex items-start gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-600"
+              className="mb-6 flex items-start gap-3 rounded-xl border border-safe/25 bg-safe/10 px-4 py-3 text-sm text-safe"
               role="status"
               aria-live="polite"
             >
               <span
-                className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-100 text-xs font-bold"
+                className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-safe/15 text-xs font-bold"
                 aria-hidden="true"
               >
                 ✓
@@ -164,16 +157,16 @@ function ElderlyRegistration() {
             {/* DATA LANSIA */}
             {/* ========================= */}
             <Card className="overflow-hidden">
-              <div className="border-b border-slate-100 px-5 py-5 sm:px-6">
+              <div className="border-b border-border px-5 py-5 sm:px-6">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 font-bold text-blue-600">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink/8 font-serif font-bold text-ink-soft">
                     01
                   </div>
 
                   <div>
-                    <h2 className="font-bold text-slate-800">Data Lansia</h2>
+                    <h2 className="font-serif text-base text-ink">Data Lansia</h2>
 
-                    <p className="mt-1 text-xs text-slate-400">
+                    <p className="mt-1 text-xs text-muted">
                       Informasi dasar lansia yang akan dipantau.
                     </p>
                   </div>
@@ -183,7 +176,7 @@ function ElderlyRegistration() {
               <div className="grid gap-5 p-5 sm:grid-cols-2 sm:p-6">
                 {/* Nama */}
                 <div className="sm:col-span-2">
-                  <label htmlFor="name" className="mb-2 block text-sm font-semibold text-slate-700">
+                  <label htmlFor="name" className="mb-2 block text-sm font-semibold text-ink-soft">
                     Nama Lengkap
                   </label>
 
@@ -195,7 +188,7 @@ function ElderlyRegistration() {
                     onChange={handleChange}
                     placeholder="Masukkan nama lengkap lansia"
                     autoComplete="name"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
+                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
                   />
                 </div>
 
@@ -203,7 +196,7 @@ function ElderlyRegistration() {
                 <div>
                   <label
                     htmlFor="birthDate"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
+                    className="mb-2 block text-sm font-semibold text-ink-soft"
                   >
                     Tanggal Lahir
                   </label>
@@ -214,7 +207,7 @@ function ElderlyRegistration() {
                     type="date"
                     value={form.birthDate}
                     onChange={handleChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
+                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
                   />
                 </div>
 
@@ -222,7 +215,7 @@ function ElderlyRegistration() {
                 <div>
                   <label
                     htmlFor="address"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
+                    className="mb-2 block text-sm font-semibold text-ink-soft"
                   >
                     Alamat
                   </label>
@@ -235,7 +228,7 @@ function ElderlyRegistration() {
                     onChange={handleChange}
                     placeholder="Masukkan alamat lansia"
                     autoComplete="street-address"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
+                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
                   />
                 </div>
 
@@ -243,7 +236,7 @@ function ElderlyRegistration() {
                 <div className="sm:col-span-2">
                   <label
                     htmlFor="healthNotes"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
+                    className="mb-2 block text-sm font-semibold text-ink-soft"
                   >
                     Catatan Kesehatan
                   </label>
@@ -255,7 +248,7 @@ function ElderlyRegistration() {
                     onChange={handleChange}
                     placeholder="Masukkan riwayat atau catatan kesehatan yang perlu diperhatikan"
                     rows={4}
-                    className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-6 text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
+                    className="w-full resize-none rounded-xl border border-border bg-paper px-4 py-3 text-sm leading-6 text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
                   />
                 </div>
               </div>
@@ -265,16 +258,16 @@ function ElderlyRegistration() {
             {/* WEARABLE */}
             {/* ========================= */}
             <Card className="overflow-hidden">
-              <div className="border-b border-slate-100 px-5 py-5 sm:px-6">
+              <div className="border-b border-border px-5 py-5 sm:px-6">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-50 font-bold text-cyan-600">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/12 font-serif font-bold text-accent-dark">
                     02
                   </div>
 
                   <div>
-                    <h2 className="font-bold text-slate-800">Perangkat Wearable</h2>
+                    <h2 className="font-serif text-base text-ink">Perangkat Wearable</h2>
 
-                    <p className="mt-1 text-xs text-slate-400">
+                    <p className="mt-1 text-xs text-muted">
                       Hubungkan perangkat wearable untuk memantau data fisiologis.
                     </p>
                   </div>
@@ -286,7 +279,7 @@ function ElderlyRegistration() {
                 <div>
                   <label
                     htmlFor="wearableType"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
+                    className="mb-2 block text-sm font-semibold text-ink-soft"
                   >
                     Tipe Wearable
                   </label>
@@ -296,7 +289,7 @@ function ElderlyRegistration() {
                     name="wearableType"
                     value={form.wearableType}
                     onChange={handleChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
+                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
                   >
                     <option value="">Pilih tipe perangkat</option>
 
@@ -312,7 +305,7 @@ function ElderlyRegistration() {
                 <div>
                   <label
                     htmlFor="wearableId"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
+                    className="mb-2 block text-sm font-semibold text-ink-soft"
                   >
                     ID Perangkat
                   </label>
@@ -324,7 +317,7 @@ function ElderlyRegistration() {
                     value={form.wearableId}
                     onChange={handleChange}
                     placeholder="Contoh: WRB-001"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
+                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
                   />
                 </div>
               </div>
@@ -334,16 +327,16 @@ function ElderlyRegistration() {
             {/* SENSOR IOT */}
             {/* ========================= */}
             <Card className="overflow-hidden">
-              <div className="border-b border-slate-100 px-5 py-5 sm:px-6">
+              <div className="border-b border-border px-5 py-5 sm:px-6">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 font-bold text-emerald-600">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-safe/12 font-serif font-bold text-safe">
                     03
                   </div>
 
                   <div>
-                    <h2 className="font-bold text-slate-800">Sensor IoT Rumah</h2>
+                    <h2 className="font-serif text-base text-ink">Sensor IoT Rumah</h2>
 
-                    <p className="mt-1 text-xs text-slate-400">
+                    <p className="mt-1 text-xs text-muted">
                       Tambahkan sensor untuk memantau aktivitas lansia di lingkungan rumah.
                     </p>
                   </div>
@@ -355,7 +348,7 @@ function ElderlyRegistration() {
                 <div>
                   <label
                     htmlFor="sensorType"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
+                    className="mb-2 block text-sm font-semibold text-ink-soft"
                   >
                     Tipe Sensor
                   </label>
@@ -365,7 +358,7 @@ function ElderlyRegistration() {
                     name="sensorType"
                     value={form.sensorType}
                     onChange={handleChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
+                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
                   >
                     <option value="">Pilih tipe sensor</option>
 
@@ -379,7 +372,7 @@ function ElderlyRegistration() {
                 <div>
                   <label
                     htmlFor="sensorLocation"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
+                    className="mb-2 block text-sm font-semibold text-ink-soft"
                   >
                     Lokasi Pemasangan
                   </label>
@@ -391,7 +384,7 @@ function ElderlyRegistration() {
                     value={form.sensorLocation}
                     onChange={handleChange}
                     placeholder="Contoh: Kamar tidur"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
+                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
                   />
                 </div>
               </div>
@@ -413,7 +406,7 @@ function ElderlyRegistration() {
 
                 <Button
                   type="submit"
-                  variant="primary"
+                  variant="accent"
                   disabled={isLoading}
                   className="min-w-40 !rounded-xl"
                 >
@@ -425,7 +418,7 @@ function ElderlyRegistration() {
         </form>
 
         <footer className="mt-6 text-center">
-          <p className="text-xs text-slate-400">ElderCare AI — Smart Elderly Monitoring System</p>
+          <p className="text-xs text-muted">ElderCare AI — Smart Elderly Monitoring System</p>
         </footer>
       </div>
     </main>

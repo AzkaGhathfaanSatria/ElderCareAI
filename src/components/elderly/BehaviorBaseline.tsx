@@ -1,47 +1,55 @@
-import Badge from "../ui/Badge";
 import Card from "../ui/Card";
 
 function BehaviorBaseline() {
   return (
     <Card className="p-6">
-      <header className="mb-5">
-        <h2 className="text-lg font-bold text-slate-800">Behavior Baseline</h2>
+      <header className="mb-4">
+        <h2 className="font-serif text-lg text-ink">Behavior Baseline</h2>
 
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-muted">
           Pola perilaku normal berdasarkan data historis lansia.
         </p>
       </header>
 
-      <div className="space-y-3">
-        <article className="flex items-center justify-between rounded-lg bg-slate-50 p-4">
+      <div className="divide-y divide-border">
+        <div className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0">
           <div>
-            <h3 className="text-sm font-semibold text-slate-700">Mobilitas</h3>
+            <h3 className="text-sm font-semibold text-ink-soft">Mobilitas</h3>
 
-            <p className="mt-1 text-xs text-slate-400">Pola pergerakan harian</p>
+            <p className="mt-1 text-xs text-muted">Pola pergerakan harian</p>
           </div>
 
-          <Badge variant="success">Normal</Badge>
-        </article>
+          <span className="inline-flex items-center gap-2 text-sm font-medium text-safe">
+            <span className="h-1.5 w-1.5 rounded-full bg-safe" aria-hidden="true" />
+            Normal
+          </span>
+        </div>
 
-        <article className="flex items-center justify-between rounded-lg bg-slate-50 p-4">
+        <div className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0">
           <div>
-            <h3 className="text-sm font-semibold text-slate-700">Pola Tidur</h3>
+            <h3 className="text-sm font-semibold text-ink-soft">Pola Tidur</h3>
 
-            <p className="mt-1 text-xs text-slate-400">Durasi dan waktu tidur</p>
+            <p className="mt-1 text-xs text-muted">Durasi dan waktu tidur</p>
           </div>
 
-          <Badge variant="success">Normal</Badge>
-        </article>
+          <span className="inline-flex items-center gap-2 text-sm font-medium text-safe">
+            <span className="h-1.5 w-1.5 rounded-full bg-safe" aria-hidden="true" />
+            Normal
+          </span>
+        </div>
 
-        <article className="flex items-center justify-between rounded-lg bg-orange-50 p-4">
+        <div className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0">
           <div>
-            <h3 className="text-sm font-semibold text-slate-700">Aktivitas</h3>
+            <h3 className="text-sm font-semibold text-ink-soft">Aktivitas</h3>
 
-            <p className="mt-1 text-xs text-slate-400">Terdapat perubahan dari baseline</p>
+            <p className="mt-1 text-xs text-muted">Terdapat perubahan dari baseline</p>
           </div>
 
-          <Badge variant="warning">Berubah</Badge>
-        </article>
+          <span className="inline-flex items-center gap-2 text-sm font-medium text-accent-dark">
+            <span className="h-1.5 w-1.5 rounded-full bg-warn" aria-hidden="true" />
+            Berubah
+          </span>
+        </div>
       </div>
     </Card>
   );

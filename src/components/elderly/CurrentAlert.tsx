@@ -1,6 +1,5 @@
 import type { AlertData } from "../../types/elderCare";
 import Badge from "../ui/Badge";
-import Card from "../ui/Card";
 
 interface CurrentAlertProps {
   alert: AlertData;
@@ -8,45 +7,42 @@ interface CurrentAlertProps {
 
 function CurrentAlert({ alert }: CurrentAlertProps) {
   return (
-    <section>
-      <Card className="p-6">
-        <header className="mb-5">
-          <h2 className="text-lg font-bold text-slate-800">Peringatan Terkini</h2>
+    <section className="mb-6" aria-label="Peringatan terkini">
+      {alert.hasAlert ? (
+        <div className="flex flex-col gap-3 rounded-lg border-l-4 border-warn bg-warn/8 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-3">
+            <span
+              className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-warn/25 text-xs font-bold text-accent-dark"
+              aria-hidden="true"
+            >
+              !
+            </span>
 
-          <p className="mt-1 text-sm text-slate-500">
-            Informasi peringatan berdasarkan hasil monitoring.
-          </p>
-        </header>
+            <div>
+              <p className="text-sm font-semibold text-ink">{alert.type}</p>
 
-        {alert.hasAlert ? (
-          <article className="rounded-xl border border-orange-200 bg-orange-50 p-5">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-              <div className="flex gap-3">
-                <div
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-orange-100 font-bold text-orange-600"
-                  aria-hidden="true"
-                >
-                  !
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-slate-800">{alert.type}</h3>
-
-                  <p className="mt-1 text-sm leading-6 text-slate-500">{alert.description}</p>
-
-                  <p className="mt-2 text-xs text-slate-400">Terdeteksi {alert.detected}</p>
-                </div>
-              </div>
-
-              <Badge variant="warning">Risiko {alert.level}</Badge>
+              <p className="mt-1 text-sm leading-6 text-muted">
+                {alert.description} — terdeteksi {alert.detected}.
+              </p>
             </div>
-          </article>
-        ) : (
-          <div className="rounded-xl border border-green-200 bg-green-50 p-5" aria-live="polite">
-            <p className="font-semibold text-green-700">Tidak ada peringatan saat ini.</p>
           </div>
-        )}
-      </Card>
+
+          <Badge variant="warning" className="shrink-0 self-start sm:self-center">
+            Risiko {alert.level}
+          </Badge>
+        </div>
+      ) : (
+        <div
+          className="flex items-center gap-3 rounded-lg border-l-4 border-safe bg-safe/8 p-4"
+          aria-live="polite"
+        >
+          <span className="text-safe" aria-hidden="true">
+            ✓
+          </span>
+
+          <p className="text-sm font-medium text-safe">Tidak ada peringatan saat ini.</p>
+        </div>
+      )}
     </section>
   );
 }

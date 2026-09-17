@@ -9,6 +9,12 @@ interface AnomalyHistoryProps {
   onPeriodChange: (period: Period) => void;
 }
 
+function dotColor(level: AnomalyHistoryItem["level"]) {
+  if (level === "Tinggi") return "bg-danger";
+  if (level === "Sedang") return "bg-warn";
+  return "bg-safe";
+}
+
 function AnomalyHistory({ anomalyHistory, selectedPeriod, onPeriodChange }: AnomalyHistoryProps) {
   const periodOptions: readonly Period[] = ["7 Hari", "30 Hari", "3 Bulan"];
 
@@ -17,12 +23,12 @@ function AnomalyHistory({ anomalyHistory, selectedPeriod, onPeriodChange }: Anom
   return (
     <section className="mb-6">
       <Card className="p-6">
-        <header className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <header className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-lg font-bold text-slate-800">Riwayat Anomali</h2>
+            <h2 className="font-serif text-lg text-ink">Riwayat Anomali</h2>
 
-            <p className="mt-1 text-sm text-slate-500">
-              Perubahan perilaku yang terdeteksi oleh sistem.
+            <p className="mt-1 text-sm text-muted">
+              Perubahan perilaku yang terdeteksi oleh sistem, urut dari yang terbaru.
             </p>
           </div>
 
@@ -34,31 +40,26 @@ function AnomalyHistory({ anomalyHistory, selectedPeriod, onPeriodChange }: Anom
           />
         </header>
 
-        <div className="space-y-3">
-          {filteredHistory.length > 0 ? (
-            filteredHistory.map((item) => (
-              <article
-                key={`${item.date}-${item.time}`}
-                className="rounded-xl border border-slate-200 p-4"
-              >
-                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                  <div className="flex gap-3">
-                    <div
-                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-orange-100 font-bold text-orange-600"
-                      aria-hidden="true"
-                    >
-                      !
-                    </div>
+        {filteredHistory.length > 0 ? (
+          <ol className="space-y-6 border-l border-border pl-6">
+            {filteredHistory.map((item) => (
+              <li key={`${item.date}-${item.time}`} className="relative">
+                <span
+                  className={`absolute top-1.5 -left-[27px] h-2.5 w-2.5 rounded-full border-2 border-surface ${dotColor(item.level)}`}
+                  aria-hidden="true"
+                />
 
-                    <div>
-                      <h3 className="text-sm font-semibold text-slate-800">{item.type}</h3>
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <p className="text-xs text-muted">
+                      {item.date} · {item.time} WIB
+                    </p>
 
-                      <p className="mt-1 text-xs leading-5 text-slate-500">{item.description}</p>
+                    <h3 className="mt-1 text-sm font-semibold text-ink">{item.type}</h3>
 
-                      <p className="mt-2 text-xs text-slate-400">
-                        {item.date} • {item.time} WIB
-                      </p>
-                    </div>
+                    <p className="mt-1 max-w-xl text-sm leading-6 text-muted">
+                      {item.description}
+                    </p>
                   </div>
 
                   <Badge
@@ -69,28 +70,29 @@ function AnomalyHistory({ anomalyHistory, selectedPeriod, onPeriodChange }: Anom
                           ? "warning"
                           : "success"
                     }
+                    className="shrink-0"
                   >
                     Risiko {item.level}
                   </Badge>
                 </div>
-              </article>
-            ))
-          ) : (
-            <div
-              className="rounded-xl border border-slate-200 bg-slate-50 p-6 text-center"
-              aria-live="polite"
-            >
-              <p className="text-sm font-medium text-slate-600">
-                Tidak ada riwayat anomali pada periode ini.
-              </p>
-            </div>
-          )}
-        </div>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <div
+            className="rounded-xl border border-border bg-paper p-6 text-center"
+            aria-live="polite"
+          >
+            <p className="text-sm font-medium text-ink-soft">
+              Tidak ada riwayat anomali pada periode ini.
+            </p>
+          </div>
+        )}
 
-        <div className="mt-5 rounded-lg bg-blue-50 p-4" aria-live="polite">
-          <p className="text-sm font-semibold text-blue-700">Analisis AI</p>
+        <div className="mt-6 rounded-lg bg-ink/[0.05] p-4" aria-live="polite">
+          <p className="text-sm font-semibold text-ink-soft">Analisis AI</p>
 
-          <p className="mt-1 text-xs leading-5 text-blue-600">
+          <p className="mt-1 text-xs leading-5 text-muted">
             Sistem membandingkan aktivitas terkini dengan baseline perilaku personal untuk
             mendeteksi perubahan yang tidak biasa.
           </p>

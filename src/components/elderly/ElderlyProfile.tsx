@@ -1,6 +1,4 @@
 import type { Elderly } from "../../types/elderCare";
-import Badge from "../ui/Badge";
-import Card from "../ui/Card";
 
 interface ElderlyProfileProps {
   elderly: Elderly;
@@ -8,43 +6,64 @@ interface ElderlyProfileProps {
 
 function ElderlyProfile({ elderly }: ElderlyProfileProps) {
   return (
-    <section className="mb-6" aria-label="Profil lansia">
-      <Card className="p-5 sm:p-6">
-        <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-          <div className="flex items-center gap-4">
-            <div
-              className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-blue-100 text-lg font-bold text-blue-600"
-              aria-hidden="true"
-            >
-              BS
-            </div>
+    <section
+      className="mb-8 flex flex-col gap-6 border-b border-border pb-8 sm:flex-row sm:items-start sm:justify-between"
+      aria-label="Profil lansia"
+    >
+      <div className="flex items-start gap-5">
+        <div
+          className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full border-2 border-accent/25 bg-accent/10 font-serif text-2xl text-accent-dark"
+          aria-hidden="true"
+        >
+          BS
+        </div>
 
-            <div>
-              <h1 className="text-2xl font-bold text-slate-800">{elderly.name}</h1>
+        <div>
+          <h1 className="font-serif text-3xl text-ink sm:text-4xl">{elderly.name}</h1>
 
-              <p className="mt-1 text-sm text-slate-500">
-                {elderly.age} tahun • Lansia yang sedang dipantau
-              </p>
+          <p className="mt-2 text-sm text-muted">
+            {elderly.age} tahun, dipantau melalui wearable dan sensor rumah.
+          </p>
 
-              <div className="mt-3 flex flex-wrap gap-2">
-                <Badge variant="success">Monitoring {elderly.monitoringStatus}</Badge>
+          <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+            <span className="inline-flex items-center gap-2 text-sm text-ink-soft">
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${
+                  elderly.monitoringStatus === "Aktif" ? "bg-safe" : "bg-muted"
+                }`}
+                aria-hidden="true"
+              />
+              Monitoring {elderly.monitoringStatus}
+            </span>
 
-                <Badge variant="info">Wearable {elderly.wearableStatus}</Badge>
+            <span className="inline-flex items-center gap-2 text-sm text-ink-soft">
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${
+                  elderly.wearableStatus === "Terhubung" ? "bg-safe" : "bg-danger"
+                }`}
+                aria-hidden="true"
+              />
+              Wearable {elderly.wearableStatus}
+            </span>
 
-                <Badge variant="info">IoT {elderly.iotStatus}</Badge>
-              </div>
-            </div>
-          </div>
-
-          <div className="text-left md:text-right">
-            <p className="text-xs text-slate-400">ID Lansia</p>
-
-            <p className="mt-1 text-sm font-semibold text-slate-700">{elderly.id}</p>
-
-            <p className="mt-2 text-xs text-green-600">Monitoring aktif</p>
+            <span className="inline-flex items-center gap-2 text-sm text-ink-soft">
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${
+                  elderly.iotStatus === "Aktif" ? "bg-safe" : "bg-muted"
+                }`}
+                aria-hidden="true"
+              />
+              IoT {elderly.iotStatus}
+            </span>
           </div>
         </div>
-      </Card>
+      </div>
+
+      <div className="shrink-0 text-left sm:text-right">
+        <p className="text-sm font-semibold text-ink-soft">{elderly.id}</p>
+
+        <p className="mt-1 text-xs text-muted">Nomor identitas lansia</p>
+      </div>
     </section>
   );
 }

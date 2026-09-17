@@ -9,22 +9,22 @@ interface DeviceStatusProps {
 function DeviceStatus({ devices }: DeviceStatusProps) {
   return (
     <Card className="p-6">
-      <header className="mb-5">
-        <h2 className="text-lg font-bold text-slate-800">Status Perangkat</h2>
+      <header className="mb-4">
+        <h2 className="font-serif text-lg text-ink">Status Perangkat</h2>
 
-        <p className="mt-1 text-sm text-slate-500">Perangkat yang mengirimkan data monitoring.</p>
+        <p className="mt-1 text-sm text-muted">Perangkat yang mengirimkan data monitoring.</p>
       </header>
 
-      <div className="space-y-3">
+      <div className="divide-y divide-border">
         {devices.map((device) => (
           <article
             key={device.name}
-            className="flex items-center justify-between rounded-lg border border-slate-200 p-4"
+            className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0"
           >
             <div>
-              <h3 className="text-sm font-semibold text-slate-700">{device.name}</h3>
+              <h3 className="text-sm font-semibold text-ink-soft">{device.name}</h3>
 
-              <p className="mt-1 text-xs text-slate-400">{device.description}</p>
+              <p className="mt-1 text-xs text-muted">{device.description}</p>
             </div>
 
             <Badge variant="success">{device.status}</Badge>

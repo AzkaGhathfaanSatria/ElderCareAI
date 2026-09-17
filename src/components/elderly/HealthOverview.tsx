@@ -8,58 +8,61 @@ interface HealthOverviewProps {
 
 function HealthOverview({ health }: HealthOverviewProps) {
   return (
-    <section
-      className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
+    <Card
+      className="mb-6 grid grid-cols-1 divide-y divide-border sm:grid-cols-2 sm:divide-x sm:divide-y-0 xl:grid-cols-4"
       aria-label="Ringkasan kondisi kesehatan lansia"
     >
-      <Card className="p-5">
-        <p className="text-sm text-slate-500">Detak Jantung</p>
+      <div className="p-5">
+        <p className="text-sm text-muted">Detak Jantung</p>
 
-        <p className="mt-3 text-3xl font-bold text-slate-800">{health.heartRate}</p>
-
-        <p className="mt-1 text-xs text-slate-400">{health.heartRateUnit}</p>
+        <div className="mt-3 flex items-baseline gap-1.5">
+          <span className="font-serif text-3xl text-ink">{health.heartRate}</span>
+          <span className="text-xs text-muted">{health.heartRateUnit}</span>
+        </div>
 
         <Badge variant="success" className="mt-3">
           Normal
         </Badge>
-      </Card>
+      </div>
 
-      <Card className="p-5">
-        <p className="text-sm text-slate-500">Aktivitas</p>
+      <div className="p-5">
+        <p className="text-sm text-muted">Aktivitas</p>
 
-        <p className="mt-3 text-3xl font-bold text-slate-800">{health.activity}%</p>
-
-        <p className="mt-1 text-xs text-slate-400">Aktivitas hari ini</p>
+        <div className="mt-3 flex items-baseline gap-1.5">
+          <span className="font-serif text-3xl text-ink">{health.activity}</span>
+          <span className="text-xs text-muted">%, hari ini</span>
+        </div>
 
         <Badge variant="info" className="mt-3">
           Aktif
         </Badge>
-      </Card>
+      </div>
 
-      <Card className="p-5">
-        <p className="text-sm text-slate-500">Durasi Tidur</p>
+      <div className="p-5">
+        <p className="text-sm text-muted">Durasi Tidur</p>
 
-        <p className="mt-3 text-3xl font-bold text-slate-800">{health.sleep}</p>
-
-        <p className="mt-1 text-xs text-slate-400">{health.sleepUnit}</p>
+        <div className="mt-3 flex items-baseline gap-1.5">
+          <span className="font-serif text-3xl text-ink">{health.sleep}</span>
+          <span className="text-xs text-muted">{health.sleepUnit}</span>
+        </div>
 
         <Badge variant="success" className="mt-3">
           Baik
         </Badge>
-      </Card>
+      </div>
 
-      <Card className="p-5">
-        <p className="text-sm text-slate-500">Tingkat Risiko</p>
+      <div className="p-5">
+        <p className="text-sm text-muted">Tingkat Risiko</p>
 
-        <p className="mt-3 text-3xl font-bold text-slate-800">{health.risk}</p>
-
-        <p className="mt-1 text-xs text-slate-400">Hasil analisis AI</p>
+        <div className="mt-3 flex items-baseline gap-1.5">
+          <span className="font-serif text-3xl text-ink">{health.risk}</span>
+        </div>
 
         <Badge variant="success" className="mt-3">
           Aman
         </Badge>
-      </Card>
-    </section>
+      </div>
+    </Card>
   );
 }
 

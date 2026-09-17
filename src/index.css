@@ -4,20 +4,20 @@
   --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-serif), ui-serif, Georgia, serif;
 
-  /* ElderCare AI — warm, trustworthy, editorial (bukan default blue SaaS) */
-  --color-ink: #16392e;
-  --color-ink-soft: #2c4a3f;
-  --color-paper: #faf8f3;
-  --color-surface: #fffdf9;
-  --color-accent: #b9762a;
+  /* ElderCare AI — coklat hangat, trustworthy, editorial (bukan default blue SaaS) */
+  --color-ink: #3b2a1c;
+  --color-ink-soft: #5c4530;
+  --color-paper: #faf5ee;
+  --color-surface: #fffbf6;
+  --color-accent: #c1802f;
   --color-accent-dark: #935c1e;
-  --color-danger: #b14328;
+  --color-danger: #b0432c;
   --color-warn: #c99a3d;
-  --color-safe: #4b7a5c;
-  --color-muted: #6b6255;
-  --color-border: #e4ddd0;
-  --color-sidebar: #14231d;
-  --color-sidebar-soft: #1d3129;
+  --color-safe: #74804a;
+  --color-muted: #7d6b57;
+  --color-border: #e9dcc9;
+  --color-sidebar: #2a1c12;
+  --color-sidebar-soft: #3e2c1c;
 
   --shadow-card: 0 1px 2px rgba(22, 57, 46, 0.04), 0 1px 1px rgba(22, 57, 46, 0.03);
   --shadow-card-lg: 0 4px 16px rgba(22, 57, 46, 0.08), 0 1px 2px rgba(22, 57, 46, 0.04);
@@ -42,7 +42,7 @@
 body {
   margin: 0;
   background: var(--color-paper);
-  color: #2b2621;
+  color: #2e2418;
 }
 
 ::selection {
