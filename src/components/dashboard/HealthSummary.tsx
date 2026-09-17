@@ -13,13 +13,13 @@ function HealthSummary({ health }: HealthSummaryProps) {
       aria-label="Ringkasan kesehatan lansia"
     >
       <Card className="p-5">
-        <p className="text-sm text-slate-500">Detak Jantung</p>
+        <p className="text-sm text-muted">Detak Jantung</p>
 
         <div className="mt-3 flex items-end justify-between">
           <div>
-            <p className="text-3xl font-bold text-slate-800">{health.heartRate}</p>
+            <p className="text-3xl font-bold text-ink">{health.heartRate}</p>
 
-            <p className="mt-1 text-xs text-slate-400">{health.heartRateUnit}</p>
+            <p className="mt-1 text-xs text-muted">{health.heartRateUnit}</p>
           </div>
 
           <Badge variant="success">Normal</Badge>
@@ -27,13 +27,13 @@ function HealthSummary({ health }: HealthSummaryProps) {
       </Card>
 
       <Card className="p-5">
-        <p className="text-sm text-slate-500">Aktivitas</p>
+        <p className="text-sm text-muted">Aktivitas</p>
 
         <div className="mt-3 flex items-end justify-between">
           <div>
-            <p className="text-3xl font-bold text-slate-800">{health.activity}%</p>
+            <p className="text-3xl font-bold text-ink">{health.activity}%</p>
 
-            <p className="mt-1 text-xs text-slate-400">Hari ini</p>
+            <p className="mt-1 text-xs text-muted">Hari ini</p>
           </div>
 
           <Badge variant="info">Aktif</Badge>
@@ -41,13 +41,13 @@ function HealthSummary({ health }: HealthSummaryProps) {
       </Card>
 
       <Card className="p-5">
-        <p className="text-sm text-slate-500">Durasi Tidur</p>
+        <p className="text-sm text-muted">Durasi Tidur</p>
 
         <div className="mt-3 flex items-end justify-between">
           <div>
-            <p className="text-3xl font-bold text-slate-800">{health.sleep}</p>
+            <p className="text-3xl font-bold text-ink">{health.sleep}</p>
 
-            <p className="mt-1 text-xs text-slate-400">{health.sleepUnit}</p>
+            <p className="mt-1 text-xs text-muted">{health.sleepUnit}</p>
           </div>
 
           <Badge variant="success">Baik</Badge>
@@ -55,13 +55,13 @@ function HealthSummary({ health }: HealthSummaryProps) {
       </Card>
 
       <Card className="p-5">
-        <p className="text-sm text-slate-500">Status Risiko</p>
+        <p className="text-sm text-muted">Status Risiko</p>
 
         <div className="mt-3 flex items-end justify-between">
           <div>
-            <p className="text-2xl font-bold text-slate-800">{health.risk}</p>
+            <p className="text-2xl font-bold text-ink">{health.risk}</p>
 
-            <p className="mt-1 text-xs text-slate-400">Berdasarkan monitoring</p>
+            <p className="mt-1 text-xs text-muted">Berdasarkan monitoring</p>
           </div>
 
           <Badge variant="success">Aman</Badge>

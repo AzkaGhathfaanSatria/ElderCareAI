@@ -2,18 +2,22 @@ import { cva, type VariantProps } from "class-variance-authority";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-lg font-medium transition focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-60",
+  "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors " +
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink " +
+    "disabled:cursor-not-allowed disabled:opacity-60",
   {
     variants: {
       variant: {
-        primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-300",
-        secondary: "bg-slate-100 text-slate-700 hover:bg-slate-200 focus:ring-slate-300",
-        danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-300",
+        primary: "bg-ink text-paper hover:bg-ink-soft",
+        accent: "bg-accent text-white hover:bg-accent-dark",
+        secondary: "bg-ink/[0.06] text-ink hover:bg-ink/[0.1]",
+        ghost: "bg-transparent text-ink hover:bg-ink/[0.06]",
+        danger: "bg-danger text-white hover:bg-danger/90",
       },
       size: {
-        sm: "px-3 py-2 text-xs",
-        md: "px-4 py-3 text-sm",
-        lg: "px-5 py-3 text-base",
+        sm: "px-3.5 py-1.5 text-xs",
+        md: "px-5 py-2.5 text-sm",
+        lg: "px-6 py-3 text-base",
       },
     },
     defaultVariants: {

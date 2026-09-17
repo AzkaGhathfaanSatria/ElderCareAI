@@ -1,10 +1,59 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-serif), ui-serif, Georgia, serif;
+
+  /* ElderCare AI — warm, trustworthy, editorial (bukan default blue SaaS) */
+  --color-ink: #16392e;
+  --color-ink-soft: #2c4a3f;
+  --color-paper: #faf8f3;
+  --color-surface: #fffdf9;
+  --color-accent: #b9762a;
+  --color-accent-dark: #935c1e;
+  --color-danger: #b14328;
+  --color-warn: #c99a3d;
+  --color-safe: #4b7a5c;
+  --color-muted: #6b6255;
+  --color-border: #e4ddd0;
+  --color-sidebar: #14231d;
+  --color-sidebar-soft: #1d3129;
+
+  --shadow-card: 0 1px 2px rgba(22, 57, 46, 0.04), 0 1px 1px rgba(22, 57, 46, 0.03);
+  --shadow-card-lg: 0 4px 16px rgba(22, 57, 46, 0.08), 0 1px 2px rgba(22, 57, 46, 0.04);
+
+  --animate-toast-in: toast-in 0.25s ease-out;
+  --animate-pulse-soft: pulse-soft 1.4s ease-in-out infinite;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: #2b2621;
+}
+
+::selection {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

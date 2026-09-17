@@ -1,0 +1,1581 @@
+From fb5bae66d572cb38cc6fe70d9477cf7ac4b02f65 Mon Sep 17 00:00:00 2001
+From: Claude <assistant@example.com>
+Date: Thu, 17 Sep 2026 09:08:39 +0000
+Subject: [PATCH] Redesign: tema hangat & editorial (bukan default blue SaaS)
+
+- Ganti palet default Tailwind (blue/slate) dengan design token custom:
+  forest-green (ink), krem hangat (paper), amber (accent), terracotta (danger)
+- Tambah font Fraunces (serif, judul) + Inter (sans, UI) via next/font
+- Redesain Login: dari split-screen blue+blob generik jadi single-column editorial
+- Redesain Sidebar: dari slate-900+blue-600 jadi forest-green+amber
+- Redesain semua komponen UI dasar (Button, Badge, Card, Select) pakai token baru
+- Redesain Dashboard + 4 komponen turunannya (HealthSummary, ActivityChart,
+  AlertSummary, ElderlyMonitoringCard) konsisten dengan tema baru
+- Judul-judul section pakai font-serif untuk personality yang konsisten
+
+Belum disentuh (bisa lanjut di PR berikutnya): halaman Register,
+ElderlyDetail + komponen turunannya (masih pakai palet lama).
+---
+ .gitignore                                    |   1 +
+ src/App.css                                   | 182 ---------
+ src/app/dashboard/loading.tsx                 |   7 +-
+ src/app/elderly/loading.tsx                   | 112 +++---
+ src/app/layout.tsx                            |  17 +-
+ src/components/dashboard/ActivityChart.tsx    |  16 +-
+ src/components/dashboard/AlertSummary.tsx     |  18 +-
+ .../dashboard/ElderlyMonitoringCard.tsx       |  12 +-
+ src/components/dashboard/HealthSummary.tsx    |  24 +-
+ src/components/layout/Sidebar.tsx             |  32 +-
+ src/components/ui/Badge.tsx                   |  27 +-
+ src/components/ui/Button.tsx                  |  18 +-
+ src/components/ui/Card.tsx                    |   9 +-
+ src/components/ui/Select.tsx                  |  14 +-
+ src/features/Dashboard.tsx                    |  50 +--
+ src/features/Login.tsx                        | 353 ++++++------------
+ src/index.css                                 |  51 ++-
+ 17 files changed, 351 insertions(+), 592 deletions(-)
+ delete mode 100644 src/App.css
+
+diff --git a/.gitignore b/.gitignore
+index 1b66ebd..41755a5 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -24,3 +24,4 @@ dist-ssr
+ *.sw?
+ 
+ .next/
++tsconfig.tsbuildinfo
+diff --git a/src/App.css b/src/App.css
+deleted file mode 100644
+index e87c16a..0000000
+--- a/src/App.css
++++ /dev/null
+@@ -1,182 +0,0 @@
+-.counter {
+-  font-size: 16px;
+-  padding: 5px 10px;
+-  border-radius: 5px;
+-  color: var(--accent);
+-  background: var(--accent-bg);
+-  border: 2px solid transparent;
+-  transition: border-color 0.3s;
+-  margin-bottom: 24px;
+-
+-  &:hover {
+-    border-color: var(--accent-border);
+-  }
+-  &:focus-visible {
+-    outline: 2px solid var(--accent);
+-    outline-offset: 2px;
+-  }
+-}
+-
+-.hero {
+-  position: relative;
+-
+-  .base,
+-  .framework,
+-  .vite {
+-    inset-inline: 0;
+-    margin: 0 auto;
+-  }
+-
+-  .base {
+-    width: 170px;
+-    position: relative;
+-    z-index: 0;
+-  }
+-
+-  .framework,
+-  .vite {
+-    position: absolute;
+-  }
+-
+-  .framework {
+-    z-index: 1;
+-    top: 34px;
+-    height: 28px;
+-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg) scale(1.4);
+-  }
+-
+-  .vite {
+-    z-index: 0;
+-    top: 107px;
+-    height: 26px;
+-    width: auto;
+-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg) scale(0.8);
+-  }
+-}
+-
+-#center {
+-  display: flex;
+-  flex-direction: column;
+-  gap: 25px;
+-  place-content: center;
+-  place-items: center;
+-  flex-grow: 1;
+-
+-  @media (max-width: 1024px) {
+-    padding: 32px 20px 24px;
+-    gap: 18px;
+-  }
+-}
+-
+-#next-steps {
+-  display: flex;
+-  border-top: 1px solid var(--border);
+-  text-align: left;
+-
+-  & > div {
+-    flex: 1 1 0;
+-    padding: 32px;
+-    @media (max-width: 1024px) {
+-      padding: 24px 20px;
+-    }
+-  }
+-
+-  .icon {
+-    margin-bottom: 16px;
+-    width: 22px;
+-    height: 22px;
+-  }
+-
+-  @media (max-width: 1024px) {
+-    flex-direction: column;
+-    text-align: center;
+-  }
+-}
+-
+-#docs {
+-  border-right: 1px solid var(--border);
+-
+-  @media (max-width: 1024px) {
+-    border-right: none;
+-    border-bottom: 1px solid var(--border);
+-  }
+-}
+-
+-#next-steps ul {
+-  list-style: none;
+-  padding: 0;
+-  display: flex;
+-  gap: 8px;
+-  margin: 32px 0 0;
+-
+-  .logo {
+-    height: 18px;
+-  }
+-
+-  a {
+-    color: var(--text-h);
+-    font-size: 16px;
+-    border-radius: 6px;
+-    background: var(--social-bg);
+-    display: flex;
+-    padding: 6px 12px;
+-    align-items: center;
+-    gap: 8px;
+-    text-decoration: none;
+-    transition: box-shadow 0.3s;
+-
+-    &:hover {
+-      box-shadow: var(--shadow);
+-    }
+-    .button-icon {
+-      height: 18px;
+-      width: 18px;
+-    }
+-  }
+-
+-  @media (max-width: 1024px) {
+-    margin-top: 20px;
+-    flex-wrap: wrap;
+-    justify-content: center;
+-
+-    li {
+-      flex: 1 1 calc(50% - 8px);
+-    }
+-
+-    a {
+-      width: 100%;
+-      justify-content: center;
+-      box-sizing: border-box;
+-    }
+-  }
+-}
+-
+-#spacer {
+-  height: 88px;
+-  border-top: 1px solid var(--border);
+-  @media (max-width: 1024px) {
+-    height: 48px;
+-  }
+-}
+-
+-.ticks {
+-  position: relative;
+-  width: 100%;
+-
+-  &::before,
+-  &::after {
+-    content: "";
+-    position: absolute;
+-    top: -4.5px;
+-    border: 5px solid transparent;
+-  }
+-
+-  &::before {
+-    left: 0;
+-    border-left-color: var(--border);
+-  }
+-  &::after {
+-    right: 0;
+-    border-right-color: var(--border);
+-  }
+-}
+diff --git a/src/app/dashboard/loading.tsx b/src/app/dashboard/loading.tsx
+index 83c335f..b5f5d9a 100644
+--- a/src/app/dashboard/loading.tsx
++++ b/src/app/dashboard/loading.tsx
+@@ -1,7 +1,10 @@
+ export default function DashboardLoading() {
+   return (
+-    <div className="min-h-screen p-8">
+-      <p>Loading Dashboard...</p>
++    <div className="flex min-h-screen items-center justify-center bg-paper">
++      <div className="flex items-center gap-3 text-ink-soft">
++        <span className="h-5 w-5 animate-spin rounded-full border-2 border-border border-t-accent" />
++        <p className="text-sm font-medium">Memuat dashboard...</p>
++      </div>
+     </div>
+   );
+ }
+diff --git a/src/app/elderly/loading.tsx b/src/app/elderly/loading.tsx
+index ea7b140..5adc92e 100644
+--- a/src/app/elderly/loading.tsx
++++ b/src/app/elderly/loading.tsx
+@@ -1,39 +1,39 @@
+ export default function ElderlyLoading() {
+   return (
+-    <div className="min-h-screen bg-slate-100">
++    <div className="min-h-screen bg-paper">
+       <div className="flex">
+         {/* Sidebar Skeleton */}
+-        <aside className="hidden h-screen w-64 shrink-0 animate-pulse bg-slate-900 lg:flex lg:flex-col">
++        <aside className="hidden h-screen w-64 shrink-0 animate-pulse bg-sidebar lg:flex lg:flex-col">
+           {/* Logo */}
+-          <div className="border-b border-slate-800 px-5 py-4">
++          <div className="border-b border-sidebar-soft px-5 py-4">
+             <div className="flex items-center gap-3">
+-              <div className="h-10 w-10 rounded-xl bg-slate-700" />
++              <div className="h-10 w-10 rounded-xl bg-sidebar-soft" />
+ 
+               <div className="space-y-2">
+-                <div className="h-3 w-24 rounded bg-slate-700" />
+-                <div className="h-2 w-28 rounded bg-slate-800" />
++                <div className="h-3 w-24 rounded bg-sidebar-soft" />
++                <div className="h-2 w-28 rounded bg-sidebar-soft" />
+               </div>
+             </div>
+           </div>
+ 
+           {/* Menu */}
+           <div className="space-y-3 p-4">
+-            <div className="h-4 w-20 rounded bg-slate-800" />
++            <div className="h-4 w-20 rounded bg-sidebar-soft" />
+ 
+-            <div className="h-11 rounded-xl bg-slate-800" />
+-            <div className="h-11 rounded-xl bg-slate-800" />
+-            <div className="h-11 rounded-xl bg-slate-800" />
+-            <div className="h-11 rounded-xl bg-slate-800" />
++            <div className="h-11 rounded-xl bg-sidebar-soft" />
++            <div className="h-11 rounded-xl bg-sidebar-soft" />
++            <div className="h-11 rounded-xl bg-sidebar-soft" />
++            <div className="h-11 rounded-xl bg-sidebar-soft" />
+           </div>
+ 
+           {/* Admin */}
+-          <div className="mt-auto border-t border-slate-800 p-4">
+-            <div className="flex items-center gap-3 rounded-xl bg-slate-800 p-3">
+-              <div className="h-8 w-8 rounded-full bg-slate-700" />
++          <div className="mt-auto border-t border-sidebar-soft p-4">
++            <div className="flex items-center gap-3 rounded-xl bg-sidebar-soft p-3">
++              <div className="h-8 w-8 rounded-full bg-sidebar-soft" />
+ 
+               <div className="space-y-2">
+-                <div className="h-3 w-24 rounded bg-slate-700" />
+-                <div className="h-2 w-28 rounded bg-slate-700" />
++                <div className="h-3 w-24 rounded bg-sidebar-soft" />
++                <div className="h-2 w-28 rounded bg-sidebar-soft" />
+               </div>
+             </div>
+           </div>
+@@ -42,21 +42,21 @@ export default function ElderlyLoading() {
+         {/* Main */}
+         <main className="min-w-0 flex-1">
+           {/* Header Skeleton */}
+-          <header className="flex min-h-16 animate-pulse items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 py-3 sm:px-6 lg:px-8">
++          <header className="flex min-h-16 animate-pulse items-center justify-between gap-4 border-b border-border bg-surface px-4 py-3 sm:px-6 lg:px-8">
+             <div className="space-y-2">
+-              <div className="h-3 w-20 rounded bg-slate-200" />
+-              <div className="h-5 w-44 rounded bg-slate-200" />
++              <div className="h-3 w-20 rounded bg-border" />
++              <div className="h-5 w-44 rounded bg-border" />
+             </div>
+ 
+             <div className="flex items-center gap-3">
+-              <div className="h-9 w-36 rounded-xl bg-slate-200" />
++              <div className="h-9 w-36 rounded-xl bg-border" />
+ 
+               <div className="hidden space-y-2 sm:block">
+-                <div className="ml-auto h-3 w-24 rounded bg-slate-200" />
+-                <div className="ml-auto h-2 w-32 rounded bg-slate-200" />
++                <div className="ml-auto h-3 w-24 rounded bg-border" />
++                <div className="ml-auto h-2 w-32 rounded bg-border" />
+               </div>
+ 
+-              <div className="h-9 w-9 rounded-full bg-slate-200" />
++              <div className="h-9 w-9 rounded-full bg-border" />
+             </div>
+           </header>
+ 
+@@ -64,91 +64,91 @@ export default function ElderlyLoading() {
+           <div className="animate-pulse p-4 sm:p-6 lg:p-8">
+             {/* Back Button */}
+             <div className="mb-6">
+-              <div className="h-9 w-40 rounded-xl bg-slate-200" />
++              <div className="h-9 w-40 rounded-xl bg-border" />
+             </div>
+ 
+             {/* Elderly Profile */}
+-            <section className="mb-6 rounded-xl bg-white p-5 sm:p-6">
++            <section className="mb-6 rounded-xl bg-surface p-5 sm:p-6">
+               <div className="flex items-center gap-4">
+-                <div className="h-14 w-14 rounded-full bg-slate-200" />
++                <div className="h-14 w-14 rounded-full bg-border" />
+ 
+                 <div className="space-y-3">
+-                  <div className="h-5 w-48 rounded bg-slate-200" />
+-                  <div className="h-3 w-32 rounded bg-slate-200" />
++                  <div className="h-5 w-48 rounded bg-border" />
++                  <div className="h-3 w-32 rounded bg-border" />
+                 </div>
+               </div>
+ 
+               <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+-                <div className="h-20 rounded-xl bg-slate-200" />
+-                <div className="h-20 rounded-xl bg-slate-200" />
+-                <div className="h-20 rounded-xl bg-slate-200" />
++                <div className="h-20 rounded-xl bg-border" />
++                <div className="h-20 rounded-xl bg-border" />
++                <div className="h-20 rounded-xl bg-border" />
+               </div>
+             </section>
+ 
+             {/* Health Overview */}
+             <section className="mb-6">
+-              <div className="mb-4 h-5 w-40 rounded bg-slate-200" />
++              <div className="mb-4 h-5 w-40 rounded bg-border" />
+ 
+               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+-                <div className="h-32 rounded-xl bg-white" />
+-                <div className="h-32 rounded-xl bg-white" />
+-                <div className="h-32 rounded-xl bg-white" />
++                <div className="h-32 rounded-xl bg-surface" />
++                <div className="h-32 rounded-xl bg-surface" />
++                <div className="h-32 rounded-xl bg-surface" />
+               </div>
+             </section>
+ 
+             {/* Behavior + Device */}
+             <section className="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+               {/* Behavior Baseline */}
+-              <div className="rounded-xl bg-white p-5 sm:p-6">
+-                <div className="h-5 w-44 rounded bg-slate-200" />
++              <div className="rounded-xl bg-surface p-5 sm:p-6">
++                <div className="h-5 w-44 rounded bg-border" />
+ 
+                 <div className="mt-5 space-y-4">
+-                  <div className="h-14 rounded-lg bg-slate-200" />
+-                  <div className="h-14 rounded-lg bg-slate-200" />
+-                  <div className="h-14 rounded-lg bg-slate-200" />
++                  <div className="h-14 rounded-lg bg-border" />
++                  <div className="h-14 rounded-lg bg-border" />
++                  <div className="h-14 rounded-lg bg-border" />
+                 </div>
+               </div>
+ 
+               {/* Device Status */}
+-              <div className="rounded-xl bg-white p-5 sm:p-6">
+-                <div className="h-5 w-36 rounded bg-slate-200" />
++              <div className="rounded-xl bg-surface p-5 sm:p-6">
++                <div className="h-5 w-36 rounded bg-border" />
+ 
+                 <div className="mt-5 space-y-4">
+-                  <div className="h-16 rounded-lg bg-slate-200" />
+-                  <div className="h-16 rounded-lg bg-slate-200" />
++                  <div className="h-16 rounded-lg bg-border" />
++                  <div className="h-16 rounded-lg bg-border" />
+                 </div>
+               </div>
+             </section>
+ 
+             {/* Anomaly History */}
+-            <section className="mb-6 rounded-xl bg-white p-5 sm:p-6">
++            <section className="mb-6 rounded-xl bg-surface p-5 sm:p-6">
+               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                 <div className="space-y-2">
+-                  <div className="h-5 w-40 rounded bg-slate-200" />
+-                  <div className="h-3 w-64 rounded bg-slate-200" />
++                  <div className="h-5 w-40 rounded bg-border" />
++                  <div className="h-3 w-64 rounded bg-border" />
+                 </div>
+ 
+-                <div className="h-9 w-32 rounded-lg bg-slate-200" />
++                <div className="h-9 w-32 rounded-lg bg-border" />
+               </div>
+ 
+               <div className="mt-6 space-y-3">
+-                <div className="h-16 rounded-lg bg-slate-200" />
+-                <div className="h-16 rounded-lg bg-slate-200" />
+-                <div className="h-16 rounded-lg bg-slate-200" />
++                <div className="h-16 rounded-lg bg-border" />
++                <div className="h-16 rounded-lg bg-border" />
++                <div className="h-16 rounded-lg bg-border" />
+               </div>
+             </section>
+ 
+             {/* Current Alert */}
+-            <section className="rounded-xl bg-white p-5 sm:p-6">
+-              <div className="h-5 w-36 rounded bg-slate-200" />
++            <section className="rounded-xl bg-surface p-5 sm:p-6">
++              <div className="h-5 w-36 rounded bg-border" />
+ 
+-              <div className="mt-5 h-24 rounded-xl bg-slate-200" />
++              <div className="mt-5 h-24 rounded-xl bg-border" />
+             </section>
+           </div>
+ 
+           {/* Footer */}
+-          <footer className="border-t border-slate-200 bg-white px-4 py-5 text-center sm:px-6 lg:px-8">
+-            <div className="mx-auto h-3 w-64 animate-pulse rounded bg-slate-200" />
++          <footer className="border-t border-border bg-surface px-4 py-5 text-center sm:px-6 lg:px-8">
++            <div className="mx-auto h-3 w-64 animate-pulse rounded bg-border" />
+           </footer>
+         </main>
+       </div>
+diff --git a/src/app/layout.tsx b/src/app/layout.tsx
+index d647e79..7ca9ed6 100644
+--- a/src/app/layout.tsx
++++ b/src/app/layout.tsx
+@@ -1,8 +1,23 @@
+ import type { Metadata } from "next";
++import { Fraunces, Inter } from "next/font/google";
+ 
+ import "../index.css";
+ import QueryProvider from "../providers/QueryProvider";
+ 
++const fraunces = Fraunces({
++  subsets: ["latin"],
++  weight: ["500", "600"],
++  variable: "--font-serif",
++  display: "swap",
++});
++
++const inter = Inter({
++  subsets: ["latin"],
++  weight: ["400", "500", "600", "700"],
++  variable: "--font-sans",
++  display: "swap",
++});
++
+ export const metadata: Metadata = {
+   title: "ElderCare AI",
+   description: "Sistem Monitoring Kesehatan Lansia",
+@@ -14,7 +29,7 @@ export default function RootLayout({
+   children: React.ReactNode;
+ }>) {
+   return (
+-    <html lang="id">
++    <html lang="id" className={`${fraunces.variable} ${inter.variable}`}>
+       <body>
+         <QueryProvider>{children}</QueryProvider>
+       </body>
+diff --git a/src/components/dashboard/ActivityChart.tsx b/src/components/dashboard/ActivityChart.tsx
+index 96c13c7..009ab12 100644
+--- a/src/components/dashboard/ActivityChart.tsx
++++ b/src/components/dashboard/ActivityChart.tsx
+@@ -17,13 +17,13 @@ function ActivityChart({
+   return (
+     <Card className="p-6 xl:col-span-2">
+       <header className="mb-6">
+-        <h2 className="text-lg font-bold text-slate-800">Aktivitas Lansia</h2>
++        <h2 className="font-serif text-lg text-ink">Aktivitas Lansia</h2>
+ 
+-        <p className="mt-1 text-sm text-slate-500">Persentase aktivitas selama 7 hari terakhir</p>
++        <p className="mt-1 text-sm text-muted">Persentase aktivitas selama 7 hari terakhir</p>
+       </header>
+ 
+       <div
+-        className="flex h-64 items-end justify-between gap-2 border-b border-slate-200 px-2"
++        className="flex h-64 items-end justify-between gap-2 border-b border-border px-2"
+         role="img"
+         aria-label="Grafik aktivitas selama tujuh hari"
+       >
+@@ -32,13 +32,13 @@ function ActivityChart({
+             key={item.day}
+             className="flex h-full flex-1 flex-col items-center justify-end gap-2"
+           >
+-            <span className="text-xs font-medium text-slate-500">{item.value}%</span>
++            <span className="text-xs font-medium text-muted">{item.value}%</span>
+ 
+             <button
+               type="button"
+               aria-label={`Aktivitas ${item.day} ${item.value}%`}
+-              className={`w-full max-w-10 rounded-t-lg bg-blue-500 transition hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 ${
+-                selectedActivityDay === item.day ? "ring-2 ring-blue-700" : ""
++              className={`w-full max-w-10 rounded-t-lg bg-accent/80 transition hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-accent/40 ${
++                selectedActivityDay === item.day ? "ring-2 ring-accent-dark" : ""
+               }`}
+               style={{
+                 height: `${item.value}%`,
+@@ -47,14 +47,14 @@ function ActivityChart({
+               onClick={() => onActivitySelect(item.day)}
+             />
+ 
+-            <span className="text-xs text-slate-400">{item.day}</span>
++            <span className="text-xs text-muted">{item.day}</span>
+           </div>
+         ))}
+       </div>
+ 
+       {selectedActivity && (
+         <div
+-          className="mt-4 rounded-lg bg-blue-50 px-4 py-3 text-sm text-blue-700"
++          className="mt-4 rounded-lg bg-accent/8 px-4 py-3 text-sm text-accent-dark"
+           role="status"
+           aria-live="polite"
+         >
+diff --git a/src/components/dashboard/AlertSummary.tsx b/src/components/dashboard/AlertSummary.tsx
+index f31cd7d..ed9c94a 100644
+--- a/src/components/dashboard/AlertSummary.tsx
++++ b/src/components/dashboard/AlertSummary.tsx
+@@ -14,9 +14,9 @@ function AlertSummary({ alert, onViewDetail }: AlertSummaryProps) {
+       <header className="mb-5">
+         <div className="flex items-center justify-between">
+           <div>
+-            <h2 className="text-lg font-bold text-slate-800">Peringatan</h2>
++            <h2 className="font-serif text-lg text-ink">Peringatan</h2>
+ 
+-            <p className="mt-1 text-sm text-slate-500">Hasil deteksi sistem AI</p>
++            <p className="mt-1 text-sm text-muted">Hasil deteksi sistem AI</p>
+           </div>
+ 
+           {alert.hasAlert && <Badge variant="danger">1 Baru</Badge>}
+@@ -24,23 +24,23 @@ function AlertSummary({ alert, onViewDetail }: AlertSummaryProps) {
+       </header>
+ 
+       {alert.hasAlert && (
+-        <article className="rounded-xl border border-orange-200 bg-orange-50 p-4">
++        <article className="rounded-xl border border-warn/30 bg-warn/10 p-4">
+           <div className="mb-3 flex items-start gap-3">
+             <div
+-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-orange-100 font-bold text-orange-600"
++              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-warn/20 font-bold text-accent-dark"
+               aria-hidden="true"
+             >
+               !
+             </div>
+ 
+             <div>
+-              <h3 className="text-sm font-semibold text-slate-800">{alert.type}</h3>
++              <h3 className="text-sm font-semibold text-ink">{alert.type}</h3>
+ 
+-              <p className="mt-1 text-xs leading-5 text-slate-500">{alert.description}</p>
++              <p className="mt-1 text-xs leading-5 text-muted">{alert.description}</p>
+             </div>
+           </div>
+ 
+-          <p className="mb-4 text-xs text-slate-400">Terdeteksi {alert.detected}</p>
++          <p className="mb-4 text-xs text-muted">Terdeteksi {alert.detected}</p>
+ 
+           <Button
+             variant="primary"
+@@ -55,8 +55,8 @@ function AlertSummary({ alert, onViewDetail }: AlertSummaryProps) {
+       )}
+ 
+       {!alert.hasAlert && (
+-        <div className="rounded-xl border border-green-200 bg-green-50 p-4" aria-live="polite">
+-          <p className="text-sm font-semibold text-green-700">Tidak ada peringatan</p>
++        <div className="rounded-xl border border-safe/25 bg-safe/10 p-4" aria-live="polite">
++          <p className="text-sm font-semibold text-safe">Tidak ada peringatan</p>
+         </div>
+       )}
+     </Card>
+diff --git a/src/components/dashboard/ElderlyMonitoringCard.tsx b/src/components/dashboard/ElderlyMonitoringCard.tsx
+index 56e0f4e..d9bf530 100644
+--- a/src/components/dashboard/ElderlyMonitoringCard.tsx
++++ b/src/components/dashboard/ElderlyMonitoringCard.tsx
+@@ -14,9 +14,9 @@ function ElderlyMonitoringCard({ elderly, onViewDetail }: ElderlyMonitoringCardP
+       <Card className="p-6">
+         <header className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+           <div>
+-            <h2 className="text-lg font-bold text-slate-800">Lansia yang Dipantau</h2>
++            <h2 className="font-serif text-lg text-ink">Lansia yang Dipantau</h2>
+ 
+-            <p className="mt-1 text-sm text-slate-500">Data lansia yang sedang dalam pemantauan.</p>
++            <p className="mt-1 text-sm text-muted">Data lansia yang sedang dalam pemantauan.</p>
+           </div>
+ 
+           <Button
+@@ -29,19 +29,19 @@ function ElderlyMonitoringCard({ elderly, onViewDetail }: ElderlyMonitoringCardP
+           </Button>
+         </header>
+ 
+-        <article className="flex flex-col gap-4 rounded-xl border border-slate-200 p-4 sm:flex-row sm:items-center sm:justify-between">
++        <article className="flex flex-col gap-4 rounded-xl border border-border p-4 sm:flex-row sm:items-center sm:justify-between">
+           <div className="flex items-center gap-4">
+             <div
+-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-100 font-bold text-blue-600"
++              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent/15 font-bold text-accent-dark"
+               aria-hidden="true"
+             >
+               BS
+             </div>
+ 
+             <div>
+-              <h3 className="font-semibold text-slate-800">{elderly.name}</h3>
++              <h3 className="font-semibold text-ink">{elderly.name}</h3>
+ 
+-              <p className="text-sm text-slate-500">{elderly.age} tahun</p>
++              <p className="text-sm text-muted">{elderly.age} tahun</p>
+             </div>
+           </div>
+ 
+diff --git a/src/components/dashboard/HealthSummary.tsx b/src/components/dashboard/HealthSummary.tsx
+index bfbda3a..dac652f 100644
+--- a/src/components/dashboard/HealthSummary.tsx
++++ b/src/components/dashboard/HealthSummary.tsx
+@@ -13,13 +13,13 @@ function HealthSummary({ health }: HealthSummaryProps) {
+       aria-label="Ringkasan kesehatan lansia"
+     >
+       <Card className="p-5">
+-        <p className="text-sm text-slate-500">Detak Jantung</p>
++        <p className="text-sm text-muted">Detak Jantung</p>
+ 
+         <div className="mt-3 flex items-end justify-between">
+           <div>
+-            <p className="text-3xl font-bold text-slate-800">{health.heartRate}</p>
++            <p className="text-3xl font-bold text-ink">{health.heartRate}</p>
+ 
+-            <p className="mt-1 text-xs text-slate-400">{health.heartRateUnit}</p>
++            <p className="mt-1 text-xs text-muted">{health.heartRateUnit}</p>
+           </div>
+ 
+           <Badge variant="success">Normal</Badge>
+@@ -27,13 +27,13 @@ function HealthSummary({ health }: HealthSummaryProps) {
+       </Card>
+ 
+       <Card className="p-5">
+-        <p className="text-sm text-slate-500">Aktivitas</p>
++        <p className="text-sm text-muted">Aktivitas</p>
+ 
+         <div className="mt-3 flex items-end justify-between">
+           <div>
+-            <p className="text-3xl font-bold text-slate-800">{health.activity}%</p>
++            <p className="text-3xl font-bold text-ink">{health.activity}%</p>
+ 
+-            <p className="mt-1 text-xs text-slate-400">Hari ini</p>
++            <p className="mt-1 text-xs text-muted">Hari ini</p>
+           </div>
+ 
+           <Badge variant="info">Aktif</Badge>
+@@ -41,13 +41,13 @@ function HealthSummary({ health }: HealthSummaryProps) {
+       </Card>
+ 
+       <Card className="p-5">
+-        <p className="text-sm text-slate-500">Durasi Tidur</p>
++        <p className="text-sm text-muted">Durasi Tidur</p>
+ 
+         <div className="mt-3 flex items-end justify-between">
+           <div>
+-            <p className="text-3xl font-bold text-slate-800">{health.sleep}</p>
++            <p className="text-3xl font-bold text-ink">{health.sleep}</p>
+ 
+-            <p className="mt-1 text-xs text-slate-400">{health.sleepUnit}</p>
++            <p className="mt-1 text-xs text-muted">{health.sleepUnit}</p>
+           </div>
+ 
+           <Badge variant="success">Baik</Badge>
+@@ -55,13 +55,13 @@ function HealthSummary({ health }: HealthSummaryProps) {
+       </Card>
+ 
+       <Card className="p-5">
+-        <p className="text-sm text-slate-500">Status Risiko</p>
++        <p className="text-sm text-muted">Status Risiko</p>
+ 
+         <div className="mt-3 flex items-end justify-between">
+           <div>
+-            <p className="text-2xl font-bold text-slate-800">{health.risk}</p>
++            <p className="text-2xl font-bold text-ink">{health.risk}</p>
+ 
+-            <p className="mt-1 text-xs text-slate-400">Berdasarkan monitoring</p>
++            <p className="mt-1 text-xs text-muted">Berdasarkan monitoring</p>
+           </div>
+ 
+           <Badge variant="success">Aman</Badge>
+diff --git a/src/components/layout/Sidebar.tsx b/src/components/layout/Sidebar.tsx
+index 06d29da..ce9b6b4 100644
+--- a/src/components/layout/Sidebar.tsx
++++ b/src/components/layout/Sidebar.tsx
+@@ -91,13 +91,13 @@ function Sidebar() {
+ 
+   return (
+     <aside
+-      className={`sticky top-0 z-40 hidden h-screen shrink-0 bg-slate-900 text-white shadow-xl transition-all duration-300 lg:flex lg:flex-col ${
++      className={`sticky top-0 z-40 hidden h-screen shrink-0 bg-sidebar text-white shadow-xl transition-all duration-300 lg:flex lg:flex-col ${
+         collapsed ? "w-[72px]" : "w-64"
+       }`}
+       aria-label="Navigasi utama"
+     >
+       <header
+-        className={`shrink-0 border-b border-slate-800 ${collapsed ? "px-3 py-4" : "px-5 py-4"}`}
++        className={`shrink-0 border-b border-sidebar-soft ${collapsed ? "px-3 py-4" : "px-5 py-4"}`}
+       >
+         <div
+           className={`flex ${
+@@ -106,7 +106,7 @@ function Sidebar() {
+         >
+           <div className="flex items-center gap-3">
+             <div
+-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-lg font-bold shadow-sm"
++              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent font-serif text-lg shadow-sm"
+               aria-hidden="true"
+             >
+               E
+@@ -114,9 +114,9 @@ function Sidebar() {
+ 
+             {!collapsed && (
+               <div>
+-                <h1 className="text-sm font-bold">ElderCare AI</h1>
++                <h1 className="font-serif text-base">ElderCare AI</h1>
+ 
+-                <p className="text-[11px] text-slate-400">Monitoring System</p>
++                <p className="text-[11px] text-paper/45">Monitoring System</p>
+               </div>
+             )}
+           </div>
+@@ -127,7 +127,7 @@ function Sidebar() {
+               onClick={() => setCollapsed(true)}
+               aria-label="Perkecil sidebar"
+               title="Perkecil sidebar"
+-              className="ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-800 hover:text-white"
++              className="ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-paper/45 transition hover:bg-sidebar-soft hover:text-white"
+             >
+               <svg
+                 viewBox="0 0 24 24"
+@@ -150,7 +150,7 @@ function Sidebar() {
+               onClick={() => setCollapsed(false)}
+               aria-label="Perbesar sidebar"
+               title="Perbesar sidebar"
+-              className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800 text-slate-400 transition hover:bg-blue-600 hover:text-white"
++              className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-soft text-paper/45 transition hover:bg-accent hover:text-white"
+             >
+               <svg
+                 viewBox="0 0 24 24"
+@@ -174,7 +174,7 @@ function Sidebar() {
+         aria-label="Menu utama"
+       >
+         {!collapsed && (
+-          <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
++          <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-paper/40">
+             Menu Utama
+           </p>
+         )}
+@@ -200,15 +200,15 @@ function Sidebar() {
+                   collapsed ? "h-11 justify-center" : "gap-3 px-3 py-3"
+                 } ${
+                   isActive
+-                    ? "bg-blue-600 text-white shadow-sm"
++                    ? "bg-accent text-white shadow-sm"
+                     : item.path
+-                      ? "text-slate-300 hover:bg-slate-800 hover:text-white"
+-                      : "cursor-default text-slate-500"
++                      ? "text-paper/70 hover:bg-sidebar-soft hover:text-white"
++                      : "cursor-default text-paper/40"
+                 }`}
+               >
+                 <span
+                   className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
+-                    isActive ? "bg-blue-500" : "bg-slate-800"
++                    isActive ? "bg-accent/70" : "bg-sidebar-soft"
+                   }`}
+                 >
+                   {item.icon}
+@@ -221,15 +221,15 @@ function Sidebar() {
+         </div>
+       </nav>
+ 
+-      <footer className={`shrink-0 border-t border-slate-800 ${collapsed ? "p-3" : "p-4"}`}>
++      <footer className={`shrink-0 border-t border-sidebar-soft ${collapsed ? "p-3" : "p-4"}`}>
+         <div
+-          className={`flex items-center rounded-xl bg-slate-800 ${
++          className={`flex items-center rounded-xl bg-sidebar-soft ${
+             collapsed ? "h-11 justify-center" : "gap-3 p-3"
+           }`}
+           title={collapsed ? "Administrator - admin@eldercare.ai" : undefined}
+         >
+           <div
+-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-600"
++            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/20 text-sm font-bold text-accent"
+             aria-hidden="true"
+           >
+             A
+@@ -239,7 +239,7 @@ function Sidebar() {
+             <div className="min-w-0">
+               <p className="truncate text-sm font-medium">Administrator</p>
+ 
+-              <p className="truncate text-xs text-slate-400">admin@eldercare.ai</p>
++              <p className="truncate text-xs text-paper/45">admin@eldercare.ai</p>
+             </div>
+           )}
+         </div>
+diff --git a/src/components/ui/Badge.tsx b/src/components/ui/Badge.tsx
+index 841843b..101ab16 100644
+--- a/src/components/ui/Badge.tsx
++++ b/src/components/ui/Badge.tsx
+@@ -1,20 +1,23 @@
+ import { cva, type VariantProps } from "class-variance-authority";
+ import type { HTMLAttributes, ReactNode } from "react";
+ 
+-const badgeVariants = cva("inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium", {
+-  variants: {
+-    variant: {
+-      success: "bg-green-100 text-green-700",
+-      info: "bg-blue-100 text-blue-700",
+-      warning: "bg-yellow-100 text-yellow-700",
+-      danger: "bg-red-100 text-red-700",
+-      neutral: "bg-slate-100 text-slate-600",
++const badgeVariants = cva(
++  "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold",
++  {
++    variants: {
++      variant: {
++        success: "bg-safe/12 text-safe",
++        info: "bg-ink/8 text-ink-soft",
++        warning: "bg-warn/15 text-accent-dark",
++        danger: "bg-danger/10 text-danger",
++        neutral: "bg-muted/12 text-muted",
++      },
++    },
++    defaultVariants: {
++      variant: "neutral",
+     },
+   },
+-  defaultVariants: {
+-    variant: "neutral",
+-  },
+-});
++);
+ 
+ type BadgeProps = HTMLAttributes<HTMLSpanElement> &
+   VariantProps<typeof badgeVariants> & {
+diff --git a/src/components/ui/Button.tsx b/src/components/ui/Button.tsx
+index b90bbf7..96432aa 100644
+--- a/src/components/ui/Button.tsx
++++ b/src/components/ui/Button.tsx
+@@ -2,18 +2,22 @@ import { cva, type VariantProps } from "class-variance-authority";
+ import type { ButtonHTMLAttributes, ReactNode } from "react";
+ 
+ const buttonVariants = cva(
+-  "inline-flex items-center justify-center rounded-lg font-medium transition focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-60",
++  "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors " +
++    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink " +
++    "disabled:cursor-not-allowed disabled:opacity-60",
+   {
+     variants: {
+       variant: {
+-        primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-300",
+-        secondary: "bg-slate-100 text-slate-700 hover:bg-slate-200 focus:ring-slate-300",
+-        danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-300",
++        primary: "bg-ink text-paper hover:bg-ink-soft",
++        accent: "bg-accent text-white hover:bg-accent-dark",
++        secondary: "bg-ink/[0.06] text-ink hover:bg-ink/[0.1]",
++        ghost: "bg-transparent text-ink hover:bg-ink/[0.06]",
++        danger: "bg-danger text-white hover:bg-danger/90",
+       },
+       size: {
+-        sm: "px-3 py-2 text-xs",
+-        md: "px-4 py-3 text-sm",
+-        lg: "px-5 py-3 text-base",
++        sm: "px-3.5 py-1.5 text-xs",
++        md: "px-5 py-2.5 text-sm",
++        lg: "px-6 py-3 text-base",
+       },
+     },
+     defaultVariants: {
+diff --git a/src/components/ui/Card.tsx b/src/components/ui/Card.tsx
+index 5701acf..7e41c34 100644
+--- a/src/components/ui/Card.tsx
++++ b/src/components/ui/Card.tsx
+@@ -1,12 +1,13 @@
+ import { cva, type VariantProps } from "class-variance-authority";
+ import type { HTMLAttributes, ReactNode } from "react";
+ 
+-const cardVariants = cva("rounded-xl bg-white transition", {
++const cardVariants = cva("rounded-2xl bg-surface transition-shadow", {
+   variants: {
+     variant: {
+-      default: "shadow-sm",
+-      bordered: "border border-slate-200 shadow-sm",
+-      elevated: "shadow-md",
++      default: "border border-border shadow-[var(--shadow-card)]",
++      bordered: "border border-border shadow-[var(--shadow-card)]",
++      elevated: "border border-border shadow-[var(--shadow-card-lg)]",
++      alert: "border border-danger/25 ring-1 ring-danger/10 shadow-[var(--shadow-card)]",
+     },
+     padding: {
+       none: "p-0",
+diff --git a/src/components/ui/Select.tsx b/src/components/ui/Select.tsx
+index 393bcac..3887308 100644
+--- a/src/components/ui/Select.tsx
++++ b/src/components/ui/Select.tsx
+@@ -15,7 +15,7 @@ function Select<T extends string>({
+ }: SelectProps<T>) {
+   return (
+     <div className="flex items-center gap-2">
+-      <span className="text-xs text-slate-500">{label}</span>
++      <span className="text-xs text-muted">{label}</span>
+ 
+       <SelectPrimitive.Root
+         value={value}
+@@ -23,27 +23,27 @@ function Select<T extends string>({
+       >
+         <SelectPrimitive.Trigger
+           aria-label={label}
+-          className="inline-flex min-w-28 items-center justify-between gap-3 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-600 outline-none transition hover:border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
++          className="inline-flex min-w-28 items-center justify-between gap-3 rounded-full border border-border bg-surface px-3.5 py-2 text-sm text-ink-soft outline-none transition hover:border-ink/30 focus:border-ink focus:ring-2 focus:ring-ink/10"
+         >
+           <SelectPrimitive.Value />
+-          <SelectPrimitive.Icon aria-hidden="true">▼</SelectPrimitive.Icon>
++          <SelectPrimitive.Icon aria-hidden="true">▾</SelectPrimitive.Icon>
+         </SelectPrimitive.Trigger>
+ 
+         <SelectPrimitive.Portal>
+           <SelectPrimitive.Content
+             position="popper"
+-            sideOffset={5}
+-            className="z-50 min-w-28 overflow-hidden rounded-lg border border-slate-200 bg-white p-1 shadow-lg"
++            sideOffset={6}
++            className="z-50 min-w-28 overflow-hidden rounded-xl border border-border bg-surface p-1 shadow-[var(--shadow-card-lg)]"
+           >
+             <SelectPrimitive.Viewport>
+               {options.map((option) => (
+                 <SelectPrimitive.Item
+                   key={option}
+                   value={option}
+-                  className="relative flex cursor-pointer select-none items-center rounded-md px-3 py-2 text-sm text-slate-600 outline-none hover:bg-slate-100 focus:bg-blue-50 focus:text-blue-600"
++                  className="relative flex cursor-pointer select-none items-center rounded-lg px-3 py-2 text-sm text-ink-soft outline-none hover:bg-ink/[0.06] focus:bg-accent/10 focus:text-accent-dark"
+                 >
+                   <SelectPrimitive.ItemText>{option}</SelectPrimitive.ItemText>
+-                  <SelectPrimitive.ItemIndicator className="absolute right-2">
++                  <SelectPrimitive.ItemIndicator className="absolute right-2 text-accent">
+                     ✓
+                   </SelectPrimitive.ItemIndicator>
+                 </SelectPrimitive.Item>
+diff --git a/src/features/Dashboard.tsx b/src/features/Dashboard.tsx
+index 5c8b14b..08d66c1 100644
+--- a/src/features/Dashboard.tsx
++++ b/src/features/Dashboard.tsx
+@@ -21,15 +21,15 @@ function Dashboard() {
+ 
+   if (monitoringQuery.isPending) {
+     return (
+-      <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
++      <main className="flex min-h-screen items-center justify-center bg-paper px-4">
+         <section
+-          className="rounded-xl bg-white px-8 py-6 text-center shadow-sm"
++          className="rounded-xl bg-surface px-8 py-6 text-center shadow-sm"
+           role="status"
+           aria-live="polite"
+         >
+-          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-blue-600" />
++          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-border border-t-accent" />
+ 
+-          <p className="text-sm font-medium text-slate-600">Memuat dashboard...</p>
++          <p className="text-sm font-medium text-ink-soft">Memuat dashboard...</p>
+         </section>
+       </main>
+     );
+@@ -37,19 +37,19 @@ function Dashboard() {
+ 
+   if (monitoringQuery.isError) {
+     return (
+-      <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
++      <main className="flex min-h-screen items-center justify-center bg-paper px-4">
+         <section
+-          className="w-full max-w-md rounded-xl border border-red-200 bg-white p-6 text-center shadow-sm"
++          className="w-full max-w-md rounded-xl border border-danger/25 bg-surface p-6 text-center shadow-sm"
+           role="alert"
+           aria-live="assertive"
+         >
+-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 font-bold text-red-600">
++          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-danger/15 font-bold text-danger">
+             !
+           </div>
+ 
+-          <h1 className="text-lg font-bold text-slate-800">Gagal Memuat Dashboard</h1>
++          <h1 className="text-lg font-bold text-ink">Gagal Memuat Dashboard</h1>
+ 
+-          <p className="mt-2 text-sm text-slate-500">
++          <p className="mt-2 text-sm text-muted">
+             {monitoringQuery.error?.message ?? "Gagal mengambil data dashboard."}
+           </p>
+ 
+@@ -70,14 +70,14 @@ function Dashboard() {
+ 
+   if (!monitoringQuery.data) {
+     return (
+-      <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
++      <main className="flex min-h-screen items-center justify-center bg-paper px-4">
+         <section
+-          className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm"
++          className="w-full max-w-md rounded-xl border border-border bg-surface p-6 text-center shadow-sm"
+           role="status"
+         >
+-          <h1 className="text-lg font-bold text-slate-800">Data Tidak Tersedia</h1>
++          <h1 className="text-lg font-bold text-ink">Data Tidak Tersedia</h1>
+ 
+-          <p className="mt-2 text-sm text-slate-500">Data dashboard belum tersedia.</p>
++          <p className="mt-2 text-sm text-muted">Data dashboard belum tersedia.</p>
+         </section>
+       </main>
+     );
+@@ -86,21 +86,21 @@ function Dashboard() {
+   const { elderly, health, activityHistory, alert } = monitoringQuery.data;
+ 
+   return (
+-    <div className="min-h-screen bg-slate-100">
++    <div className="min-h-screen bg-paper">
+       <div className="flex">
+         <Sidebar />
+ 
+         <main className="min-w-0 flex-1">
+-          <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-6 lg:px-8">
++          <header className="flex h-16 items-center justify-between border-b border-border bg-surface px-4 sm:px-6 lg:px-8">
+             <div>
+-              <p className="text-sm text-slate-500">Sistem Pemantauan Kesehatan Lansia</p>
++              <p className="text-sm text-muted">Sistem Pemantauan Kesehatan Lansia</p>
+             </div>
+ 
+             <div className="flex items-center gap-4">
+               <button
+                 type="button"
+                 aria-label="Buka notifikasi"
+-                className="relative rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
++                className="relative rounded-lg p-2 text-muted transition hover:bg-paper hover:text-ink-soft"
+               >
+                 <span className="text-lg" aria-hidden="true">
+                   ♢
+@@ -108,7 +108,7 @@ function Dashboard() {
+ 
+                 {alert.hasAlert && (
+                   <span
+-                    className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500"
++                    className="absolute right-1 top-1 h-2 w-2 rounded-full bg-danger"
+                     role="status"
+                     aria-label="Ada notifikasi baru"
+                   />
+@@ -116,13 +116,13 @@ function Dashboard() {
+               </button>
+ 
+               <div className="hidden text-right sm:block">
+-                <p className="text-sm font-semibold text-slate-700">Administrator</p>
++                <p className="text-sm font-semibold text-ink-soft">Administrator</p>
+ 
+-                <p className="text-xs text-slate-400">admin@eldercare.ai</p>
++                <p className="text-xs text-muted">admin@eldercare.ai</p>
+               </div>
+ 
+               <div
+-                className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-600"
++                className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/15 text-sm font-bold text-accent-dark"
+                 aria-hidden="true"
+               >
+                 A
+@@ -132,11 +132,11 @@ function Dashboard() {
+ 
+           <div className="p-4 sm:p-6 lg:p-8">
+             <section className="mb-8">
+-              <h1 className="text-2xl font-bold text-slate-800 sm:text-3xl">
++              <h1 className="font-serif text-2xl text-ink sm:text-3xl">
+                 Dashboard Monitoring
+               </h1>
+ 
+-              <p className="mt-2 text-sm text-slate-500">
++              <p className="mt-2 text-sm text-muted">
+                 Pantau kondisi kesehatan dan aktivitas lansia secara berkala.
+               </p>
+             </section>
+@@ -156,8 +156,8 @@ function Dashboard() {
+             <ElderlyMonitoringCard elderly={elderly} onViewDetail={() => router.push("/elderly")} />
+           </div>
+ 
+-          <footer className="border-t border-slate-200 bg-white px-4 py-5 text-center sm:px-6 lg:px-8">
+-            <p className="text-xs text-slate-400">ElderCare AI — Smart Elderly Monitoring System</p>
++          <footer className="border-t border-border bg-surface px-4 py-5 text-center sm:px-6 lg:px-8">
++            <p className="text-xs text-muted">ElderCare AI — Smart Elderly Monitoring System</p>
+           </footer>
+         </main>
+       </div>
+diff --git a/src/features/Login.tsx b/src/features/Login.tsx
+index ee58f50..20901da 100644
+--- a/src/features/Login.tsx
++++ b/src/features/Login.tsx
+@@ -54,8 +54,6 @@ function LoginPage() {
+       });
+ 
+       if (validation.data.email === "admin@eldercare.ai" && validation.data.password === "123456") {
+-        // Membuat cookie sebagai tanda bahwa pengguna sudah login.
+-        // Cookie ini akan dibaca oleh middleware.ts.
+         document.cookie = "eldercare_token=logged_in; path=/; max-age=86400";
+ 
+         setFormState({ status: "success" });
+@@ -81,260 +79,127 @@ function LoginPage() {
+   };
+ 
+   return (
+-    <main className="relative min-h-screen overflow-hidden bg-slate-50">
+-      {/* Decorative Background */}
++    <main className="relative min-h-screen bg-paper">
++      {/* Aksen dekoratif — garis titik-titik ala catatan tangan, bukan blob gradient */}
+       <div
+-        className="pointer-events-none absolute -left-32 -top-32 h-80 w-80 rounded-full bg-blue-100/70 blur-3xl"
++        className="pointer-events-none absolute inset-x-0 top-0 h-1.5 bg-[repeating-linear-gradient(90deg,var(--color-accent)_0,var(--color-accent)_10px,transparent_10px,transparent_20px)] opacity-60"
+         aria-hidden="true"
+       />
+ 
+-      <div
+-        className="pointer-events-none absolute -bottom-40 -right-32 h-96 w-96 rounded-full bg-cyan-100/70 blur-3xl"
+-        aria-hidden="true"
+-      />
+-
+-      <div className="relative flex min-h-screen items-center justify-center px-4 py-8">
+-        <div className="grid w-full max-w-5xl overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl lg:grid-cols-2">
+-          {/* Branding Section */}
+-          <section className="relative hidden overflow-hidden bg-blue-600 p-10 text-white lg:flex lg:flex-col lg:justify-between">
+-            {/* Decorative circles */}
+-            <div
+-              className="absolute -right-24 -top-24 h-64 w-64 rounded-full border-[40px] border-white/10"
+-              aria-hidden="true"
+-            />
+-
+-            <div
+-              className="absolute -bottom-32 -left-24 h-72 w-72 rounded-full border-[50px] border-white/10"
+-              aria-hidden="true"
+-            />
+-
+-            <div className="relative">
+-              <div className="mb-8 flex items-center gap-3">
+-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-bold text-blue-600 shadow-sm">
+-                  E
+-                </div>
+-
+-                <span className="text-lg font-bold tracking-tight">ElderCare AI</span>
+-              </div>
+-
+-              <p className="mb-3 text-sm font-medium text-blue-100">
+-                Smart Elderly Monitoring System
+-              </p>
+-
+-              <h2 className="max-w-md text-3xl font-bold leading-tight">
+-                Pemantauan lansia yang lebih tenang, aman, dan terarah.
+-              </h2>
+-
+-              <p className="mt-5 max-w-md text-sm leading-6 text-blue-100">
+-                Pantau aktivitas, kondisi kesehatan, dan perubahan perilaku lansia melalui satu
+-                sistem monitoring yang terintegrasi.
+-              </p>
+-            </div>
+-
+-            {/* Feature Cards */}
+-            <div className="relative mt-10 space-y-3">
+-              <div className="flex items-center gap-4 rounded-2xl bg-white/10 p-4 backdrop-blur-sm">
+-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15 text-lg">
+-                  ♥
+-                </div>
+-
+-                <div>
+-                  <p className="text-sm font-semibold">Monitoring kesehatan</p>
+-
+-                  <p className="mt-1 text-xs text-blue-100">
+-                    Pantau detak jantung, aktivitas, dan pola tidur.
+-                  </p>
+-                </div>
+-              </div>
+-
+-              <div className="flex items-center gap-4 rounded-2xl bg-white/10 p-4 backdrop-blur-sm">
+-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15 text-lg">
+-                  ◉
+-                </div>
+-
+-                <div>
+-                  <p className="text-sm font-semibold">Deteksi perubahan perilaku</p>
+-
+-                  <p className="mt-1 text-xs text-blue-100">
+-                    Identifikasi aktivitas yang berbeda dari pola normal.
+-                  </p>
+-                </div>
+-              </div>
++      <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6 py-16">
++        {/* Logo */}
++        <div className="mb-10 flex items-center gap-3">
++          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-ink font-serif text-lg text-paper">
++            E
++          </div>
++          <div>
++            <p className="font-serif text-lg leading-none text-ink">ElderCare AI</p>
++            <p className="mt-1 text-xs tracking-wide text-muted">
++              Sistem Pemantauan Kesehatan Lansia
++            </p>
++          </div>
++        </div>
+ 
+-              <div className="flex items-center gap-4 rounded-2xl bg-white/10 p-4 backdrop-blur-sm">
+-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15 text-lg">
++        {/* Heading */}
++        <header className="mb-8">
++          <p className="mb-2 text-sm font-medium text-accent-dark">Selamat datang kembali</p>
++          <h1 className="font-serif text-3xl leading-tight text-ink">
++            Yang kamu sayangi,
++            <br />
++            tetap terpantau.
++          </h1>
++        </header>
++
++        <div className="rounded-2xl border border-border bg-surface p-7 shadow-[var(--shadow-card-lg)]">
++          <form onSubmit={handleSubmit} noValidate>
++            {formState.status === "error" && (
++              <div
++                role="alert"
++                aria-live="polite"
++                className="mb-5 flex items-start gap-3 rounded-xl border border-danger/25 bg-danger/6 px-4 py-3 text-sm text-danger"
++              >
++                <span
++                  className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-danger/15 text-xs font-bold"
++                  aria-hidden="true"
++                >
+                   !
+-                </div>
+-
+-                <div>
+-                  <p className="text-sm font-semibold">Peringatan dini</p>
+-
+-                  <p className="mt-1 text-xs text-blue-100">
+-                    Membantu keluarga dan tenaga medis merespons lebih cepat.
+-                  </p>
+-                </div>
++                </span>
++                <p>{formState.message}</p>
+               </div>
++            )}
++
++            <div className="mb-5">
++              <label htmlFor="email" className="mb-2 block text-sm font-semibold text-ink-soft">
++                Email
++              </label>
++              <input
++                id="email"
++                name="email"
++                type="email"
++                value={email}
++                onChange={(event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
++                placeholder="nama@keluarga.id"
++                autoComplete="email"
++                aria-label="Email pengguna"
++                className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
++              />
+             </div>
+ 
+-            <p className="relative mt-10 text-xs text-blue-200">ElderCare AI © 2026</p>
+-          </section>
+-
+-          {/* Login Section */}
+-          <section className="flex items-center p-6 sm:p-10" aria-labelledby="login-title">
+-            <div className="w-full">
+-              {/* Mobile Logo */}
+-              <div className="mb-8 lg:hidden">
+-                <div className="mb-4 flex items-center gap-3">
+-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-lg font-bold text-white shadow-sm">
+-                    E
+-                  </div>
+-
+-                  <div>
+-                    <h1 className="font-bold text-slate-800">ElderCare AI</h1>
+-
+-                    <p className="text-xs text-slate-400">Smart Elderly Monitoring System</p>
+-                  </div>
+-                </div>
+-              </div>
+-
+-              {/* Heading */}
+-              <header className="mb-8">
+-                <p className="mb-2 text-sm font-medium text-blue-600">Selamat datang kembali</p>
+-
+-                <h1 id="login-title" className="text-2xl font-bold text-slate-800 sm:text-3xl">
+-                  Masuk ke akun Anda
+-                </h1>
+-
+-                <p className="mt-2 text-sm leading-6 text-slate-500">
+-                  Masuk untuk melanjutkan pemantauan kesehatan lansia.
+-                </p>
+-              </header>
+-
+-              {/* Login Form */}
+-              <form onSubmit={handleSubmit} noValidate>
+-                {/* Error */}
+-                {formState.status === "error" && (
+-                  <div
+-                    role="alert"
+-                    aria-live="polite"
+-                    className="mb-5 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600"
+-                  >
+-                    <span
+-                      className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-xs font-bold"
+-                      aria-hidden="true"
+-                    >
+-                      !
+-                    </span>
+-
+-                    <p>{formState.message}</p>
+-                  </div>
+-                )}
+-
+-                {/* Email */}
+-                <div className="mb-5">
+-                  <label
+-                    htmlFor="email"
+-                    className="mb-2 block text-sm font-semibold text-slate-700"
+-                  >
+-                    Email
+-                  </label>
+-
+-                  <div className="relative">
+-                    <span
+-                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+-                      aria-hidden="true"
+-                    >
+-                      @
+-                    </span>
+-
+-                    <input
+-                      id="email"
+-                      name="email"
+-                      type="email"
+-                      value={email}
+-                      onChange={(event: ChangeEvent<HTMLInputElement>) =>
+-                        setEmail(event.target.value)
+-                      }
+-                      placeholder="Masukkan email"
+-                      autoComplete="email"
+-                      aria-label="Email pengguna"
+-                      className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
+-                    />
+-                  </div>
+-                </div>
+-
+-                {/* Password */}
+-                <div className="mb-6">
+-                  <label
+-                    htmlFor="password"
+-                    className="mb-2 block text-sm font-semibold text-slate-700"
+-                  >
+-                    Password
+-                  </label>
+-
+-                  <div className="relative">
+-                    <span
+-                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+-                      aria-hidden="true"
+-                    >
+-                      •
+-                    </span>
+-
+-                    <input
+-                      id="password"
+-                      name="password"
+-                      type="password"
+-                      value={password}
+-                      onChange={(event: ChangeEvent<HTMLInputElement>) =>
+-                        setPassword(event.target.value)
+-                      }
+-                      placeholder="Masukkan password"
+-                      autoComplete="current-password"
+-                      aria-label="Password pengguna"
+-                      className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
+-                    />
+-                  </div>
+-                </div>
+-
+-                {/* Submit */}
+-                <button
+-                  type="submit"
+-                  disabled={loading}
+-                  aria-label="Masuk ke sistem ElderCare AI"
+-                  className="w-full rounded-xl bg-blue-600 px-4 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:shadow-sm"
+-                >
+-                  {loading ? "Memproses..." : "Masuk"}
+-                </button>
+-              </form>
+-
+-              {/* Register */}
+-              <div className="mt-6 text-center">
+-                <p className="text-sm text-slate-500">
+-                  Belum memiliki akun?{" "}
+-                  <button
+-                    type="button"
+-                    onClick={() => router.push("/register")}
+-                    className="font-semibold text-blue-600 transition hover:text-blue-700"
+-                  >
+-                    Daftar sekarang
+-                  </button>
+-                </p>
+-              </div>
+-
+-              {/* Demo Account */}
+-              <div className="mt-8 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+-                <p className="text-xs font-semibold text-slate-600">Akun demo</p>
+-
+-                <p className="mt-1 text-xs text-slate-400">admin@eldercare.ai · 123456</p>
+-              </div>
++            <div className="mb-6">
++              <label
++                htmlFor="password"
++                className="mb-2 block text-sm font-semibold text-ink-soft"
++              >
++                Password
++              </label>
++              <input
++                id="password"
++                name="password"
++                type="password"
++                value={password}
++                onChange={(event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
++                placeholder="Masukkan password"
++                autoComplete="current-password"
++                aria-label="Password pengguna"
++                className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
++              />
++            </div>
+ 
+-              {/* Footer */}
+-              <p className="mt-8 text-center text-xs text-slate-400">
+-                Sistem Pemantauan Kesehatan Lansia
+-              </p>
++            <button
++              type="submit"
++              disabled={loading}
++              aria-label="Masuk ke sistem ElderCare AI"
++              className="w-full rounded-full bg-accent px-4 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent/25 disabled:cursor-not-allowed disabled:opacity-60"
++            >
++              {loading ? "Memproses..." : "Masuk"}
++            </button>
++          </form>
++
++          <div className="mt-6 text-center">
++            <p className="text-sm text-muted">
++              Belum memiliki akun?{" "}
++              <button
++                type="button"
++                onClick={() => router.push("/register")}
++                className="font-semibold text-ink underline decoration-accent decoration-2 underline-offset-4 transition hover:text-accent-dark"
++              >
++                Daftar sekarang
++              </button>
++            </p>
++          </div>
++
++          <div className="mt-7 flex items-center gap-3 rounded-xl border border-dashed border-border bg-paper px-4 py-3">
++            <span className="text-base" aria-hidden="true">🔑</span>
++            <div>
++              <p className="text-xs font-semibold text-ink-soft">Akun demo</p>
++              <p className="mt-0.5 text-xs text-muted">admin@eldercare.ai · 123456</p>
+             </div>
+-          </section>
++          </div>
+         </div>
++
++        <p className="mt-8 text-center text-xs text-muted">
++          ElderCare AI © 2026 · Dibangun untuk keluarga yang peduli
++        </p>
+       </div>
+     </main>
+   );
+diff --git a/src/index.css b/src/index.css
+index e9909bd..7303b35 100644
+--- a/src/index.css
++++ b/src/index.css
+@@ -1,10 +1,59 @@
+ @import "tailwindcss";
+ 
++@theme {
++  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
++  --font-serif: var(--font-serif), ui-serif, Georgia, serif;
++
++  /* ElderCare AI — warm, trustworthy, editorial (bukan default blue SaaS) */
++  --color-ink: #16392e;
++  --color-ink-soft: #2c4a3f;
++  --color-paper: #faf8f3;
++  --color-surface: #fffdf9;
++  --color-accent: #b9762a;
++  --color-accent-dark: #935c1e;
++  --color-danger: #b14328;
++  --color-warn: #c99a3d;
++  --color-safe: #4b7a5c;
++  --color-muted: #6b6255;
++  --color-border: #e4ddd0;
++  --color-sidebar: #14231d;
++  --color-sidebar-soft: #1d3129;
++
++  --shadow-card: 0 1px 2px rgba(22, 57, 46, 0.04), 0 1px 1px rgba(22, 57, 46, 0.03);
++  --shadow-card-lg: 0 4px 16px rgba(22, 57, 46, 0.08), 0 1px 2px rgba(22, 57, 46, 0.04);
++
++  --animate-toast-in: toast-in 0.25s ease-out;
++  --animate-pulse-soft: pulse-soft 1.4s ease-in-out infinite;
++}
++
++@keyframes toast-in {
++  from { opacity: 0; transform: translateY(6px); }
++  to { opacity: 1; transform: translateY(0); }
++}
++@keyframes pulse-soft {
++  0%, 100% { opacity: 0.55; }
++  50% { opacity: 1; }
++}
++
+ * {
+   box-sizing: border-box;
+ }
+ 
+ body {
+   margin: 0;
+-  font-family: Arial, Helvetica, sans-serif;
++  background: var(--color-paper);
++  color: #2b2621;
++}
++
++::selection {
++  background: var(--color-ink);
++  color: var(--color-paper);
++}
++
++@media (prefers-reduced-motion: reduce) {
++  * {
++    animation-duration: 0.001ms !important;
++    animation-iteration-count: 1 !important;
++    transition-duration: 0.001ms !important;
++  }
+ }
+-- 
+2.43.0
+

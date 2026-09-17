@@ -14,9 +14,9 @@ function ElderlyMonitoringCard({ elderly, onViewDetail }: ElderlyMonitoringCardP
       <Card className="p-6">
         <header className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-lg font-bold text-slate-800">Lansia yang Dipantau</h2>
+            <h2 className="font-serif text-lg text-ink">Lansia yang Dipantau</h2>
 
-            <p className="mt-1 text-sm text-slate-500">Data lansia yang sedang dalam pemantauan.</p>
+            <p className="mt-1 text-sm text-muted">Data lansia yang sedang dalam pemantauan.</p>
           </div>
 
           <Button
@@ -29,19 +29,19 @@ function ElderlyMonitoringCard({ elderly, onViewDetail }: ElderlyMonitoringCardP
           </Button>
         </header>
 
-        <article className="flex flex-col gap-4 rounded-xl border border-slate-200 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <article className="flex flex-col gap-4 rounded-xl border border-border p-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
             <div
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-100 font-bold text-blue-600"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent/15 font-bold text-accent-dark"
               aria-hidden="true"
             >
               BS
             </div>
 
             <div>
-              <h3 className="font-semibold text-slate-800">{elderly.name}</h3>
+              <h3 className="font-semibold text-ink">{elderly.name}</h3>
 
-              <p className="text-sm text-slate-500">{elderly.age} tahun</p>
+              <p className="text-sm text-muted">{elderly.age} tahun</p>
             </div>
           </div>
 

@@ -17,13 +17,13 @@ function ActivityChart({
   return (
     <Card className="p-6 xl:col-span-2">
       <header className="mb-6">
-        <h2 className="text-lg font-bold text-slate-800">Aktivitas Lansia</h2>
+        <h2 className="font-serif text-lg text-ink">Aktivitas Lansia</h2>
 
-        <p className="mt-1 text-sm text-slate-500">Persentase aktivitas selama 7 hari terakhir</p>
+        <p className="mt-1 text-sm text-muted">Persentase aktivitas selama 7 hari terakhir</p>
       </header>
 
       <div
-        className="flex h-64 items-end justify-between gap-2 border-b border-slate-200 px-2"
+        className="flex h-64 items-end justify-between gap-2 border-b border-border px-2"
         role="img"
         aria-label="Grafik aktivitas selama tujuh hari"
       >
@@ -32,13 +32,13 @@ function ActivityChart({
             key={item.day}
             className="flex h-full flex-1 flex-col items-center justify-end gap-2"
           >
-            <span className="text-xs font-medium text-slate-500">{item.value}%</span>
+            <span className="text-xs font-medium text-muted">{item.value}%</span>
 
             <button
               type="button"
               aria-label={`Aktivitas ${item.day} ${item.value}%`}
-              className={`w-full max-w-10 rounded-t-lg bg-blue-500 transition hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 ${
-                selectedActivityDay === item.day ? "ring-2 ring-blue-700" : ""
+              className={`w-full max-w-10 rounded-t-lg bg-accent/80 transition hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-accent/40 ${
+                selectedActivityDay === item.day ? "ring-2 ring-accent-dark" : ""
               }`}
               style={{
                 height: `${item.value}%`,
@@ -47,14 +47,14 @@ function ActivityChart({
               onClick={() => onActivitySelect(item.day)}
             />
 
-            <span className="text-xs text-slate-400">{item.day}</span>
+            <span className="text-xs text-muted">{item.day}</span>
           </div>
         ))}
       </div>
 
       {selectedActivity && (
         <div
-          className="mt-4 rounded-lg bg-blue-50 px-4 py-3 text-sm text-blue-700"
+          className="mt-4 rounded-lg bg-accent/8 px-4 py-3 text-sm text-accent-dark"
           role="status"
           aria-live="polite"
         >

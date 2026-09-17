@@ -91,13 +91,13 @@ function Sidebar() {
 
   return (
     <aside
-      className={`sticky top-0 z-40 hidden h-screen shrink-0 bg-slate-900 text-white shadow-xl transition-all duration-300 lg:flex lg:flex-col ${
+      className={`sticky top-0 z-40 hidden h-screen shrink-0 bg-sidebar text-white shadow-xl transition-all duration-300 lg:flex lg:flex-col ${
         collapsed ? "w-[72px]" : "w-64"
       }`}
       aria-label="Navigasi utama"
     >
       <header
-        className={`shrink-0 border-b border-slate-800 ${collapsed ? "px-3 py-4" : "px-5 py-4"}`}
+        className={`shrink-0 border-b border-sidebar-soft ${collapsed ? "px-3 py-4" : "px-5 py-4"}`}
       >
         <div
           className={`flex ${
@@ -106,7 +106,7 @@ function Sidebar() {
         >
           <div className="flex items-center gap-3">
             <div
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-lg font-bold shadow-sm"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent font-serif text-lg shadow-sm"
               aria-hidden="true"
             >
               E
@@ -114,9 +114,9 @@ function Sidebar() {
 
             {!collapsed && (
               <div>
-                <h1 className="text-sm font-bold">ElderCare AI</h1>
+                <h1 className="font-serif text-base">ElderCare AI</h1>
 
-                <p className="text-[11px] text-slate-400">Monitoring System</p>
+                <p className="text-[11px] text-paper/45">Monitoring System</p>
               </div>
             )}
           </div>
@@ -127,7 +127,7 @@ function Sidebar() {
               onClick={() => setCollapsed(true)}
               aria-label="Perkecil sidebar"
               title="Perkecil sidebar"
-              className="ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-800 hover:text-white"
+              className="ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-paper/45 transition hover:bg-sidebar-soft hover:text-white"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -150,7 +150,7 @@ function Sidebar() {
               onClick={() => setCollapsed(false)}
               aria-label="Perbesar sidebar"
               title="Perbesar sidebar"
-              className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800 text-slate-400 transition hover:bg-blue-600 hover:text-white"
+              className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-soft text-paper/45 transition hover:bg-accent hover:text-white"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -174,7 +174,7 @@ function Sidebar() {
         aria-label="Menu utama"
       >
         {!collapsed && (
-          <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+          <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-paper/40">
             Menu Utama
           </p>
         )}
@@ -200,15 +200,15 @@ function Sidebar() {
                   collapsed ? "h-11 justify-center" : "gap-3 px-3 py-3"
                 } ${
                   isActive
-                    ? "bg-blue-600 text-white shadow-sm"
+                    ? "bg-accent text-white shadow-sm"
                     : item.path
-                      ? "text-slate-300 hover:bg-slate-800 hover:text-white"
-                      : "cursor-default text-slate-500"
+                      ? "text-paper/70 hover:bg-sidebar-soft hover:text-white"
+                      : "cursor-default text-paper/40"
                 }`}
               >
                 <span
                   className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
-                    isActive ? "bg-blue-500" : "bg-slate-800"
+                    isActive ? "bg-accent/70" : "bg-sidebar-soft"
                   }`}
                 >
                   {item.icon}
@@ -221,15 +221,15 @@ function Sidebar() {
         </div>
       </nav>
 
-      <footer className={`shrink-0 border-t border-slate-800 ${collapsed ? "p-3" : "p-4"}`}>
+      <footer className={`shrink-0 border-t border-sidebar-soft ${collapsed ? "p-3" : "p-4"}`}>
         <div
-          className={`flex items-center rounded-xl bg-slate-800 ${
+          className={`flex items-center rounded-xl bg-sidebar-soft ${
             collapsed ? "h-11 justify-center" : "gap-3 p-3"
           }`}
           title={collapsed ? "Administrator - admin@eldercare.ai" : undefined}
         >
           <div
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-600"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/20 text-sm font-bold text-accent"
             aria-hidden="true"
           >
             A
@@ -239,7 +239,7 @@ function Sidebar() {
             <div className="min-w-0">
               <p className="truncate text-sm font-medium">Administrator</p>
 
-              <p className="truncate text-xs text-slate-400">admin@eldercare.ai</p>
+              <p className="truncate text-xs text-paper/45">admin@eldercare.ai</p>
             </div>
           )}
         </div>

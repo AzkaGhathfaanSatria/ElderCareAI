@@ -1,12 +1,13 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import type { HTMLAttributes, ReactNode } from "react";
 
-const cardVariants = cva("rounded-xl bg-white transition", {
+const cardVariants = cva("rounded-2xl bg-surface transition-shadow", {
   variants: {
     variant: {
-      default: "shadow-sm",
-      bordered: "border border-slate-200 shadow-sm",
-      elevated: "shadow-md",
+      default: "border border-border shadow-[var(--shadow-card)]",
+      bordered: "border border-border shadow-[var(--shadow-card)]",
+      elevated: "border border-border shadow-[var(--shadow-card-lg)]",
+      alert: "border border-danger/25 ring-1 ring-danger/10 shadow-[var(--shadow-card)]",
     },
     padding: {
       none: "p-0",

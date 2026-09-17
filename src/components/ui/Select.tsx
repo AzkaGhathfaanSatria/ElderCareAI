@@ -15,7 +15,7 @@ function Select<T extends string>({
 }: SelectProps<T>) {
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xs text-slate-500">{label}</span>
+      <span className="text-xs text-muted">{label}</span>
 
       <SelectPrimitive.Root
         value={value}
@@ -23,27 +23,27 @@ function Select<T extends string>({
       >
         <SelectPrimitive.Trigger
           aria-label={label}
-          className="inline-flex min-w-28 items-center justify-between gap-3 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-600 outline-none transition hover:border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          className="inline-flex min-w-28 items-center justify-between gap-3 rounded-full border border-border bg-surface px-3.5 py-2 text-sm text-ink-soft outline-none transition hover:border-ink/30 focus:border-ink focus:ring-2 focus:ring-ink/10"
         >
           <SelectPrimitive.Value />
-          <SelectPrimitive.Icon aria-hidden="true">▼</SelectPrimitive.Icon>
+          <SelectPrimitive.Icon aria-hidden="true">▾</SelectPrimitive.Icon>
         </SelectPrimitive.Trigger>
 
         <SelectPrimitive.Portal>
           <SelectPrimitive.Content
             position="popper"
-            sideOffset={5}
-            className="z-50 min-w-28 overflow-hidden rounded-lg border border-slate-200 bg-white p-1 shadow-lg"
+            sideOffset={6}
+            className="z-50 min-w-28 overflow-hidden rounded-xl border border-border bg-surface p-1 shadow-[var(--shadow-card-lg)]"
           >
             <SelectPrimitive.Viewport>
               {options.map((option) => (
                 <SelectPrimitive.Item
                   key={option}
                   value={option}
-                  className="relative flex cursor-pointer select-none items-center rounded-md px-3 py-2 text-sm text-slate-600 outline-none hover:bg-slate-100 focus:bg-blue-50 focus:text-blue-600"
+                  className="relative flex cursor-pointer select-none items-center rounded-lg px-3 py-2 text-sm text-ink-soft outline-none hover:bg-ink/[0.06] focus:bg-accent/10 focus:text-accent-dark"
                 >
                   <SelectPrimitive.ItemText>{option}</SelectPrimitive.ItemText>
-                  <SelectPrimitive.ItemIndicator className="absolute right-2">
+                  <SelectPrimitive.ItemIndicator className="absolute right-2 text-accent">
                     ✓
                   </SelectPrimitive.ItemIndicator>
                 </SelectPrimitive.Item>
