@@ -82,7 +82,7 @@ function TopNav({ hasNotification = false }: TopNavProps) {
     },
     {
       label: "Notifikasi",
-      path: null,
+      path: "/notifications",
       icon: (
         <svg
           viewBox="0 0 24 24"
@@ -94,6 +94,23 @@ function TopNav({ hasNotification = false }: TopNavProps) {
         >
           <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
           <path d="M10 21h4" />
+        </svg>
+      ),
+    },
+    {
+      label: "Izin Akses",
+      path: "/access",
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          className="h-4 w-4"
+          aria-hidden="true"
+        >
+          <rect x="4" y="10" width="16" height="10" rx="1.5" />
+          <path d="M8 10V7a4 4 0 0 1 8 0v3" />
         </svg>
       ),
     },
@@ -165,12 +182,12 @@ function TopNav({ hasNotification = false }: TopNavProps) {
                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent/15 text-sm font-bold text-accent-dark"
                 aria-hidden="true"
               >
-                A
+                DK
               </div>
 
               <div className="hidden text-left sm:block">
-                <p className="text-sm font-semibold leading-tight text-ink-soft">Administrator</p>
-                <p className="text-xs text-muted">admin@eldercare.ai</p>
+                <p className="text-sm font-semibold leading-tight text-ink-soft">Dian Kusuma</p>
+                <p className="text-xs text-muted">Keluarga/Caregiver</p>
               </div>
 
               <svg
@@ -194,8 +211,8 @@ function TopNav({ hasNotification = false }: TopNavProps) {
                 className="absolute right-0 top-[calc(100%+8px)] w-60 overflow-hidden rounded-xl border border-border bg-surface shadow-[var(--shadow-card-lg)]"
               >
                 <div className="border-b border-border px-4 py-3">
-                  <p className="text-sm font-semibold text-ink-soft">Administrator</p>
-                  <p className="mt-0.5 text-xs text-muted">admin@eldercare.ai</p>
+                  <p className="text-sm font-semibold text-ink-soft">Dian Kusuma</p>
+                  <p className="mt-0.5 text-xs text-muted">Keluarga/Caregiver · Budi Santoso</p>
                 </div>
 
                 <div className="py-1.5">

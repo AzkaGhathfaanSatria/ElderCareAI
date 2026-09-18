@@ -1,0 +1,286 @@
+"use client";
+
+import { type ChangeEvent, type FormEvent, useState } from "react";
+
+import TopNav from "../components/layout/TopNav";
+import Badge from "../components/ui/Badge";
+import Button from "../components/ui/Button";
+import Card from "../components/ui/Card";
+import { useElderCareQuery } from "../hooks/useElderCareQuery";
+import { AccessGrantSchema, type AccessGrantInput } from "../schemas/accessGrantSchema";
+
+interface AccessGrant extends AccessGrantInput {
+  id: string;
+  grantedAt: string;
+  status: "Aktif" | "Dicabut";
+}
+
+const initialGrants: AccessGrant[] = [
+  {
+    id: "grant-1",
+    name: "dr. Amelia Putri",
+    email: "amelia.putri@klinikwarasehat.id",
+    specialization: "Dokter Umum",
+    grantedAt: "12 Agu 2026",
+    status: "Aktif",
+  },
+  {
+    id: "grant-2",
+    name: "Ns. Farhan Ramadhan",
+    email: "farhan.ramadhan@homecare.id",
+    specialization: "Perawat Home Care",
+    grantedAt: "3 Sep 2026",
+    status: "Aktif",
+  },
+];
+
+const emptyForm: AccessGrantInput = { name: "", email: "", specialization: "" };
+
+function AccessManagement() {
+  const monitoringQuery = useElderCareQuery();
+
+  const [grants, setGrants] = useState<AccessGrant[]>(initialGrants);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [form, setForm] = useState<AccessGrantInput>(emptyForm);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const elderlyName = monitoringQuery.data?.elderly.name ?? "lansia yang kamu pantau";
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setForm((current) => ({ ...current, [name]: value }));
+    setError("");
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
+
+    const result = AccessGrantSchema.safeParse(form);
+
+    if (!result.success) {
+      setError(result.error.issues[0]?.message ?? "Data tidak valid.");
+      return;
+    }
+
+    const newGrant: AccessGrant = {
+      ...result.data,
+      id: `grant-${Date.now()}`,
+      grantedAt: "Baru saja",
+      status: "Aktif",
+    };
+
+    setGrants((current) => [newGrant, ...current]);
+    setForm(emptyForm);
+    setIsFormOpen(false);
+    setSuccess(`Akses untuk ${newGrant.name} berhasil diberikan.`);
+  };
+
+  const toggleStatus = (id: string) => {
+    setSuccess("");
+    setGrants((current) =>
+      current.map((grant) =>
+        grant.id === id
+          ? { ...grant, status: grant.status === "Aktif" ? "Dicabut" : "Aktif" }
+          : grant,
+      ),
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-paper">
+      <TopNav hasNotification={monitoringQuery.data?.alert.hasAlert ?? false} />
+
+      <main className="min-w-0">
+        <div className="p-4 sm:p-6 lg:p-8">
+          <header className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h1 className="font-serif text-2xl text-ink sm:text-3xl">Pengaturan Izin Akses</h1>
+
+              <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
+                Kelola tenaga medis yang boleh melihat data kesehatan {elderlyName}. Hanya tenaga
+                medis dengan akses aktif yang dapat melihat data ini.
+              </p>
+            </div>
+
+            <Button
+              variant="accent"
+              size="sm"
+              onClick={() => {
+                setSuccess("");
+                setIsFormOpen((open) => !open);
+              }}
+            >
+              {isFormOpen ? "Batal" : "+ Beri Akses Baru"}
+            </Button>
+          </header>
+
+          {success && (
+            <div
+              className="mb-5 flex items-start gap-3 rounded-lg border-l-4 border-safe bg-safe/8 p-4 text-sm text-safe"
+              role="status"
+              aria-live="polite"
+            >
+              <span aria-hidden="true">✓</span>
+              <p>{success}</p>
+            </div>
+          )}
+
+          {isFormOpen && (
+            <Card className="mb-6 p-5 sm:p-6">
+              <h2 className="mb-4 font-serif text-base text-ink">Beri Akses Tenaga Medis</h2>
+
+              <form onSubmit={handleSubmit} noValidate className="space-y-4">
+                {error && (
+                  <div
+                    className="flex items-start gap-3 rounded-lg border border-danger/25 bg-danger/6 px-4 py-3 text-sm text-danger"
+                    role="alert"
+                  >
+                    <span aria-hidden="true">!</span>
+                    <p>{error}</p>
+                  </div>
+                )}
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="mb-2 block text-sm font-semibold text-ink-soft"
+                    >
+                      Nama Tenaga Medis
+                    </label>
+
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      value={form.name}
+                      onChange={handleChange}
+                      placeholder="Contoh: dr. Sarah Amalia"
+                      className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="specialization"
+                      className="mb-2 block text-sm font-semibold text-ink-soft"
+                    >
+                      Spesialisasi/Peran
+                    </label>
+
+                    <input
+                      id="specialization"
+                      name="specialization"
+                      type="text"
+                      value={form.specialization}
+                      onChange={handleChange}
+                      placeholder="Contoh: Dokter Geriatri"
+                      className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label
+                      htmlFor="email"
+                      className="mb-2 block text-sm font-semibold text-ink-soft"
+                    >
+                      Email Terdaftar
+                    </label>
+
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      placeholder="contoh@klinik.id"
+                      className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <Button type="submit" variant="accent" size="sm">
+                    Simpan Akses
+                  </Button>
+                </div>
+              </form>
+            </Card>
+          )}
+
+          <Card className="p-6">
+            <header className="mb-4">
+              <h2 className="font-serif text-lg text-ink">Daftar Tenaga Medis</h2>
+              <p className="mt-1 text-sm text-muted">
+                {grants.filter((grant) => grant.status === "Aktif").length} dari {grants.length}{" "}
+                tenaga medis memiliki akses aktif.
+              </p>
+            </header>
+
+            {grants.length > 0 ? (
+              <ol className="divide-y divide-border">
+                {grants.map((grant) => (
+                  <li
+                    key={grant.id}
+                    className="flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/12 font-serif text-sm text-accent-dark"
+                        aria-hidden="true"
+                      >
+                        {grant.name
+                          .replace(/^(dr\.|Ns\.)\s*/i, "")
+                          .split(" ")
+                          .slice(0, 2)
+                          .map((part) => part.charAt(0))
+                          .join("")
+                          .toUpperCase()}
+                      </div>
+
+                      <div>
+                        <p className="text-sm font-semibold text-ink-soft">{grant.name}</p>
+                        <p className="mt-0.5 text-xs text-muted">
+                          {grant.specialization} · {grant.email}
+                        </p>
+                        <p className="mt-0.5 text-xs text-muted">Diberi akses {grant.grantedAt}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 sm:shrink-0">
+                      <Badge variant={grant.status === "Aktif" ? "success" : "neutral"}>
+                        {grant.status}
+                      </Badge>
+
+                      <Button
+                        variant={grant.status === "Aktif" ? "secondary" : "accent"}
+                        size="sm"
+                        onClick={() => toggleStatus(grant.id)}
+                      >
+                        {grant.status === "Aktif" ? "Cabut Akses" : "Aktifkan Kembali"}
+                      </Button>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <div className="py-6 text-center">
+                <p className="text-sm font-medium text-ink-soft">
+                  Belum ada tenaga medis yang diberi akses.
+                </p>
+              </div>
+            )}
+          </Card>
+        </div>
+
+        <footer className="border-t border-border bg-surface px-4 py-5 text-center sm:px-6 lg:px-8">
+          <p className="text-xs text-muted">ElderCare AI — Smart Elderly Monitoring System</p>
+        </footer>
+      </main>
+    </div>
+  );
+}
+
+export default AccessManagement;
