@@ -1,5 +1,8 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.13/schema.json",
+  "files": {
+    "includes": ["src/**", "*.json", "!node_modules", "!.next", "!vite.config.js"]
+  },
   "assist": {
     "actions": {
       "source": {

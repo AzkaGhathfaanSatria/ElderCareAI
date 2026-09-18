@@ -4,8 +4,8 @@ import {
   SESSION_COOKIE_NAME,
   SESSION_MAX_AGE_SECONDS,
   signSessionToken,
-  verifyPassword,
-} from "../../../../lib/auth";
+} from "../../../../lib/auth-edge";
+import { verifyPassword } from "../../../../lib/auth-password";
 import { findUserByEmail } from "../../../../lib/userStore";
 import { LoginSchema } from "../../../../schemas/authSchema";
 

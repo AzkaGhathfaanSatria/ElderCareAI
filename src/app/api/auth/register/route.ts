@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { hashPassword } from "../../../../lib/auth";
+import { hashPassword } from "../../../../lib/auth-password";
 import { createUser, findUserByEmail } from "../../../../lib/userStore";
 import { RegisterSchema } from "../../../../schemas/registerSchema";
 

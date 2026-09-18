@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { SESSION_COOKIE_NAME, verifySessionToken } from "../../../../lib/auth";
+import { SESSION_COOKIE_NAME, verifySessionToken } from "../../../../lib/auth-edge";
 
 export async function GET() {
   const cookieStore = await cookies();

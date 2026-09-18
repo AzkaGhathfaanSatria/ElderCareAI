@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { SESSION_COOKIE_NAME } from "../../../../lib/auth";
+import { SESSION_COOKIE_NAME } from "../../../../lib/auth-edge";
 
 export async function POST() {
   const response = NextResponse.json({ ok: true });
