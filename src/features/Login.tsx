@@ -205,6 +205,16 @@ function LoginPage() {
                 <p className="mt-0.5 text-xs text-muted">amelia@eldercare.ai · medis123</p>
               </div>
             </div>
+
+            <div className="flex items-start gap-3">
+              <span className="text-base" aria-hidden="true">
+                🛡️
+              </span>
+              <div>
+                <p className="text-xs font-semibold text-ink-soft">Akun demo Admin</p>
+                <p className="mt-0.5 text-xs text-muted">admin@eldercare.ai · admin123</p>
+              </div>
+            </div>
           </div>
         </div>
 

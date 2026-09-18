@@ -242,6 +242,7 @@ function TopNav({ hasNotification = false }: TopNavProps) {
           <button
             type="button"
             aria-label="Buka notifikasi"
+            onClick={() => router.push("/notifications")}
             className="relative rounded-lg p-2 text-muted transition hover:bg-paper hover:text-ink-soft"
           >
             <span className="text-lg" aria-hidden="true">
@@ -310,9 +311,11 @@ function TopNav({ hasNotification = false }: TopNavProps) {
                   <button
                     type="button"
                     role="menuitem"
-                    disabled
-                    title="Segera hadir"
-                    className="flex w-full cursor-default items-center gap-2.5 px-4 py-2.5 text-left text-sm text-muted/50"
+                    onClick={() => {
+                      setIsProfileOpen(false);
+                      router.push("/profile");
+                    }}
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-ink-soft transition hover:bg-paper"
                   >
                     <svg
                       viewBox="0 0 24 24"
@@ -331,9 +334,11 @@ function TopNav({ hasNotification = false }: TopNavProps) {
                   <button
                     type="button"
                     role="menuitem"
-                    disabled
-                    title="Segera hadir"
-                    className="flex w-full cursor-default items-center gap-2.5 px-4 py-2.5 text-left text-sm text-muted/50"
+                    onClick={() => {
+                      setIsProfileOpen(false);
+                      router.push("/settings");
+                    }}
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-ink-soft transition hover:bg-paper"
                   >
                     <svg
                       viewBox="0 0 24 24"

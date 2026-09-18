@@ -3,7 +3,15 @@ import { NextResponse } from "next/server";
 
 import { SESSION_COOKIE_NAME, verifySessionToken } from "./lib/auth";
 
-const PROTECTED_PREFIXES = ["/dashboard", "/elderly", "/notifications", "/access", "/admin"];
+const PROTECTED_PREFIXES = [
+  "/dashboard",
+  "/elderly",
+  "/notifications",
+  "/access",
+  "/admin",
+  "/profile",
+  "/settings",
+];
 const AUTH_PAGES = ["/login", "/register"];
 
 export async function proxy(request: NextRequest) {
@@ -63,6 +71,8 @@ export const config = {
     "/notifications/:path*",
     "/access/:path*",
     "/admin/:path*",
+    "/profile/:path*",
+    "/settings/:path*",
     "/login",
     "/register",
   ],
