@@ -1,8 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-
-import { hashPassword } from "./auth-password";
 import type { UserRole } from "../types/auth";
+import { hashPassword } from "./auth-password";
 
 export interface StoredUser {
   id: string;

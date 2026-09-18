@@ -57,9 +57,7 @@ function AnomalyHistory({ anomalyHistory, selectedPeriod, onPeriodChange }: Anom
 
                     <h3 className="mt-1 text-sm font-semibold text-ink">{item.type}</h3>
 
-                    <p className="mt-1 max-w-xl text-sm leading-6 text-muted">
-                      {item.description}
-                    </p>
+                    <p className="mt-1 max-w-xl text-sm leading-6 text-muted">{item.description}</p>
                   </div>
 
                   <Badge

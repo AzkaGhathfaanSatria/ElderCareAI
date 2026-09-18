@@ -43,9 +43,7 @@ export async function verifySessionToken(token: string): Promise<SessionPayload 
       typeof payload.userId === "string" &&
       typeof payload.name === "string" &&
       typeof payload.email === "string" &&
-      (payload.role === "keluarga" ||
-        payload.role === "tenaga_medis" ||
-        payload.role === "admin")
+      (payload.role === "keluarga" || payload.role === "tenaga_medis" || payload.role === "admin")
     ) {
       return {
         userId: payload.userId,

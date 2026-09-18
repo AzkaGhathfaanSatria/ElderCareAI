@@ -154,10 +154,7 @@ function Settings() {
             </header>
 
             <div>
-              <label
-                htmlFor="language"
-                className="mb-2 block text-sm font-semibold text-ink-soft"
-              >
+              <label htmlFor="language" className="mb-2 block text-sm font-semibold text-ink-soft">
                 Bahasa
               </label>
               <select

@@ -9,7 +9,7 @@ import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import { useElderCareQuery } from "../hooks/useElderCareQuery";
 import { useSession } from "../hooks/useSession";
-import { AccessGrantSchema, type AccessGrantInput } from "../schemas/accessGrantSchema";
+import { type AccessGrantInput, AccessGrantSchema } from "../schemas/accessGrantSchema";
 
 interface AccessGrant extends AccessGrantInput {
   id: string;
