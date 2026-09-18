@@ -25,3 +25,8 @@ dist-ssr
 
 .next/
 tsconfig.tsbuildinfo
+
+# Data pengguna (auto-dibuat oleh backend, jangan ikut di-commit)
+/data
+.env
+.env.local

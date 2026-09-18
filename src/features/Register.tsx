@@ -59,9 +59,24 @@ function Register() {
     setIsLoading(true);
 
     try {
-      await new Promise<void>((resolve) => {
-        window.setTimeout(resolve, 1000);
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(result.data),
       });
+
+      const data: unknown = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        const message =
+          data && typeof data === "object" && "message" in data && typeof data.message === "string"
+            ? data.message
+            : "Registrasi gagal. Silakan coba lagi.";
+
+        setError(message);
+        setIsLoading(false);
+        return;
+      }
 
       setSuccess("Registrasi berhasil. Mengarahkan ke halaman login...");
 
@@ -69,8 +84,7 @@ function Register() {
         router.push("/login");
       }, 1000);
     } catch {
-      setError("Registrasi gagal. Silakan coba lagi.");
-    } finally {
+      setError("Tidak dapat terhubung ke server. Coba lagi.");
       setIsLoading(false);
     }
   };
@@ -257,10 +271,7 @@ function Register() {
 
                 {/* Email */}
                 <div>
-                  <label
-                    htmlFor="email"
-                    className="mb-2 block text-sm font-semibold text-ink-soft"
-                  >
+                  <label htmlFor="email" className="mb-2 block text-sm font-semibold text-ink-soft">
                     Email
                   </label>
 

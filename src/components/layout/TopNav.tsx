@@ -3,15 +3,37 @@
 import { usePathname, useRouter } from "next/navigation";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
+import { useSession } from "../../hooks/useSession";
+
 interface TopNavProps {
   hasNotification?: boolean;
+}
+
+const roleLabel = {
+  keluarga: "Keluarga/Caregiver",
+  tenaga_medis: "Tenaga Medis",
+  admin: "Administrator Sistem",
+} as const;
+
+function getInitials(name: string) {
+  return name
+    .replace(/^(dr\.|Ns\.)\s*/i, "")
+    .split(" ")
+    .slice(0, 2)
+    .map((part) => part.charAt(0))
+    .join("")
+    .toUpperCase();
 }
 
 function TopNav({ hasNotification = false }: TopNavProps) {
   const router = useRouter();
   const pathname = usePathname();
 
+  const sessionQuery = useSession();
+  const user = sessionQuery.data;
+
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const profileRef = useRef<HTMLDivElement>(null);
 
@@ -39,10 +61,22 @@ function TopNav({ hasNotification = false }: TopNavProps) {
     };
   }, [isProfileOpen]);
 
-  const menuItems: Array<{
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    setIsProfileOpen(false);
+
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } finally {
+      router.push("/login");
+    }
+  };
+
+  const monitoringMenuItems: Array<{
     label: string;
     path: string | null;
     icon: ReactNode;
+    roles?: Array<"keluarga" | "tenaga_medis">;
   }> = [
     {
       label: "Dashboard",
@@ -100,6 +134,7 @@ function TopNav({ hasNotification = false }: TopNavProps) {
     {
       label: "Izin Akses",
       path: "/access",
+      roles: ["keluarga"],
       icon: (
         <svg
           viewBox="0 0 24 24"
@@ -114,9 +149,12 @@ function TopNav({ hasNotification = false }: TopNavProps) {
         </svg>
       ),
     },
+  ];
+
+  const adminMenuItems: Array<{ label: string; path: string; icon: ReactNode }> = [
     {
-      label: "Riwayat",
-      path: null,
+      label: "Dashboard Admin",
+      path: "/admin",
       icon: (
         <svg
           viewBox="0 0 24 24"
@@ -126,12 +164,61 @@ function TopNav({ hasNotification = false }: TopNavProps) {
           className="h-4 w-4"
           aria-hidden="true"
         >
-          <circle cx="12" cy="12" r="8" />
-          <path d="M12 8v4l3 2" />
+          <rect x="4" y="4" width="6" height="6" rx="1" />
+          <rect x="14" y="4" width="6" height="6" rx="1" />
+          <rect x="4" y="14" width="6" height="6" rx="1" />
+          <rect x="14" y="14" width="6" height="6" rx="1" />
+        </svg>
+      ),
+    },
+    {
+      label: "Manajemen Pengguna",
+      path: "/admin/users",
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          className="h-4 w-4"
+          aria-hidden="true"
+        >
+          <circle cx="9" cy="8" r="3" />
+          <path d="M2.5 19c.7-3 2.9-4.6 6.5-4.6s5.8 1.6 6.5 4.6" />
+          <path d="M16.5 8.5a2.5 2.5 0 1 1 0-5" />
+          <path d="M17.5 14.6c2.4.3 4 1.6 4.5 4.4" />
+        </svg>
+      ),
+    },
+    {
+      label: "Manajemen Perangkat",
+      path: "/admin/devices",
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          className="h-4 w-4"
+          aria-hidden="true"
+        >
+          <rect x="3" y="5" width="12" height="8" rx="1.5" />
+          <path d="M7 17h4" />
+          <circle cx="19" cy="9" r="3" />
+          <path d="M19 12v2m0 4h.01" />
         </svg>
       ),
     },
   ];
+
+  const isAdmin = user?.role === "admin";
+
+  const visibleMenuItems = isAdmin
+    ? adminMenuItems
+    : monitoringMenuItems.filter(
+        (item) =>
+          !item.roles || (user && item.roles.includes(user.role as "keluarga" | "tenaga_medis")),
+      );
 
   return (
     <div className="sticky top-0 z-40 bg-surface">
@@ -182,12 +269,14 @@ function TopNav({ hasNotification = false }: TopNavProps) {
                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent/15 text-sm font-bold text-accent-dark"
                 aria-hidden="true"
               >
-                DK
+                {user ? getInitials(user.name) : "…"}
               </div>
 
               <div className="hidden text-left sm:block">
-                <p className="text-sm font-semibold leading-tight text-ink-soft">Dian Kusuma</p>
-                <p className="text-xs text-muted">Keluarga/Caregiver</p>
+                <p className="text-sm font-semibold leading-tight text-ink-soft">
+                  {user?.name ?? "Memuat..."}
+                </p>
+                <p className="text-xs text-muted">{user ? roleLabel[user.role] : ""}</p>
               </div>
 
               <svg
@@ -211,8 +300,10 @@ function TopNav({ hasNotification = false }: TopNavProps) {
                 className="absolute right-0 top-[calc(100%+8px)] w-60 overflow-hidden rounded-xl border border-border bg-surface shadow-[var(--shadow-card-lg)]"
               >
                 <div className="border-b border-border px-4 py-3">
-                  <p className="text-sm font-semibold text-ink-soft">Dian Kusuma</p>
-                  <p className="mt-0.5 text-xs text-muted">Keluarga/Caregiver · Budi Santoso</p>
+                  <p className="text-sm font-semibold text-ink-soft">{user?.name}</p>
+                  <p className="mt-0.5 text-xs text-muted">
+                    {user ? roleLabel[user.role] : ""} · {user?.email}
+                  </p>
                 </div>
 
                 <div className="py-1.5">
@@ -263,11 +354,9 @@ function TopNav({ hasNotification = false }: TopNavProps) {
                   <button
                     type="button"
                     role="menuitem"
-                    onClick={() => {
-                      setIsProfileOpen(false);
-                      router.push("/login");
-                    }}
-                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm font-medium text-danger transition hover:bg-danger/8"
+                    onClick={handleLogout}
+                    disabled={isLoggingOut}
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm font-medium text-danger transition hover:bg-danger/8 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <svg
                       viewBox="0 0 24 24"
@@ -281,7 +370,7 @@ function TopNav({ hasNotification = false }: TopNavProps) {
                       <path d="M16 17l5-5-5-5" />
                       <path d="M21 12H9" />
                     </svg>
-                    Keluar
+                    {isLoggingOut ? "Keluar..." : "Keluar"}
                   </button>
                 </div>
               </div>
@@ -295,7 +384,7 @@ function TopNav({ hasNotification = false }: TopNavProps) {
         className="flex items-center gap-1 overflow-x-auto border-b border-border px-2 sm:px-4 lg:px-6"
         aria-label="Navigasi utama"
       >
-        {menuItems.map((item) => {
+        {visibleMenuItems.map((item) => {
           const isActive = item.path !== null && pathname === item.path;
 
           return (

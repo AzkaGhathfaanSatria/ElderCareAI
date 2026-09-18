@@ -49,31 +49,31 @@ function LoginPage() {
     setFormState({ status: "submitting" });
 
     try {
-      await new Promise<void>((resolve) => {
-        window.setTimeout(resolve, 1000);
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(validation.data),
       });
 
-      if (validation.data.email === "admin@eldercare.ai" && validation.data.password === "123456") {
-        document.cookie = "eldercare_token=logged_in; path=/; max-age=86400";
+      const data: unknown = await response.json().catch(() => null);
 
-        setFormState({ status: "success" });
+      if (!response.ok) {
+        const message =
+          data && typeof data === "object" && "message" in data && typeof data.message === "string"
+            ? data.message
+            : "Email atau password salah.";
 
-        router.push("/dashboard");
-
+        setFormState({ status: "error", message });
         return;
       }
 
-      setFormState({
-        status: "error",
-        message: "Email atau password salah.",
-      });
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error ? error.message : "Terjadi kesalahan saat proses login.";
+      setFormState({ status: "success" });
 
+      router.push("/dashboard");
+    } catch {
       setFormState({
         status: "error",
-        message,
+        message: "Tidak dapat terhubung ke server. Coba lagi.",
       });
     }
   };
@@ -146,10 +146,7 @@ function LoginPage() {
             </div>
 
             <div className="mb-6">
-              <label
-                htmlFor="password"
-                className="mb-2 block text-sm font-semibold text-ink-soft"
-              >
+              <label htmlFor="password" className="mb-2 block text-sm font-semibold text-ink-soft">
                 Password
               </label>
               <input
@@ -188,11 +185,25 @@ function LoginPage() {
             </p>
           </div>
 
-          <div className="mt-7 flex items-center gap-3 rounded-xl border border-dashed border-border bg-paper px-4 py-3">
-            <span className="text-base" aria-hidden="true">🔑</span>
-            <div>
-              <p className="text-xs font-semibold text-ink-soft">Akun demo</p>
-              <p className="mt-0.5 text-xs text-muted">admin@eldercare.ai · 123456</p>
+          <div className="mt-7 space-y-2 rounded-xl border border-dashed border-border bg-paper px-4 py-3">
+            <div className="flex items-start gap-3">
+              <span className="text-base" aria-hidden="true">
+                🔑
+              </span>
+              <div>
+                <p className="text-xs font-semibold text-ink-soft">Akun demo Keluarga</p>
+                <p className="mt-0.5 text-xs text-muted">dian@eldercare.ai · keluarga123</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <span className="text-base" aria-hidden="true">
+                🩺
+              </span>
+              <div>
+                <p className="text-xs font-semibold text-ink-soft">Akun demo Tenaga Medis</p>
+                <p className="mt-0.5 text-xs text-muted">amelia@eldercare.ai · medis123</p>
+              </div>
             </div>
           </div>
         </div>

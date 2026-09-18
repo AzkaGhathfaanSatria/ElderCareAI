@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { type ChangeEvent, type FormEvent, useState } from "react";
 
 import TopNav from "../components/layout/TopNav";
@@ -7,6 +8,7 @@ import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import { useElderCareQuery } from "../hooks/useElderCareQuery";
+import { useSession } from "../hooks/useSession";
 import { AccessGrantSchema, type AccessGrantInput } from "../schemas/accessGrantSchema";
 
 interface AccessGrant extends AccessGrantInput {
@@ -37,6 +39,10 @@ const initialGrants: AccessGrant[] = [
 const emptyForm: AccessGrantInput = { name: "", email: "", specialization: "" };
 
 function AccessManagement() {
+  const router = useRouter();
+
+  const sessionQuery = useSession();
+
   const monitoringQuery = useElderCareQuery();
 
   const [grants, setGrants] = useState<AccessGrant[]>(initialGrants);
@@ -46,6 +52,41 @@ function AccessManagement() {
   const [success, setSuccess] = useState("");
 
   const elderlyName = monitoringQuery.data?.elderly.name ?? "lansia yang kamu pantau";
+
+  // Middleware sudah menolak Tenaga Medis di sisi server; guard ini cuma
+  // jaring pengaman tambahan di sisi client (defense in depth), dan juga
+  // menutupi jeda singkat sebelum data sesi selesai dimuat.
+  if (sessionQuery.data && sessionQuery.data.role !== "keluarga") {
+    return (
+      <div className="min-h-screen bg-paper">
+        <TopNav hasNotification={monitoringQuery.data?.alert.hasAlert ?? false} />
+
+        <main className="flex min-h-[calc(100vh-113px)] items-center justify-center p-4">
+          <Card className="max-w-md p-8 text-center">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-danger/12 text-lg font-bold text-danger">
+              !
+            </div>
+
+            <h1 className="font-serif text-lg text-ink">Tidak Punya Akses</h1>
+
+            <p className="mt-2 text-sm leading-6 text-muted">
+              Halaman Pengaturan Izin Akses hanya bisa dibuka oleh Keluarga/Caregiver, bukan Tenaga
+              Medis.
+            </p>
+
+            <Button
+              variant="primary"
+              size="sm"
+              className="mt-5"
+              onClick={() => router.push("/dashboard")}
+            >
+              Kembali ke Dashboard
+            </Button>
+          </Card>
+        </main>
+      </div>
+    );
+  }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
