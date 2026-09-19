@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { UserRole } from "../types/auth";
 import { hashPassword } from "./auth-password";
+import { getDataDir } from "./dataDir";
 
 export interface StoredUser {
   id: string;
@@ -12,7 +13,7 @@ export interface StoredUser {
   createdAt: string;
 }
 
-const DATA_DIR = path.join(process.cwd(), "data");
+const DATA_DIR = getDataDir();
 const USERS_FILE = path.join(DATA_DIR, "users.json");
 
 async function ensureSeeded(): Promise<StoredUser[]> {

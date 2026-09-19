@@ -3,6 +3,7 @@ import path from "node:path";
 
 import { ElderCareDataSchema } from "../schemas/elderCareSchema";
 import type { ElderCareData } from "../types/elderCare";
+import { getDataDir } from "./dataDir";
 
 /**
  * Penyimpanan data monitoring lansia di server (Node.js runtime saja —
@@ -16,7 +17,7 @@ import type { ElderCareData } from "../types/elderCare";
  * skema di sisi server (pola Backend for Frontend / BFF).
  */
 
-const DATA_DIR = path.join(process.cwd(), "data");
+const DATA_DIR = getDataDir();
 const ELDERLY_FILE = path.join(DATA_DIR, "elderly.json");
 
 const SEED_DATA = {
