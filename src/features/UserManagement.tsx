@@ -3,10 +3,13 @@
 import { type ChangeEvent, type FormEvent, useMemo, useState } from "react";
 
 import TopNav from "../components/layout/TopNav";
+import PageFooter from "../components/layout/PageFooter";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
+import FormAlert from "../components/ui/FormAlert";
 import Select from "../components/ui/Select";
+import TextField from "../components/ui/TextField";
 import { getInitials } from "../lib/initials";
 import { RegisterSchema } from "../schemas/registerSchema";
 
@@ -164,51 +167,29 @@ function UserManagement() {
 
               <form onSubmit={handleSubmit} noValidate className="space-y-4">
                 {error && (
-                  <div
-                    className="flex items-start gap-3 rounded-lg border border-danger/25 bg-danger/6 px-4 py-3 text-sm text-danger"
-                    role="alert"
-                  >
-                    <span aria-hidden="true">!</span>
-                    <p>{error}</p>
-                  </div>
+                  <FormAlert message={error} />
                 )}
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label
-                      htmlFor="name"
-                      className="mb-2 block text-sm font-semibold text-ink-soft"
-                    >
-                      Nama Lengkap
-                    </label>
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      value={form.name}
-                      onChange={handleChange}
-                      placeholder="Nama pengguna"
-                      className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                    />
-                  </div>
+                  <TextField
+                    id="name"
+                    name="name"
+                    type="text"
+                    label="Nama Lengkap"
+                    value={form.name}
+                    onChange={handleChange}
+                    placeholder="Nama pengguna"
+                  />
 
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="mb-2 block text-sm font-semibold text-ink-soft"
-                    >
-                      Email
-                    </label>
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      placeholder="contoh@email.com"
-                      className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                    />
-                  </div>
+                  <TextField
+                    id="email"
+                    name="email"
+                    type="email"
+                    label="Email"
+                    value={form.email}
+                    onChange={handleChange}
+                    placeholder="contoh@email.com"
+                  />
                 </div>
 
                 <div className="max-w-xs">
@@ -310,9 +291,7 @@ function UserManagement() {
           </Card>
         </div>
 
-        <footer className="border-t border-border bg-surface px-4 py-5 text-center sm:px-6 lg:px-8">
-          <p className="text-xs text-muted">ElderCare AI — Smart Elderly Monitoring System</p>
-        </footer>
+        <PageFooter />
       </main>
     </div>
   );

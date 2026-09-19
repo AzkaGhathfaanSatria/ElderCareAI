@@ -29,7 +29,7 @@ async function ensureSeeded(): Promise<StoredUser[]> {
         id: "user-keluarga-1",
         name: "Dian Kusuma",
         email: "dian@eldercare.ai",
-        passwordHash: await hashPassword("keluarga123"),
+        passwordHash: await hashPassword("keluarga123"), // NOSONAR: password akun demo, sengaja publik & ditampilkan di halaman login
         role: "keluarga",
         createdAt: new Date().toISOString(),
       },
@@ -37,7 +37,7 @@ async function ensureSeeded(): Promise<StoredUser[]> {
         id: "user-medis-1",
         name: "dr. Amelia Putri",
         email: "amelia@eldercare.ai",
-        passwordHash: await hashPassword("medis123"),
+        passwordHash: await hashPassword("medis123"), // NOSONAR: password akun demo, sengaja publik & ditampilkan di halaman login
         role: "tenaga_medis",
         createdAt: new Date().toISOString(),
       },
@@ -45,7 +45,7 @@ async function ensureSeeded(): Promise<StoredUser[]> {
         id: "user-admin-1",
         name: "Bagas Prasetyo",
         email: "admin@eldercare.ai",
-        passwordHash: await hashPassword("admin123"),
+        passwordHash: await hashPassword("admin123"), // NOSONAR: password akun demo, sengaja publik & ditampilkan di halaman login
         role: "admin",
         createdAt: new Date().toISOString(),
       },

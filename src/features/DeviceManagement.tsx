@@ -3,9 +3,12 @@
 import { type ChangeEvent, type FormEvent, useState } from "react";
 
 import TopNav from "../components/layout/TopNav";
+import PageFooter from "../components/layout/PageFooter";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
+import FormAlert from "../components/ui/FormAlert";
+import TextField from "../components/ui/TextField";
 
 type DeviceType = "Wearable" | "Sensor Gerak" | "Sensor Pintu";
 type DeviceStatus = "Terhubung" | "Terputus";
@@ -151,33 +154,19 @@ function DeviceManagement() {
 
               <form onSubmit={handleSubmit} noValidate className="space-y-4">
                 {error && (
-                  <div
-                    className="flex items-start gap-3 rounded-lg border border-danger/25 bg-danger/6 px-4 py-3 text-sm text-danger"
-                    role="alert"
-                  >
-                    <span aria-hidden="true">!</span>
-                    <p>{error}</p>
-                  </div>
+                  <FormAlert message={error} />
                 )}
 
                 <div className="grid gap-4 sm:grid-cols-3">
-                  <div>
-                    <label
-                      htmlFor="deviceId"
-                      className="mb-2 block text-sm font-semibold text-ink-soft"
-                    >
-                      ID Perangkat
-                    </label>
-                    <input
-                      id="deviceId"
-                      name="deviceId"
-                      type="text"
-                      value={form.deviceId}
-                      onChange={handleChange}
-                      placeholder="Contoh: WRB-030"
-                      className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                    />
-                  </div>
+                  <TextField
+                    id="deviceId"
+                    name="deviceId"
+                    type="text"
+                    label="ID Perangkat"
+                    value={form.deviceId}
+                    onChange={handleChange}
+                    placeholder="Contoh: WRB-030"
+                  />
 
                   <div>
                     <label
@@ -199,23 +188,15 @@ function DeviceManagement() {
                     </select>
                   </div>
 
-                  <div>
-                    <label
-                      htmlFor="assignedTo"
-                      className="mb-2 block text-sm font-semibold text-ink-soft"
-                    >
-                      Dipasangkan ke Lansia
-                    </label>
-                    <input
-                      id="assignedTo"
-                      name="assignedTo"
-                      type="text"
-                      value={form.assignedTo}
-                      onChange={handleChange}
-                      placeholder="Nama lansia"
-                      className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                    />
-                  </div>
+                  <TextField
+                    id="assignedTo"
+                    name="assignedTo"
+                    type="text"
+                    label="Dipasangkan ke Lansia"
+                    value={form.assignedTo}
+                    onChange={handleChange}
+                    placeholder="Nama lansia"
+                  />
                 </div>
 
                 <div className="flex justify-end">
@@ -280,9 +261,7 @@ function DeviceManagement() {
           </Card>
         </div>
 
-        <footer className="border-t border-border bg-surface px-4 py-5 text-center sm:px-6 lg:px-8">
-          <p className="text-xs text-muted">ElderCare AI — Smart Elderly Monitoring System</p>
-        </footer>
+        <PageFooter />
       </main>
     </div>
   );

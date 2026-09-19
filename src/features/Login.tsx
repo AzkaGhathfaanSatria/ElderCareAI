@@ -4,6 +4,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { type ChangeEvent, type FormEvent, useState } from "react";
 
+import FormAlert from "../components/ui/FormAlert";
+import TextField from "../components/ui/TextField";
 import { type LoginInput, LoginSchema } from "../schemas/authSchema";
 import type { PublicUser } from "../types/auth";
 
@@ -123,54 +125,34 @@ function LoginPage() {
         <div className="rounded-2xl border border-border bg-surface p-7 shadow-[var(--shadow-card-lg)]">
           <form onSubmit={handleSubmit} noValidate>
             {formState.status === "error" && (
-              <div
-                role="alert"
-                aria-live="polite"
-                className="mb-5 flex items-start gap-3 rounded-xl border border-danger/25 bg-danger/6 px-4 py-3 text-sm text-danger"
-              >
-                <span
-                  className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-danger/15 text-xs font-bold"
-                  aria-hidden="true"
-                >
-                  !
-                </span>
-                <p>{formState.message}</p>
-              </div>
+              <FormAlert variant="icon" className="mb-5" message={formState.message} />
             )}
 
-            <div className="mb-5">
-              <label htmlFor="email" className="mb-2 block text-sm font-semibold text-ink-soft">
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={email}
-                onChange={(event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
-                placeholder="nama@keluarga.id"
-                autoComplete="email"
-                aria-label="Email pengguna"
-                className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-              />
-            </div>
+            <TextField
+              id="email"
+              name="email"
+              type="email"
+              label="Email"
+              value={email}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
+              placeholder="nama@keluarga.id"
+              autoComplete="email"
+              aria-label="Email pengguna"
+              containerClassName="mb-5"
+            />
 
-            <div className="mb-6">
-              <label htmlFor="password" className="mb-2 block text-sm font-semibold text-ink-soft">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={password}
-                onChange={(event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
-                placeholder="Masukkan password"
-                autoComplete="current-password"
-                aria-label="Password pengguna"
-                className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-              />
-            </div>
+            <TextField
+              id="password"
+              name="password"
+              type="password"
+              label="Password"
+              value={password}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
+              placeholder="Masukkan password"
+              autoComplete="current-password"
+              aria-label="Password pengguna"
+              containerClassName="mb-6"
+            />
 
             <button
               type="submit"

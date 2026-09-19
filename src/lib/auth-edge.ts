@@ -17,7 +17,7 @@ const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 hari
  * kebutuhan development/demo lokal supaya proyek tetap bisa langsung
  * dijalankan tanpa setup tambahan.
  */
-const secretValue = process.env.AUTH_SECRET ?? "dev-only-secret-jangan-dipakai-di-production";
+const secretValue = process.env.AUTH_SECRET ?? "dev-only-secret-jangan-dipakai-di-production"; // NOSONAR: fallback dev/demo lokal, wajib diisi lewat AUTH_SECRET di production (lihat .env.example)
 const secretKey = new TextEncoder().encode(secretValue);
 
 export interface SessionPayload {

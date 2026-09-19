@@ -6,6 +6,7 @@ import AlertSummary from "../components/dashboard/AlertSummary";
 import ElderlyMonitoringCard from "../components/dashboard/ElderlyMonitoringCard";
 import HealthSummary from "../components/dashboard/HealthSummary";
 import TopNav from "../components/layout/TopNav";
+import PageFooter from "../components/layout/PageFooter";
 import QueryStateScreen from "../components/ui/QueryStateScreen";
 import { useElderCareQuery } from "../hooks/useElderCareQuery";
 import { useUIStore } from "../store/useUIStore";
@@ -62,9 +63,7 @@ function Dashboard() {
           <ElderlyMonitoringCard elderly={elderly} onViewDetail={() => router.push("/elderly")} />
         </div>
 
-        <footer className="border-t border-border bg-surface px-4 py-5 text-center sm:px-6 lg:px-8">
-          <p className="text-xs text-muted">ElderCare AI — Smart Elderly Monitoring System</p>
-        </footer>
+        <PageFooter />
       </main>
     </div>
   );

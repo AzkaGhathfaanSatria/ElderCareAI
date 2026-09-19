@@ -1,6 +1,7 @@
 "use client";
 
 import TopNav from "../components/layout/TopNav";
+import PageFooter from "../components/layout/PageFooter";
 import Badge from "../components/ui/Badge";
 import Card from "../components/ui/Card";
 
@@ -155,9 +156,7 @@ function AdminDashboard() {
           </section>
         </div>
 
-        <footer className="border-t border-border bg-surface px-4 py-5 text-center sm:px-6 lg:px-8">
-          <p className="text-xs text-muted">ElderCare AI — Smart Elderly Monitoring System</p>
-        </footer>
+        <PageFooter />
       </main>
     </div>
   );

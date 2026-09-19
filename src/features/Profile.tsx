@@ -7,6 +7,7 @@ import TopNav from "../components/layout/TopNav";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
+import TextField from "../components/ui/TextField";
 import { useSession } from "../hooks/useSession";
 
 const roleLabel = {
@@ -124,33 +125,25 @@ function Profile() {
             </header>
 
             <form onSubmit={handleSaveProfile} noValidate>
-              <div className="mb-4">
-                <label htmlFor="name" className="mb-2 block text-sm font-semibold text-ink-soft">
-                  Nama Lengkap
-                </label>
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  value={name}
-                  onChange={(event: ChangeEvent<HTMLInputElement>) => setName(event.target.value)}
-                  className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                />
-              </div>
+              <TextField
+                id="name"
+                name="name"
+                type="text"
+                label="Nama Lengkap"
+                value={name}
+                onChange={(event: ChangeEvent<HTMLInputElement>) => setName(event.target.value)}
+                containerClassName="mb-4"
+              />
 
-              <div className="mb-5">
-                <label htmlFor="email" className="mb-2 block text-sm font-semibold text-ink-soft">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={email}
-                  onChange={(event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
-                  className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                />
-              </div>
+              <TextField
+                id="email"
+                name="email"
+                type="email"
+                label="Email"
+                value={email}
+                onChange={(event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
+                containerClassName="mb-5"
+              />
 
               <Button type="submit" variant="accent" size="md">
                 Simpan Perubahan
@@ -168,66 +161,43 @@ function Profile() {
             </header>
 
             <form onSubmit={handleChangePassword} noValidate>
-              <div className="mb-4">
-                <label
-                  htmlFor="currentPassword"
-                  className="mb-2 block text-sm font-semibold text-ink-soft"
-                >
-                  Password Saat Ini
-                </label>
-                <input
-                  id="currentPassword"
-                  name="currentPassword"
-                  type="password"
-                  value={currentPassword}
-                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                    setCurrentPassword(event.target.value)
-                  }
-                  autoComplete="current-password"
-                  className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                />
-              </div>
+              <TextField
+                id="currentPassword"
+                name="currentPassword"
+                type="password"
+                label="Password Saat Ini"
+                value={currentPassword}
+                onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                  setCurrentPassword(event.target.value)
+                }
+                autoComplete="current-password"
+                containerClassName="mb-4"
+              />
 
               <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label
-                    htmlFor="newPassword"
-                    className="mb-2 block text-sm font-semibold text-ink-soft"
-                  >
-                    Password Baru
-                  </label>
-                  <input
-                    id="newPassword"
-                    name="newPassword"
-                    type="password"
-                    value={newPassword}
-                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                      setNewPassword(event.target.value)
-                    }
-                    autoComplete="new-password"
-                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                  />
-                </div>
+                <TextField
+                  id="newPassword"
+                  name="newPassword"
+                  type="password"
+                  label="Password Baru"
+                  value={newPassword}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                    setNewPassword(event.target.value)
+                  }
+                  autoComplete="new-password"
+                />
 
-                <div>
-                  <label
-                    htmlFor="confirmPassword"
-                    className="mb-2 block text-sm font-semibold text-ink-soft"
-                  >
-                    Konfirmasi Password Baru
-                  </label>
-                  <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                      setConfirmPassword(event.target.value)
-                    }
-                    autoComplete="new-password"
-                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                  />
-                </div>
+                <TextField
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  label="Konfirmasi Password Baru"
+                  value={confirmPassword}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                    setConfirmPassword(event.target.value)
+                  }
+                  autoComplete="new-password"
+                />
               </div>
 
               <Button type="submit" variant="primary" size="md">

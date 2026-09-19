@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { type ChangeEvent, type FormEvent, useState } from "react";
 
 import Button from "../components/ui/Button";
+import FormAlert from "../components/ui/FormAlert";
+import TextField from "../components/ui/TextField";
 import { type RegisterInput, RegisterSchema } from "../schemas/registerSchema";
 
 function Register() {
@@ -214,22 +216,7 @@ function Register() {
               </header>
 
               {/* Error */}
-              {error && (
-                <div
-                  className="mb-5 flex items-start gap-3 rounded-xl border border-danger/25 bg-danger/6 px-4 py-3 text-sm text-danger"
-                  role="alert"
-                  aria-live="polite"
-                >
-                  <span
-                    className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-danger/15 text-xs font-bold"
-                    aria-hidden="true"
-                  >
-                    !
-                  </span>
-
-                  <p>{error}</p>
-                </div>
-              )}
+              {error && <FormAlert variant="icon" className="mb-5" message={error} />}
 
               {/* Success */}
               {success && (
@@ -252,82 +239,52 @@ function Register() {
               {/* Form */}
               <form onSubmit={handleSubmit} noValidate className="space-y-5">
                 {/* Name */}
-                <div>
-                  <label htmlFor="name" className="mb-2 block text-sm font-semibold text-ink-soft">
-                    Nama Lengkap
-                  </label>
-
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    value={form.name}
-                    onChange={handleChange}
-                    placeholder="Masukkan nama lengkap"
-                    autoComplete="name"
-                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                  />
-                </div>
+                <TextField
+                  id="name"
+                  name="name"
+                  type="text"
+                  label="Nama Lengkap"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="Masukkan nama lengkap"
+                  autoComplete="name"
+                />
 
                 {/* Email */}
-                <div>
-                  <label htmlFor="email" className="mb-2 block text-sm font-semibold text-ink-soft">
-                    Email
-                  </label>
-
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder="contoh@email.com"
-                    autoComplete="email"
-                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                  />
-                </div>
+                <TextField
+                  id="email"
+                  name="email"
+                  type="email"
+                  label="Email"
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder="contoh@email.com"
+                  autoComplete="email"
+                />
 
                 {/* Password */}
-                <div>
-                  <label
-                    htmlFor="password"
-                    className="mb-2 block text-sm font-semibold text-ink-soft"
-                  >
-                    Password
-                  </label>
-
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    value={form.password}
-                    onChange={handleChange}
-                    placeholder="Minimal 6 karakter"
-                    autoComplete="new-password"
-                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                  />
-                </div>
+                <TextField
+                  id="password"
+                  name="password"
+                  type="password"
+                  label="Password"
+                  value={form.password}
+                  onChange={handleChange}
+                  placeholder="Minimal 6 karakter"
+                  autoComplete="new-password"
+                />
 
                 {/* Confirm Password */}
-                <div>
-                  <label
-                    htmlFor="confirmPassword"
-                    className="mb-2 block text-sm font-semibold text-ink-soft"
-                  >
-                    Konfirmasi Password
-                  </label>
-
-                  <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    value={form.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="Masukkan ulang password"
-                    autoComplete="new-password"
-                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                  />
-                </div>
+                <TextField
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  label="Konfirmasi Password"
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Masukkan ulang password"
+                  autoComplete="new-password"
+                />
 
                 {/* Role */}
                 <fieldset>

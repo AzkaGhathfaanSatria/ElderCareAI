@@ -4,9 +4,12 @@ import { useRouter } from "next/navigation";
 import { type ChangeEvent, type FormEvent, useState } from "react";
 
 import TopNav from "../components/layout/TopNav";
+import PageFooter from "../components/layout/PageFooter";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
+import FormAlert from "../components/ui/FormAlert";
+import TextField from "../components/ui/TextField";
 import { useElderCareQuery } from "../hooks/useElderCareQuery";
 import { useSession } from "../hooks/useSession";
 import { getInitials } from "../lib/initials";
@@ -175,72 +178,40 @@ function AccessManagement() {
 
               <form onSubmit={handleSubmit} noValidate className="space-y-4">
                 {error && (
-                  <div
-                    className="flex items-start gap-3 rounded-lg border border-danger/25 bg-danger/6 px-4 py-3 text-sm text-danger"
-                    role="alert"
-                  >
-                    <span aria-hidden="true">!</span>
-                    <p>{error}</p>
-                  </div>
+                  <FormAlert message={error} />
                 )}
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label
-                      htmlFor="name"
-                      className="mb-2 block text-sm font-semibold text-ink-soft"
-                    >
-                      Nama Tenaga Medis
-                    </label>
+                  <TextField
+                    id="name"
+                    name="name"
+                    type="text"
+                    label="Nama Tenaga Medis"
+                    value={form.name}
+                    onChange={handleChange}
+                    placeholder="Contoh: dr. Sarah Amalia"
+                  />
 
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      value={form.name}
-                      onChange={handleChange}
-                      placeholder="Contoh: dr. Sarah Amalia"
-                      className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                    />
-                  </div>
+                  <TextField
+                    id="specialization"
+                    name="specialization"
+                    type="text"
+                    label="Spesialisasi/Peran"
+                    value={form.specialization}
+                    onChange={handleChange}
+                    placeholder="Contoh: Dokter Geriatri"
+                  />
 
-                  <div>
-                    <label
-                      htmlFor="specialization"
-                      className="mb-2 block text-sm font-semibold text-ink-soft"
-                    >
-                      Spesialisasi/Peran
-                    </label>
-
-                    <input
-                      id="specialization"
-                      name="specialization"
-                      type="text"
-                      value={form.specialization}
-                      onChange={handleChange}
-                      placeholder="Contoh: Dokter Geriatri"
-                      className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                    />
-                  </div>
-
-                  <div className="sm:col-span-2">
-                    <label
-                      htmlFor="email"
-                      className="mb-2 block text-sm font-semibold text-ink-soft"
-                    >
-                      Email Terdaftar
-                    </label>
-
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      placeholder="contoh@klinik.id"
-                      className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                    />
-                  </div>
+                  <TextField
+                    id="email"
+                    name="email"
+                    type="email"
+                    label="Email Terdaftar"
+                    value={form.email}
+                    onChange={handleChange}
+                    placeholder="contoh@klinik.id"
+                    containerClassName="sm:col-span-2"
+                  />
                 </div>
 
                 <div className="flex justify-end">
@@ -311,9 +282,7 @@ function AccessManagement() {
           </Card>
         </div>
 
-        <footer className="border-t border-border bg-surface px-4 py-5 text-center sm:px-6 lg:px-8">
-          <p className="text-xs text-muted">ElderCare AI — Smart Elderly Monitoring System</p>
-        </footer>
+        <PageFooter />
       </main>
     </div>
   );

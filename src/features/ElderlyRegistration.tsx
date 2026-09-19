@@ -5,6 +5,8 @@ import { type ChangeEvent, type FormEvent, useState } from "react";
 
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
+import FormAlert from "../components/ui/FormAlert";
+import TextField from "../components/ui/TextField";
 import { useElderlyMutation } from "../hooks/useElderlyMutation";
 import {
   type ElderlyRegistrationInput,
@@ -117,22 +119,7 @@ function ElderlyRegistration() {
         {/* Form */}
         <form onSubmit={handleSubmit} noValidate>
           {/* Error */}
-          {error && (
-            <div
-              className="mb-6 flex items-start gap-3 rounded-xl border border-danger/25 bg-danger/6 px-4 py-3 text-sm text-danger"
-              role="alert"
-              aria-live="polite"
-            >
-              <span
-                className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-danger/15 text-xs font-bold"
-                aria-hidden="true"
-              >
-                !
-              </span>
-
-              <p>{error}</p>
-            </div>
-          )}
+          {error && <FormAlert variant="icon" className="mb-6" message={error} />}
 
           {/* Success */}
           {success && (
@@ -175,62 +162,39 @@ function ElderlyRegistration() {
 
               <div className="grid gap-5 p-5 sm:grid-cols-2 sm:p-6">
                 {/* Nama */}
-                <div className="sm:col-span-2">
-                  <label htmlFor="name" className="mb-2 block text-sm font-semibold text-ink-soft">
-                    Nama Lengkap
-                  </label>
-
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    value={form.name}
-                    onChange={handleChange}
-                    placeholder="Masukkan nama lengkap lansia"
-                    autoComplete="name"
-                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                  />
-                </div>
+                <TextField
+                  id="name"
+                  name="name"
+                  type="text"
+                  label="Nama Lengkap"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="Masukkan nama lengkap lansia"
+                  autoComplete="name"
+                  containerClassName="sm:col-span-2"
+                />
 
                 {/* Tanggal lahir */}
-                <div>
-                  <label
-                    htmlFor="birthDate"
-                    className="mb-2 block text-sm font-semibold text-ink-soft"
-                  >
-                    Tanggal Lahir
-                  </label>
-
-                  <input
-                    id="birthDate"
-                    name="birthDate"
-                    type="date"
-                    value={form.birthDate}
-                    onChange={handleChange}
-                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                  />
-                </div>
+                <TextField
+                  id="birthDate"
+                  name="birthDate"
+                  type="date"
+                  label="Tanggal Lahir"
+                  value={form.birthDate}
+                  onChange={handleChange}
+                />
 
                 {/* Alamat */}
-                <div>
-                  <label
-                    htmlFor="address"
-                    className="mb-2 block text-sm font-semibold text-ink-soft"
-                  >
-                    Alamat
-                  </label>
-
-                  <input
-                    id="address"
-                    name="address"
-                    type="text"
-                    value={form.address}
-                    onChange={handleChange}
-                    placeholder="Masukkan alamat lansia"
-                    autoComplete="street-address"
-                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                  />
-                </div>
+                <TextField
+                  id="address"
+                  name="address"
+                  type="text"
+                  label="Alamat"
+                  value={form.address}
+                  onChange={handleChange}
+                  placeholder="Masukkan alamat lansia"
+                  autoComplete="street-address"
+                />
 
                 {/* Catatan kesehatan */}
                 <div className="sm:col-span-2">
@@ -302,24 +266,15 @@ function ElderlyRegistration() {
                 </div>
 
                 {/* ID wearable */}
-                <div>
-                  <label
-                    htmlFor="wearableId"
-                    className="mb-2 block text-sm font-semibold text-ink-soft"
-                  >
-                    ID Perangkat
-                  </label>
-
-                  <input
-                    id="wearableId"
-                    name="wearableId"
-                    type="text"
-                    value={form.wearableId}
-                    onChange={handleChange}
-                    placeholder="Contoh: WRB-001"
-                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                  />
-                </div>
+                <TextField
+                  id="wearableId"
+                  name="wearableId"
+                  type="text"
+                  label="ID Perangkat"
+                  value={form.wearableId}
+                  onChange={handleChange}
+                  placeholder="Contoh: WRB-001"
+                />
               </div>
             </Card>
 
@@ -369,24 +324,15 @@ function ElderlyRegistration() {
                 </div>
 
                 {/* Lokasi sensor */}
-                <div>
-                  <label
-                    htmlFor="sensorLocation"
-                    className="mb-2 block text-sm font-semibold text-ink-soft"
-                  >
-                    Lokasi Pemasangan
-                  </label>
-
-                  <input
-                    id="sensorLocation"
-                    name="sensorLocation"
-                    type="text"
-                    value={form.sensorLocation}
-                    onChange={handleChange}
-                    placeholder="Contoh: Kamar tidur"
-                    className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition placeholder:text-muted/70 hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                  />
-                </div>
+                <TextField
+                  id="sensorLocation"
+                  name="sensorLocation"
+                  type="text"
+                  label="Lokasi Pemasangan"
+                  value={form.sensorLocation}
+                  onChange={handleChange}
+                  placeholder="Contoh: Kamar tidur"
+                />
               </div>
             </Card>
 
