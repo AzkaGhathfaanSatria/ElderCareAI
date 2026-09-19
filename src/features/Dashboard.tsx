@@ -6,7 +6,7 @@ import AlertSummary from "../components/dashboard/AlertSummary";
 import ElderlyMonitoringCard from "../components/dashboard/ElderlyMonitoringCard";
 import HealthSummary from "../components/dashboard/HealthSummary";
 import TopNav from "../components/layout/TopNav";
-import Button from "../components/ui/Button";
+import QueryStateScreen from "../components/ui/QueryStateScreen";
 import { useElderCareQuery } from "../hooks/useElderCareQuery";
 import { useUIStore } from "../store/useUIStore";
 
@@ -19,67 +19,15 @@ function Dashboard() {
 
   const monitoringQuery = useElderCareQuery();
 
-  if (monitoringQuery.isPending) {
+  if (monitoringQuery.isPending || monitoringQuery.isError || !monitoringQuery.data) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-paper px-4">
-        <section
-          className="rounded-xl bg-surface px-8 py-6 text-center shadow-sm"
-          role="status"
-          aria-live="polite"
-        >
-          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-border border-t-accent" />
-
-          <p className="text-sm font-medium text-ink-soft">Memuat dashboard...</p>
-        </section>
-      </main>
-    );
-  }
-
-  if (monitoringQuery.isError) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-paper px-4">
-        <section
-          className="w-full max-w-md rounded-xl border border-danger/25 bg-surface p-6 text-center shadow-sm"
-          role="alert"
-          aria-live="assertive"
-        >
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-danger/15 font-bold text-danger">
-            !
-          </div>
-
-          <h1 className="text-lg font-bold text-ink">Gagal Memuat Dashboard</h1>
-
-          <p className="mt-2 text-sm text-muted">
-            {monitoringQuery.error?.message ?? "Gagal mengambil data dashboard."}
-          </p>
-
-          <Button
-            variant="primary"
-            size="sm"
-            className="mt-5"
-            onClick={() => {
-              void monitoringQuery.refetch();
-            }}
-          >
-            Coba Lagi
-          </Button>
-        </section>
-      </main>
-    );
-  }
-
-  if (!monitoringQuery.data) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-paper px-4">
-        <section
-          className="w-full max-w-md rounded-xl border border-border bg-surface p-6 text-center shadow-sm"
-          role="status"
-        >
-          <h1 className="text-lg font-bold text-ink">Data Tidak Tersedia</h1>
-
-          <p className="mt-2 text-sm text-muted">Data dashboard belum tersedia.</p>
-        </section>
-      </main>
+      <QueryStateScreen
+        query={monitoringQuery}
+        pendingMessage="Memuat dashboard..."
+        errorTitle="Gagal Memuat Dashboard"
+        errorFallbackMessage="Gagal mengambil data dashboard."
+        emptyMessage="Data dashboard belum tersedia."
+      />
     );
   }
 

@@ -9,6 +9,7 @@ import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import { useElderCareQuery } from "../hooks/useElderCareQuery";
 import { useSession } from "../hooks/useSession";
+import { getInitials } from "../lib/initials";
 import { type AccessGrantInput, AccessGrantSchema } from "../schemas/accessGrantSchema";
 
 interface AccessGrant extends AccessGrantInput {
@@ -272,13 +273,7 @@ function AccessManagement() {
                         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/12 font-serif text-sm text-accent-dark"
                         aria-hidden="true"
                       >
-                        {grant.name
-                          .replace(/^(dr\.|Ns\.)\s*/i, "")
-                          .split(" ")
-                          .slice(0, 2)
-                          .map((part) => part.charAt(0))
-                          .join("")
-                          .toUpperCase()}
+                        {getInitials(grant.name)}
                       </div>
 
                       <div>

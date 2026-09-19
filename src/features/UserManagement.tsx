@@ -7,6 +7,7 @@ import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Select from "../components/ui/Select";
+import { getInitials } from "../lib/initials";
 import { RegisterSchema } from "../schemas/registerSchema";
 
 type ManagedRole = "keluarga" | "tenaga_medis" | "admin";
@@ -269,13 +270,7 @@ function UserManagement() {
                         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/12 font-serif text-sm text-accent-dark"
                         aria-hidden="true"
                       >
-                        {user.name
-                          .replace(/^(dr\.|Ns\.)\s*/i, "")
-                          .split(" ")
-                          .slice(0, 2)
-                          .map((part) => part.charAt(0))
-                          .join("")
-                          .toUpperCase()}
+                        {getInitials(user.name)}
                       </div>
 
                       <div>
