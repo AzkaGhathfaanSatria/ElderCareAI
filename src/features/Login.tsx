@@ -1,9 +1,11 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { type ChangeEvent, type FormEvent, useState } from "react";
 
 import { type LoginInput, LoginSchema } from "../schemas/authSchema";
+import type { PublicUser } from "../types/auth";
 
 type LoginFormState =
   | { status: "idle" }
@@ -13,6 +15,7 @@ type LoginFormState =
 
 function LoginPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -69,7 +72,14 @@ function LoginPage() {
 
       setFormState({ status: "success" });
 
-      router.push("/dashboard");
+      // Langsung isi cache sesi dengan data yang baru login, jangan nunggu
+      // refetch otomatis — supaya navbar nggak sempat kelihatan "nyangkut"
+      // nampilin identitas/role user sebelumnya (misal abis logout dari
+      // akun Keluarga terus login sebagai Admin).
+      const user = data as PublicUser;
+      queryClient.setQueryData(["session"], user);
+
+      router.push(user.role === "admin" ? "/admin" : "/dashboard");
     } catch {
       setFormState({
         status: "error",

@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
@@ -30,6 +31,7 @@ function TopNav({ hasNotification = false }: TopNavProps) {
   const pathname = usePathname();
 
   const sessionQuery = useSession();
+  const queryClient = useQueryClient();
   const user = sessionQuery.data;
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -68,6 +70,10 @@ function TopNav({ hasNotification = false }: TopNavProps) {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
     } finally {
+      // Buang cache sesi lama SEBELUM pindah halaman, biar TopNav di
+      // halaman login/dashboard berikutnya nggak sempat nampilin identitas
+      // user yang barusan logout.
+      queryClient.setQueryData(["session"], null);
       router.push("/login");
     }
   };
