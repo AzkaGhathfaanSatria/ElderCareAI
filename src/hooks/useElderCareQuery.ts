@@ -2,26 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import { ElderCareDataSchema } from "../schemas/elderCareSchema";
-import type { ElderCareData } from "../types/elderCare";
-
-async function fetchElderCareData(): Promise<ElderCareData> {
-  const response = await fetch("/data/elderly.json");
-
-  if (!response.ok) {
-    throw new Error("Gagal mengambil data ElderCare.");
-  }
-
-  const rawData: unknown = await response.json();
-
-  const result = ElderCareDataSchema.safeParse(rawData);
-
-  if (!result.success) {
-    throw new Error("Format data ElderCare tidak valid.");
-  }
-
-  return result.data;
-}
+import { fetchElderCareData } from "../services/elderCareApi";
 
 export function useElderCareQuery() {
   return useQuery({

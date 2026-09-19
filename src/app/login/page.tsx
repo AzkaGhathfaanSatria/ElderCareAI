@@ -1,3 +1,6 @@
+import { Suspense } from "react";
+
+import PageLoadingFallback from "../../components/ui/PageLoadingFallback";
 import Login from "../../features/Login";
 
 export const metadata = {
@@ -6,5 +9,9 @@ export const metadata = {
 };
 
 export default function LoginPage() {
-  return <Login />;
+  return (
+    <Suspense fallback={<PageLoadingFallback />}>
+      <Login />
+    </Suspense>
+  );
 }

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
+import PageLoadingFallback from "../../../components/ui/PageLoadingFallback";
 import DeviceManagement from "../../../features/DeviceManagement";
 
 export const metadata: Metadata = {
@@ -8,5 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function AdminDevicesPage() {
-  return <DeviceManagement />;
+  return (
+    <Suspense fallback={<PageLoadingFallback />}>
+      <DeviceManagement />
+    </Suspense>
+  );
 }

@@ -1,3 +1,6 @@
+import { Suspense } from "react";
+
+import PageLoadingFallback from "../../components/ui/PageLoadingFallback";
 import ElderlyDetail from "../../features/ElderlyDetail";
 
 export const metadata = {
@@ -6,5 +9,9 @@ export const metadata = {
 };
 
 export default function ElderlyPage() {
-  return <ElderlyDetail />;
+  return (
+    <Suspense fallback={<PageLoadingFallback />}>
+      <ElderlyDetail />
+    </Suspense>
+  );
 }

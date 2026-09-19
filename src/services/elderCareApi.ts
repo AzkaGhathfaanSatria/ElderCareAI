@@ -2,7 +2,7 @@ import { ElderCareDataSchema } from "../schemas/elderCareSchema";
 import type { ElderCareData } from "../types/elderCare";
 
 export async function fetchElderCareData(): Promise<ElderCareData> {
-  const response = await fetch("/data/elderly.json");
+  const response = await fetch("/api/elderly");
 
   if (!response.ok) {
     throw new Error("Gagal mengambil data monitoring.");

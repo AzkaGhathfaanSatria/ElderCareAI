@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
+import PageLoadingFallback from "../../components/ui/PageLoadingFallback";
 import AdminDashboard from "../../features/AdminDashboard";
 
 export const metadata: Metadata = {
@@ -8,5 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function AdminPage() {
-  return <AdminDashboard />;
+  return (
+    <Suspense fallback={<PageLoadingFallback />}>
+      <AdminDashboard />
+    </Suspense>
+  );
 }

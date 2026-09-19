@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
+import PageLoadingFallback from "../../../components/ui/PageLoadingFallback";
 import ElderlyRegistration from "../../../features/ElderlyRegistration";
 
 export const metadata: Metadata = {
@@ -9,5 +11,9 @@ export const metadata: Metadata = {
 };
 
 export default function ElderlyRegistrationPage() {
-  return <ElderlyRegistration />;
+  return (
+    <Suspense fallback={<PageLoadingFallback />}>
+      <ElderlyRegistration />
+    </Suspense>
+  );
 }

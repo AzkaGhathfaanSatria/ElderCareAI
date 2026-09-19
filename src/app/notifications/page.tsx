@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
+import PageLoadingFallback from "../../components/ui/PageLoadingFallback";
 import NotificationCenter from "../../features/NotificationCenter";
 
 export const metadata: Metadata = {
@@ -8,5 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function NotificationsPage() {
-  return <NotificationCenter />;
+  return (
+    <Suspense fallback={<PageLoadingFallback />}>
+      <NotificationCenter />
+    </Suspense>
+  );
 }

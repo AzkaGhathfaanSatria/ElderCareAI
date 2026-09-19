@@ -10,35 +10,23 @@ interface CreateElderlyResult {
 }
 
 async function createElderly(input: ElderlyRegistrationInput): Promise<CreateElderlyResult> {
-  await new Promise<void>((resolve) => {
-    window.setTimeout(resolve, 1200);
+  const response = await fetch("/api/elderly", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
   });
 
-  const response = await fetch("/data/elderly.json");
-
   if (!response.ok) {
-    throw new Error("Gagal mengambil data lansia.");
+    const body: unknown = await response.json().catch(() => null);
+    const message =
+      body && typeof body === "object" && "message" in body && typeof body.message === "string"
+        ? body.message
+        : "Gagal menyimpan data lansia.";
+
+    throw new Error(message);
   }
 
-  const rawData: unknown = await response.json();
-
-  if (typeof rawData !== "object" || rawData === null || !("elderly" in rawData)) {
-    throw new Error("Format data lansia tidak valid.");
-  }
-
-  const currentData = rawData as {
-    elderly: Elderly;
-  };
-
-  const createdElderly: Elderly = {
-    ...currentData.elderly,
-    name: input.name,
-  };
-
-  return {
-    elderly: createdElderly,
-    registration: input,
-  };
+  return (await response.json()) as CreateElderlyResult;
 }
 
 export function useElderlyMutation() {

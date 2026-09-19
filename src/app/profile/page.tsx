@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
+import PageLoadingFallback from "../../components/ui/PageLoadingFallback";
 import Profile from "../../features/Profile";
 
 export const metadata: Metadata = {
@@ -8,5 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function ProfilePage() {
-  return <Profile />;
+  return (
+    <Suspense fallback={<PageLoadingFallback />}>
+      <Profile />
+    </Suspense>
+  );
 }

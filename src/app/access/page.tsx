@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
+import PageLoadingFallback from "../../components/ui/PageLoadingFallback";
 import AccessManagement from "../../features/AccessManagement";
 
 export const metadata: Metadata = {
@@ -8,5 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function AccessPage() {
-  return <AccessManagement />;
+  return (
+    <Suspense fallback={<PageLoadingFallback />}>
+      <AccessManagement />
+    </Suspense>
+  );
 }
