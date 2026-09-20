@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 
+import Footer from "../components/layout/Footer";
 import TopNav from "../components/layout/TopNav";
-import PageFooter from "../components/layout/PageFooter";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
@@ -252,7 +252,7 @@ function NotificationCenter() {
           )}
         </div>
 
-        <PageFooter />
+        <Footer />
       </main>
     </div>
   );

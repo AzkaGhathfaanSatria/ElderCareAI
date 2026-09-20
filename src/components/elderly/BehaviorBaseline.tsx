@@ -1,5 +1,21 @@
 import Card from "../ui/Card";
 
+interface BaselineRow {
+  title: string;
+  description: string;
+  status: "Normal" | "Berubah";
+}
+
+const baselineRows: BaselineRow[] = [
+  { title: "Mobilitas", description: "Pola pergerakan harian", status: "Normal" },
+  { title: "Pola Tidur", description: "Durasi dan waktu tidur", status: "Normal" },
+  {
+    title: "Aktivitas",
+    description: "Terdapat perubahan dari baseline",
+    status: "Berubah",
+  },
+];
+
 function BehaviorBaseline() {
   return (
     <Card className="p-6">
@@ -12,44 +28,31 @@ function BehaviorBaseline() {
       </header>
 
       <div className="divide-y divide-border">
-        <div className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0">
-          <div>
-            <h3 className="text-sm font-semibold text-ink-soft">Mobilitas</h3>
+        {baselineRows.map((row) => (
+          <div
+            key={row.title}
+            className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0"
+          >
+            <div>
+              <h3 className="text-sm font-semibold text-ink-soft">{row.title}</h3>
+              <p className="mt-1 text-xs text-muted">{row.description}</p>
+            </div>
 
-            <p className="mt-1 text-xs text-muted">Pola pergerakan harian</p>
+            <span
+              className={`inline-flex items-center gap-2 text-sm font-medium ${
+                row.status === "Normal" ? "text-safe" : "text-accent-dark"
+              }`}
+            >
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${
+                  row.status === "Normal" ? "bg-safe" : "bg-warn"
+                }`}
+                aria-hidden="true"
+              />
+              {row.status}
+            </span>
           </div>
-
-          <span className="inline-flex items-center gap-2 text-sm font-medium text-safe">
-            <span className="h-1.5 w-1.5 rounded-full bg-safe" aria-hidden="true" />
-            Normal
-          </span>
-        </div>
-
-        <div className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0">
-          <div>
-            <h3 className="text-sm font-semibold text-ink-soft">Pola Tidur</h3>
-
-            <p className="mt-1 text-xs text-muted">Durasi dan waktu tidur</p>
-          </div>
-
-          <span className="inline-flex items-center gap-2 text-sm font-medium text-safe">
-            <span className="h-1.5 w-1.5 rounded-full bg-safe" aria-hidden="true" />
-            Normal
-          </span>
-        </div>
-
-        <div className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0">
-          <div>
-            <h3 className="text-sm font-semibold text-ink-soft">Aktivitas</h3>
-
-            <p className="mt-1 text-xs text-muted">Terdapat perubahan dari baseline</p>
-          </div>
-
-          <span className="inline-flex items-center gap-2 text-sm font-medium text-accent-dark">
-            <span className="h-1.5 w-1.5 rounded-full bg-warn" aria-hidden="true" />
-            Berubah
-          </span>
-        </div>
+        ))}
       </div>
     </Card>
   );

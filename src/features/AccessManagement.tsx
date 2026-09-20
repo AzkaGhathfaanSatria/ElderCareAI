@@ -3,12 +3,13 @@
 import { useRouter } from "next/navigation";
 import { type ChangeEvent, type FormEvent, useState } from "react";
 
+import Footer from "../components/layout/Footer";
+import ManagementHeader from "../components/layout/ManagementHeader";
 import TopNav from "../components/layout/TopNav";
-import PageFooter from "../components/layout/PageFooter";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
-import FormAlert from "../components/ui/FormAlert";
+import EmptyStateMessage from "../components/ui/EmptyStateMessage";
 import TextField from "../components/ui/TextField";
 import { useElderCareQuery } from "../hooks/useElderCareQuery";
 import { useSession } from "../hooks/useSession";
@@ -139,27 +140,21 @@ function AccessManagement() {
 
       <main className="min-w-0">
         <div className="p-4 sm:p-6 lg:p-8">
-          <header className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <h1 className="font-serif text-2xl text-ink sm:text-3xl">Pengaturan Izin Akses</h1>
-
-              <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
+          <ManagementHeader
+            title="Pengaturan Izin Akses"
+            description={
+              <>
                 Kelola tenaga medis yang boleh melihat data kesehatan {elderlyName}. Hanya tenaga
                 medis dengan akses aktif yang dapat melihat data ini.
-              </p>
-            </div>
-
-            <Button
-              variant="accent"
-              size="sm"
-              onClick={() => {
-                setSuccess("");
-                setIsFormOpen((open) => !open);
-              }}
-            >
-              {isFormOpen ? "Batal" : "+ Beri Akses Baru"}
-            </Button>
-          </header>
+              </>
+            }
+            isFormOpen={isFormOpen}
+            onToggleForm={() => {
+              setSuccess("");
+              setIsFormOpen((open) => !open);
+            }}
+            openLabel="+ Beri Akses Baru"
+          />
 
           {success && (
             <div
@@ -178,15 +173,21 @@ function AccessManagement() {
 
               <form onSubmit={handleSubmit} noValidate className="space-y-4">
                 {error && (
-                  <FormAlert message={error} />
+                  <div
+                    className="flex items-start gap-3 rounded-lg border border-danger/25 bg-danger/6 px-4 py-3 text-sm text-danger"
+                    role="alert"
+                  >
+                    <span aria-hidden="true">!</span>
+                    <p>{error}</p>
+                  </div>
                 )}
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <TextField
                     id="name"
                     name="name"
-                    type="text"
                     label="Nama Tenaga Medis"
+                    type="text"
                     value={form.name}
                     onChange={handleChange}
                     placeholder="Contoh: dr. Sarah Amalia"
@@ -195,8 +196,8 @@ function AccessManagement() {
                   <TextField
                     id="specialization"
                     name="specialization"
-                    type="text"
                     label="Spesialisasi/Peran"
+                    type="text"
                     value={form.specialization}
                     onChange={handleChange}
                     placeholder="Contoh: Dokter Geriatri"
@@ -205,12 +206,12 @@ function AccessManagement() {
                   <TextField
                     id="email"
                     name="email"
-                    type="email"
                     label="Email Terdaftar"
+                    type="email"
                     value={form.email}
                     onChange={handleChange}
                     placeholder="contoh@klinik.id"
-                    containerClassName="sm:col-span-2"
+                    wrapperClassName="sm:col-span-2"
                   />
                 </div>
 
@@ -273,16 +274,12 @@ function AccessManagement() {
                 ))}
               </ol>
             ) : (
-              <div className="py-6 text-center">
-                <p className="text-sm font-medium text-ink-soft">
-                  Belum ada tenaga medis yang diberi akses.
-                </p>
-              </div>
+              <EmptyStateMessage message="Belum ada tenaga medis yang diberi akses." />
             )}
           </Card>
         </div>
 
-        <PageFooter />
+        <Footer />
       </main>
     </div>
   );

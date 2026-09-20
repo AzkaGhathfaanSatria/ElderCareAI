@@ -8,8 +8,8 @@ import DeviceStatus from "../components/elderly/DeviceStatus";
 import ElderlyProfile from "../components/elderly/ElderlyProfile";
 import HealthOverview from "../components/elderly/HealthOverview";
 import MedicalRecommendation from "../components/elderly/MedicalRecommendation";
+import Footer from "../components/layout/Footer";
 import TopNav from "../components/layout/TopNav";
-import PageFooter from "../components/layout/PageFooter";
 import Button from "../components/ui/Button";
 import QueryStateScreen from "../components/ui/QueryStateScreen";
 import { useElderCareQuery } from "../hooks/useElderCareQuery";
@@ -98,7 +98,7 @@ function ElderlyDetail() {
           {role === "tenaga_medis" && <MedicalRecommendation />}
         </div>
 
-        <PageFooter />
+        <Footer />
       </main>
     </div>
   );

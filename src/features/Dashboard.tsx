@@ -5,8 +5,8 @@ import ActivityChart from "../components/dashboard/ActivityChart";
 import AlertSummary from "../components/dashboard/AlertSummary";
 import ElderlyMonitoringCard from "../components/dashboard/ElderlyMonitoringCard";
 import HealthSummary from "../components/dashboard/HealthSummary";
+import Footer from "../components/layout/Footer";
 import TopNav from "../components/layout/TopNav";
-import PageFooter from "../components/layout/PageFooter";
 import QueryStateScreen from "../components/ui/QueryStateScreen";
 import { useElderCareQuery } from "../hooks/useElderCareQuery";
 import { useUIStore } from "../store/useUIStore";
@@ -63,7 +63,7 @@ function Dashboard() {
           <ElderlyMonitoringCard elderly={elderly} onViewDetail={() => router.push("/elderly")} />
         </div>
 
-        <PageFooter />
+        <Footer />
       </main>
     </div>
   );

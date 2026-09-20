@@ -2,12 +2,14 @@
 
 import { type ChangeEvent, type FormEvent, useState } from "react";
 
+import Footer from "../components/layout/Footer";
+import ManagementHeader from "../components/layout/ManagementHeader";
 import TopNav from "../components/layout/TopNav";
-import PageFooter from "../components/layout/PageFooter";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
-import FormAlert from "../components/ui/FormAlert";
+import EmptyStateMessage from "../components/ui/EmptyStateMessage";
+import { SelectField } from "../components/ui/SelectField";
 import TextField from "../components/ui/TextField";
 
 type DeviceType = "Wearable" | "Sensor Gerak" | "Sensor Pintu";
@@ -128,25 +130,16 @@ function DeviceManagement() {
 
       <main className="min-w-0">
         <div className="p-4 sm:p-6 lg:p-8">
-          <header className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <h1 className="font-serif text-2xl text-ink sm:text-3xl">Manajemen Perangkat</h1>
-              <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
-                Kelola pemasangan (pairing) wearable dan sensor IoT ke setiap lansia.
-              </p>
-            </div>
-
-            <Button
-              variant="accent"
-              size="sm"
-              onClick={() => {
-                setError("");
-                setIsFormOpen((open) => !open);
-              }}
-            >
-              {isFormOpen ? "Batal" : "+ Pasangkan Perangkat"}
-            </Button>
-          </header>
+          <ManagementHeader
+            title="Manajemen Perangkat"
+            description="Kelola pemasangan (pairing) wearable dan sensor IoT ke setiap lansia."
+            isFormOpen={isFormOpen}
+            onToggleForm={() => {
+              setError("");
+              setIsFormOpen((open) => !open);
+            }}
+            openLabel="+ Pasangkan Perangkat"
+          />
 
           {isFormOpen && (
             <Card className="mb-6 p-5 sm:p-6">
@@ -154,45 +147,43 @@ function DeviceManagement() {
 
               <form onSubmit={handleSubmit} noValidate className="space-y-4">
                 {error && (
-                  <FormAlert message={error} />
+                  <div
+                    className="flex items-start gap-3 rounded-lg border border-danger/25 bg-danger/6 px-4 py-3 text-sm text-danger"
+                    role="alert"
+                  >
+                    <span aria-hidden="true">!</span>
+                    <p>{error}</p>
+                  </div>
                 )}
 
                 <div className="grid gap-4 sm:grid-cols-3">
                   <TextField
                     id="deviceId"
                     name="deviceId"
-                    type="text"
                     label="ID Perangkat"
+                    type="text"
                     value={form.deviceId}
                     onChange={handleChange}
                     placeholder="Contoh: WRB-030"
                   />
 
-                  <div>
-                    <label
-                      htmlFor="type"
-                      className="mb-2 block text-sm font-semibold text-ink-soft"
-                    >
-                      Tipe Perangkat
-                    </label>
-                    <select
-                      id="type"
-                      name="type"
-                      value={form.type}
-                      onChange={handleChange}
-                      className="w-full rounded-xl border border-border bg-paper px-4 py-3 text-sm text-ink-soft outline-none transition hover:border-ink/25 focus:border-ink focus:bg-surface focus:ring-4 focus:ring-ink/8"
-                    >
-                      <option value="Wearable">Wearable</option>
-                      <option value="Sensor Gerak">Sensor Gerak</option>
-                      <option value="Sensor Pintu">Sensor Pintu</option>
-                    </select>
-                  </div>
+                  <SelectField
+                    id="type"
+                    name="type"
+                    label="Tipe Perangkat"
+                    value={form.type}
+                    onChange={handleChange}
+                  >
+                    <option value="Wearable">Wearable</option>
+                    <option value="Sensor Gerak">Sensor Gerak</option>
+                    <option value="Sensor Pintu">Sensor Pintu</option>
+                  </SelectField>
 
                   <TextField
                     id="assignedTo"
                     name="assignedTo"
-                    type="text"
                     label="Dipasangkan ke Lansia"
+                    type="text"
                     value={form.assignedTo}
                     onChange={handleChange}
                     placeholder="Nama lansia"
@@ -254,14 +245,12 @@ function DeviceManagement() {
                 ))}
               </ol>
             ) : (
-              <div className="py-6 text-center">
-                <p className="text-sm font-medium text-ink-soft">Belum ada perangkat terdaftar.</p>
-              </div>
+              <EmptyStateMessage message="Belum ada perangkat terdaftar." />
             )}
           </Card>
         </div>
 
-        <PageFooter />
+        <Footer />
       </main>
     </div>
   );

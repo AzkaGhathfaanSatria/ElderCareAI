@@ -1,5 +1,5 @@
-import { AdminSectionSkeleton } from "../../../components/skeletons/AdminSectionSkeleton";
+import AdminSectionLoadingSkeleton from "../../../components/layout/AdminSectionLoadingSkeleton";
 
-export default function AdminUsersLoading() {
-  return <AdminSectionSkeleton />;
+export default function Loading() {
+  return <AdminSectionLoadingSkeleton />;
 }

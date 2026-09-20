@@ -1,9 +1,41 @@
 "use client";
 
+import Footer from "../components/layout/Footer";
 import TopNav from "../components/layout/TopNav";
-import PageFooter from "../components/layout/PageFooter";
 import Badge from "../components/ui/Badge";
 import Card from "../components/ui/Card";
+
+const systemStatusRows: Array<{
+  title: string;
+  description: string;
+  status: string;
+  variant: "success" | "warning";
+}> = [
+  {
+    title: "API Server",
+    description: "Uptime 30 hari terakhir: 99.8%",
+    status: "Normal",
+    variant: "success",
+  },
+  {
+    title: "Database",
+    description: "Latensi rata-rata 42ms",
+    status: "Normal",
+    variant: "success",
+  },
+  {
+    title: "Model Deteksi Anomali",
+    description: "Terakhir dilatih ulang 12 hari lalu",
+    status: "Normal",
+    variant: "success",
+  },
+  {
+    title: "Gateway Perangkat IoT",
+    description: "13 perangkat tidak merespons",
+    status: "Perlu Diperiksa",
+    variant: "warning",
+  },
+];
 
 const recentActivity = [
   {
@@ -99,37 +131,18 @@ function AdminDashboard() {
               </header>
 
               <div className="divide-y divide-border">
-                <div className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0">
-                  <div>
-                    <p className="text-sm font-semibold text-ink-soft">API Server</p>
-                    <p className="mt-0.5 text-xs text-muted">Uptime 30 hari terakhir: 99.8%</p>
+                {systemStatusRows.map((row) => (
+                  <div
+                    key={row.title}
+                    className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0"
+                  >
+                    <div>
+                      <p className="text-sm font-semibold text-ink-soft">{row.title}</p>
+                      <p className="mt-0.5 text-xs text-muted">{row.description}</p>
+                    </div>
+                    <Badge variant={row.variant}>{row.status}</Badge>
                   </div>
-                  <Badge variant="success">Normal</Badge>
-                </div>
-
-                <div className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0">
-                  <div>
-                    <p className="text-sm font-semibold text-ink-soft">Database</p>
-                    <p className="mt-0.5 text-xs text-muted">Latensi rata-rata 42ms</p>
-                  </div>
-                  <Badge variant="success">Normal</Badge>
-                </div>
-
-                <div className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0">
-                  <div>
-                    <p className="text-sm font-semibold text-ink-soft">Model Deteksi Anomali</p>
-                    <p className="mt-0.5 text-xs text-muted">Terakhir dilatih ulang 12 hari lalu</p>
-                  </div>
-                  <Badge variant="success">Normal</Badge>
-                </div>
-
-                <div className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0">
-                  <div>
-                    <p className="text-sm font-semibold text-ink-soft">Gateway Perangkat IoT</p>
-                    <p className="mt-0.5 text-xs text-muted">13 perangkat tidak merespons</p>
-                  </div>
-                  <Badge variant="warning">Perlu Diperiksa</Badge>
-                </div>
+                ))}
               </div>
             </Card>
 
@@ -156,7 +169,7 @@ function AdminDashboard() {
           </section>
         </div>
 
-        <PageFooter />
+        <Footer />
       </main>
     </div>
   );

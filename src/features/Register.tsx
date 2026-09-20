@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import { type ChangeEvent, type FormEvent, useState } from "react";
 
 import Button from "../components/ui/Button";
-import FormAlert from "../components/ui/FormAlert";
 import TextField from "../components/ui/TextField";
+import { extractErrorMessage } from "../lib/apiError";
 import { type RegisterInput, RegisterSchema } from "../schemas/registerSchema";
 
 function Register() {
@@ -70,10 +70,7 @@ function Register() {
       const data: unknown = await response.json().catch(() => null);
 
       if (!response.ok) {
-        const message =
-          data && typeof data === "object" && "message" in data && typeof data.message === "string"
-            ? data.message
-            : "Registrasi gagal. Silakan coba lagi.";
+        const message = extractErrorMessage(data, "Registrasi gagal. Silakan coba lagi.");
 
         setError(message);
         setIsLoading(false);
@@ -216,7 +213,22 @@ function Register() {
               </header>
 
               {/* Error */}
-              {error && <FormAlert variant="icon" className="mb-5" message={error} />}
+              {error && (
+                <div
+                  className="mb-5 flex items-start gap-3 rounded-xl border border-danger/25 bg-danger/6 px-4 py-3 text-sm text-danger"
+                  role="alert"
+                  aria-live="polite"
+                >
+                  <span
+                    className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-danger/15 text-xs font-bold"
+                    aria-hidden="true"
+                  >
+                    !
+                  </span>
+
+                  <p>{error}</p>
+                </div>
+              )}
 
               {/* Success */}
               {success && (
@@ -242,8 +254,8 @@ function Register() {
                 <TextField
                   id="name"
                   name="name"
-                  type="text"
                   label="Nama Lengkap"
+                  type="text"
                   value={form.name}
                   onChange={handleChange}
                   placeholder="Masukkan nama lengkap"
@@ -254,8 +266,8 @@ function Register() {
                 <TextField
                   id="email"
                   name="email"
-                  type="email"
                   label="Email"
+                  type="email"
                   value={form.email}
                   onChange={handleChange}
                   placeholder="contoh@email.com"
@@ -266,8 +278,8 @@ function Register() {
                 <TextField
                   id="password"
                   name="password"
-                  type="password"
                   label="Password"
+                  type="password"
                   value={form.password}
                   onChange={handleChange}
                   placeholder="Minimal 6 karakter"
@@ -278,8 +290,8 @@ function Register() {
                 <TextField
                   id="confirmPassword"
                   name="confirmPassword"
-                  type="password"
                   label="Konfirmasi Password"
+                  type="password"
                   value={form.confirmPassword}
                   onChange={handleChange}
                   placeholder="Masukkan ulang password"

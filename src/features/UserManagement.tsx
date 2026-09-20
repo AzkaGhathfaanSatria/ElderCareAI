@@ -2,14 +2,15 @@
 
 import { type ChangeEvent, type FormEvent, useMemo, useState } from "react";
 
+import Footer from "../components/layout/Footer";
+import ManagementHeader from "../components/layout/ManagementHeader";
 import TopNav from "../components/layout/TopNav";
-import PageFooter from "../components/layout/PageFooter";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
-import FormAlert from "../components/ui/FormAlert";
-import Select from "../components/ui/Select";
+import EmptyStateMessage from "../components/ui/EmptyStateMessage";
 import TextField from "../components/ui/TextField";
+import Select from "../components/ui/Select";
 import { getInitials } from "../lib/initials";
 import { RegisterSchema } from "../schemas/registerSchema";
 
@@ -141,25 +142,16 @@ function UserManagement() {
 
       <main className="min-w-0">
         <div className="p-4 sm:p-6 lg:p-8">
-          <header className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <h1 className="font-serif text-2xl text-ink sm:text-3xl">Manajemen Pengguna</h1>
-              <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
-                Kelola akun Keluarga/Caregiver, Tenaga Medis, dan Admin pada sistem.
-              </p>
-            </div>
-
-            <Button
-              variant="accent"
-              size="sm"
-              onClick={() => {
-                setError("");
-                setIsFormOpen((open) => !open);
-              }}
-            >
-              {isFormOpen ? "Batal" : "+ Tambah Pengguna"}
-            </Button>
-          </header>
+          <ManagementHeader
+            title="Manajemen Pengguna"
+            description="Kelola akun Keluarga/Caregiver, Tenaga Medis, dan Admin pada sistem."
+            isFormOpen={isFormOpen}
+            onToggleForm={() => {
+              setError("");
+              setIsFormOpen((open) => !open);
+            }}
+            openLabel="+ Tambah Pengguna"
+          />
 
           {isFormOpen && (
             <Card className="mb-6 p-5 sm:p-6">
@@ -167,15 +159,21 @@ function UserManagement() {
 
               <form onSubmit={handleSubmit} noValidate className="space-y-4">
                 {error && (
-                  <FormAlert message={error} />
+                  <div
+                    className="flex items-start gap-3 rounded-lg border border-danger/25 bg-danger/6 px-4 py-3 text-sm text-danger"
+                    role="alert"
+                  >
+                    <span aria-hidden="true">!</span>
+                    <p>{error}</p>
+                  </div>
                 )}
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <TextField
                     id="name"
                     name="name"
-                    type="text"
                     label="Nama Lengkap"
+                    type="text"
                     value={form.name}
                     onChange={handleChange}
                     placeholder="Nama pengguna"
@@ -184,8 +182,8 @@ function UserManagement() {
                   <TextField
                     id="email"
                     name="email"
-                    type="email"
                     label="Email"
+                    type="email"
                     value={form.email}
                     onChange={handleChange}
                     placeholder="contoh@email.com"
@@ -284,14 +282,12 @@ function UserManagement() {
                 ))}
               </ol>
             ) : (
-              <div className="py-6 text-center">
-                <p className="text-sm font-medium text-ink-soft">Tidak ada pengguna ditemukan.</p>
-              </div>
+              <EmptyStateMessage message="Tidak ada pengguna ditemukan." />
             )}
           </Card>
         </div>
 
-        <PageFooter />
+        <Footer />
       </main>
     </div>
   );

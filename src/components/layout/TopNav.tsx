@@ -5,25 +5,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import { useSession } from "../../hooks/useSession";
+import { getInitials } from "../../lib/initials";
+import { roleLabel } from "../../lib/userDisplay";
 
 interface TopNavProps {
   hasNotification?: boolean;
-}
-
-const roleLabel = {
-  keluarga: "Keluarga/Caregiver",
-  tenaga_medis: "Tenaga Medis",
-  admin: "Administrator Sistem",
-} as const;
-
-function getInitials(name: string) {
-  return name
-    .replace(/^(dr\.|Ns\.)\s*/i, "")
-    .split(" ")
-    .slice(0, 2)
-    .map((part) => part.charAt(0))
-    .join("")
-    .toUpperCase();
 }
 
 function TopNav({ hasNotification = false }: TopNavProps) {
@@ -63,6 +49,43 @@ function TopNav({ hasNotification = false }: TopNavProps) {
     };
   }, [isProfileOpen]);
 
+  const accountMenuItems: Array<{ label: string; path: string; icon: ReactNode }> = [
+    {
+      label: "Profil Saya",
+      path: "/profile",
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          className="h-4 w-4 shrink-0"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="8" r="3.2" />
+          <path d="M5 20c.8-3.2 3.1-5 7-5s6.2 1.8 7 5" />
+        </svg>
+      ),
+    },
+    {
+      label: "Pengaturan",
+      path: "/settings",
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          className="h-4 w-4 shrink-0"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 13a7.97 7.97 0 0 0 0-2l2.1-1.6-2-3.4-2.5 1a8 8 0 0 0-1.7-1L14.9 3h-4l-.4 2.9a8 8 0 0 0-1.7 1l-2.5-1-2 3.4L6.4 11a7.97 7.97 0 0 0 0 2l-2.1 1.6 2 3.4 2.5-1a8 8 0 0 0 1.7 1l.4 2.9h4l.4-2.9a8 8 0 0 0 1.7-1l2.5 1 2-3.4z" />
+        </svg>
+      ),
+    },
+  ];
+
   const handleLogout = async () => {
     setIsLoggingOut(true);
     setIsProfileOpen(false);
@@ -78,6 +101,22 @@ function TopNav({ hasNotification = false }: TopNavProps) {
     }
   };
 
+  const gridIcon = (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      className="h-4 w-4"
+      aria-hidden="true"
+    >
+      <rect x="4" y="4" width="6" height="6" rx="1" />
+      <rect x="14" y="4" width="6" height="6" rx="1" />
+      <rect x="4" y="14" width="6" height="6" rx="1" />
+      <rect x="14" y="14" width="6" height="6" rx="1" />
+    </svg>
+  );
+
   const monitoringMenuItems: Array<{
     label: string;
     path: string | null;
@@ -87,21 +126,7 @@ function TopNav({ hasNotification = false }: TopNavProps) {
     {
       label: "Dashboard",
       path: "/dashboard",
-      icon: (
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          className="h-4 w-4"
-          aria-hidden="true"
-        >
-          <rect x="4" y="4" width="6" height="6" rx="1" />
-          <rect x="14" y="4" width="6" height="6" rx="1" />
-          <rect x="4" y="14" width="6" height="6" rx="1" />
-          <rect x="14" y="14" width="6" height="6" rx="1" />
-        </svg>
-      ),
+      icon: gridIcon,
     },
     {
       label: "Data Lansia",
@@ -161,21 +186,7 @@ function TopNav({ hasNotification = false }: TopNavProps) {
     {
       label: "Dashboard Admin",
       path: "/admin",
-      icon: (
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          className="h-4 w-4"
-          aria-hidden="true"
-        >
-          <rect x="4" y="4" width="6" height="6" rx="1" />
-          <rect x="14" y="4" width="6" height="6" rx="1" />
-          <rect x="4" y="14" width="6" height="6" rx="1" />
-          <rect x="14" y="14" width="6" height="6" rx="1" />
-        </svg>
-      ),
+      icon: gridIcon,
     },
     {
       label: "Manajemen Pengguna",
@@ -314,51 +325,21 @@ function TopNav({ hasNotification = false }: TopNavProps) {
                 </div>
 
                 <div className="py-1.5">
-                  <button
-                    type="button"
-                    role="menuitem"
-                    onClick={() => {
-                      setIsProfileOpen(false);
-                      router.push("/profile");
-                    }}
-                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-ink-soft transition hover:bg-paper"
-                  >
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      className="h-4 w-4 shrink-0"
-                      aria-hidden="true"
+                  {accountMenuItems.map((item) => (
+                    <button
+                      key={item.path}
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        router.push(item.path);
+                      }}
+                      className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-ink-soft transition hover:bg-paper"
                     >
-                      <circle cx="12" cy="8" r="3.2" />
-                      <path d="M5 20c.8-3.2 3.1-5 7-5s6.2 1.8 7 5" />
-                    </svg>
-                    Profil Saya
-                  </button>
-
-                  <button
-                    type="button"
-                    role="menuitem"
-                    onClick={() => {
-                      setIsProfileOpen(false);
-                      router.push("/settings");
-                    }}
-                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-ink-soft transition hover:bg-paper"
-                  >
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      className="h-4 w-4 shrink-0"
-                      aria-hidden="true"
-                    >
-                      <circle cx="12" cy="12" r="3" />
-                      <path d="M19.4 13a7.97 7.97 0 0 0 0-2l2.1-1.6-2-3.4-2.5 1a8 8 0 0 0-1.7-1L14.9 3h-4l-.4 2.9a8 8 0 0 0-1.7 1l-2.5-1-2 3.4L6.4 11a7.97 7.97 0 0 0 0 2l-2.1 1.6 2 3.4 2.5-1a8 8 0 0 0 1.7 1l.4 2.9h4l.4-2.9a8 8 0 0 0 1.7-1l2.5 1 2-3.4z" />
-                    </svg>
-                    Pengaturan
-                  </button>
+                      {item.icon}
+                      {item.label}
+                    </button>
+                  ))}
                 </div>
 
                 <div className="border-t border-border py-1.5">

@@ -1,5 +1,5 @@
-import { TabbedPageSkeleton } from "../../components/skeletons/TabbedPageSkeleton";
+import ListPageLoadingSkeleton from "../../components/layout/ListPageLoadingSkeleton";
 
-export default function AccessLoading() {
-  return <TabbedPageSkeleton />;
+export default function Loading() {
+  return <ListPageLoadingSkeleton />;
 }

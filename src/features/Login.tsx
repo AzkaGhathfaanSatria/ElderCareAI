@@ -2,12 +2,12 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { type ChangeEvent, type FormEvent, useState } from "react";
+import { type FormEvent, useState } from "react";
 
-import FormAlert from "../components/ui/FormAlert";
-import TextField from "../components/ui/TextField";
 import { type LoginInput, LoginSchema } from "../schemas/authSchema";
 import type { PublicUser } from "../types/auth";
+import TextField from "../components/ui/TextField";
+import { extractErrorMessage } from "../lib/apiError";
 
 type LoginFormState =
   | { status: "idle" }
@@ -63,10 +63,7 @@ function LoginPage() {
       const data: unknown = await response.json().catch(() => null);
 
       if (!response.ok) {
-        const message =
-          data && typeof data === "object" && "message" in data && typeof data.message === "string"
-            ? data.message
-            : "Email atau password salah.";
+        const message = extractErrorMessage(data, "Email atau password salah.");
 
         setFormState({ status: "error", message });
         return;
@@ -125,33 +122,45 @@ function LoginPage() {
         <div className="rounded-2xl border border-border bg-surface p-7 shadow-[var(--shadow-card-lg)]">
           <form onSubmit={handleSubmit} noValidate>
             {formState.status === "error" && (
-              <FormAlert variant="icon" className="mb-5" message={formState.message} />
+              <div
+                role="alert"
+                aria-live="polite"
+                className="mb-5 flex items-start gap-3 rounded-xl border border-danger/25 bg-danger/6 px-4 py-3 text-sm text-danger"
+              >
+                <span
+                  className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-danger/15 text-xs font-bold"
+                  aria-hidden="true"
+                >
+                  !
+                </span>
+                <p>{formState.message}</p>
+              </div>
             )}
 
             <TextField
               id="email"
               name="email"
-              type="email"
               label="Email"
+              type="email"
               value={email}
-              onChange={(event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
+              onChange={(event) => setEmail(event.target.value)}
               placeholder="nama@keluarga.id"
               autoComplete="email"
               aria-label="Email pengguna"
-              containerClassName="mb-5"
+              wrapperClassName="mb-5"
             />
 
             <TextField
               id="password"
               name="password"
-              type="password"
               label="Password"
+              type="password"
               value={password}
-              onChange={(event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
+              onChange={(event) => setPassword(event.target.value)}
               placeholder="Masukkan password"
               autoComplete="current-password"
               aria-label="Password pengguna"
-              containerClassName="mb-6"
+              wrapperClassName="mb-6"
             />
 
             <button
