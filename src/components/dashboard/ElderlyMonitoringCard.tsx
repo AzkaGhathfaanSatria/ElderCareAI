@@ -48,8 +48,6 @@ function ElderlyMonitoringCard({ elderly, onViewDetail }: ElderlyMonitoringCardP
           <div className="flex flex-wrap gap-2">
             <Badge variant="success">Wearable {elderly.wearableStatus}</Badge>
 
-            <Badge variant="info">IoT {elderly.iotStatus}</Badge>
-
             <Button
               variant="primary"
               size="sm"

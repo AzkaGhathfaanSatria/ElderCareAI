@@ -4,7 +4,6 @@ export type ElderlyId = string & {
 
 export type MonitoringStatus = "Aktif" | "Tidak Aktif";
 export type WearableStatus = "Terhubung" | "Terputus";
-export type IoTStatus = "Aktif" | "Tidak Aktif";
 export type AlertLevel = "Rendah" | "Sedang" | "Tinggi";
 export type Period = "7 Hari" | "30 Hari" | "3 Bulan";
 
@@ -14,7 +13,6 @@ export interface Elderly {
   age: number;
   monitoringStatus: MonitoringStatus;
   wearableStatus: WearableStatus;
-  iotStatus: IoTStatus;
 }
 
 export interface Health {

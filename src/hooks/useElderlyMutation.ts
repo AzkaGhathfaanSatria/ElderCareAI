@@ -2,43 +2,44 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { ElderlyRegistrationInput } from "../schemas/elderlyRegistrationSchema";
-import type { Elderly } from "../types/elderCare";
-
-interface CreateElderlyResult {
-  elderly: Elderly;
-  registration: ElderlyRegistrationInput;
-}
-
-async function createElderly(input: ElderlyRegistrationInput): Promise<CreateElderlyResult> {
-  const response = await fetch("/api/elderly", {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(input),
-  });
-
-  if (!response.ok) {
-    const body: unknown = await response.json().catch(() => null);
-    const message =
-      body && typeof body === "object" && "message" in body && typeof body.message === "string"
-        ? body.message
-        : "Gagal menyimpan data lansia.";
-
-    throw new Error(message);
-  }
-
-  return (await response.json()) as CreateElderlyResult;
-}
+import { createCamera, createElder, createWearable, pairDevice } from "../services/backendApi";
 
 export function useElderlyMutation() {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: createElderly,
-
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["elder-care"],
+    mutationFn: async (input: ElderlyRegistrationInput) => {
+      const elder = await createElder({
+        name: input.name,
+        nama: input.name,
+        birthDate: input.birthDate,
+        tanggal_lahir: input.birthDate,
+        address: input.address,
+        alamat: input.address,
+        healthNotes: input.healthNotes,
+        catatan_kesehatan: input.healthNotes,
       });
+      const elderId = elder.id;
+      if (!elderId) throw new Error("Backend tidak mengembalikan ID lansia.");
+
+      if (input.wearableId) {
+        const wearable = await createWearable({ deviceId: input.wearableId, id_wearable: input.wearableId, type: input.wearableType, tipe: input.wearableType, elderId, id_lansia: elderId });
+        const wearableId = wearable.id || input.wearableId;
+        await pairDevice(wearableId, elderId);
+      }
+
+      if (input.cameraId) {
+        const camera = await createCamera({ deviceId: input.cameraId, id_kamera: input.cameraId, type: input.cameraType, tipe: input.cameraType, elderId, id_lansia: elderId });
+        const cameraId = camera.id || input.cameraId;
+        await pairDevice(cameraId, elderId);
+      }
+      return elder;
+    },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["elder-care"] }),
+        queryClient.invalidateQueries({ queryKey: ["elders"] }),
+        queryClient.invalidateQueries({ queryKey: ["devices"] }),
+      ]);
     },
   });
 }

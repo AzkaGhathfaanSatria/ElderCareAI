@@ -70,3 +70,32 @@ menjalankan lint, format check, typecheck, dan build pada setiap push/PR ke `mai
 ## Dokumen Terkait
 
 - Spesifikasi Kebutuhan Perangkat Lunak (SKPL/SRS): lihat dokumen laporan proyek akhir.
+
+## Integrasi Backend Express ElderCare AI
+
+Frontend ini sekarang diposisikan sebagai client untuk backend Express/TypeScript yang dirancang pada `Backend_ElderCareAI_Final.pdf`.
+
+Atur `.env.local`:
+
+```env
+NEXT_PUBLIC_BACKEND_URL=http://localhost:4000
+```
+
+Frontend menggunakan endpoint utama:
+
+- `POST /auth/login`, `/auth/register`, `/auth/refresh`, `/auth/logout`
+- `GET/PATCH /me`
+- `POST /auth/forgot-password` dan `POST /auth/reset-password`
+- `GET/POST /elders`
+- `GET /elders/:id/summary`, `/vitals`, `/history`, `/stream`
+- `POST /devices/wearables`, `POST /devices/cameras`, `POST /devices/:id/pair`, `GET /devices`
+- `GET/DELETE/POST /elders/:id/access-grants`
+- `GET /notifications`
+- `GET/PUT /me/notification-preferences`, `POST /me/push-tokens`
+- `GET/POST/PATCH/DELETE /users` dan endpoint item user
+- `GET/PATCH /alerts` dan konfirmasi jatuh
+- `GET /health`
+
+AI service Flask tidak dipanggil langsung oleh browser. Browser hanya berbicara dengan Express API, sesuai arsitektur target; Express/worker yang berkomunikasi dengan AI service internal.
+
+Untuk development lintas-origin, backend perlu mengizinkan origin frontend melalui CORS dan credentials jika autentikasi menggunakan HttpOnly cookie.

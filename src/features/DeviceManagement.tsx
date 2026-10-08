@@ -1,7 +1,7 @@
 "use client";
 
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { type ChangeEvent, type FormEvent, useState } from "react";
-
 import Footer from "../components/layout/Footer";
 import ManagementHeader from "../components/layout/ManagementHeader";
 import TopNav from "../components/layout/TopNav";
@@ -11,67 +11,22 @@ import Card from "../components/ui/Card";
 import EmptyStateMessage from "../components/ui/EmptyStateMessage";
 import { SelectField } from "../components/ui/SelectField";
 import TextField from "../components/ui/TextField";
+import { getDevices, getElders, createWearable, createCamera, pairDevice } from "../services/backendApi";
 
-type DeviceType = "Wearable" | "Sensor Gerak" | "Sensor Pintu";
-type DeviceStatus = "Terhubung" | "Terputus";
+type DeviceType = "Wearable" | "Kamera CCTV";
 
-interface ManagedDevice {
-  id: string;
-  deviceId: string;
-  type: DeviceType;
-  assignedTo: string;
-  pairedAt: string;
-  status: DeviceStatus;
-}
-
-const initialDevices: ManagedDevice[] = [
-  {
-    id: "d1",
-    deviceId: "WRB-014",
-    type: "Wearable",
-    assignedTo: "Budi Santoso",
-    pairedAt: "3 Jun 2026",
-    status: "Terhubung",
-  },
-  {
-    id: "d2",
-    deviceId: "SNS-007",
-    type: "Sensor Pintu",
-    assignedTo: "Budi Santoso",
-    pairedAt: "3 Jun 2026",
-    status: "Terputus",
-  },
-  {
-    id: "d3",
-    deviceId: "SNS-011",
-    type: "Sensor Gerak",
-    assignedTo: "Budi Santoso",
-    pairedAt: "10 Jul 2026",
-    status: "Terhubung",
-  },
-  {
-    id: "d4",
-    deviceId: "WRB-022",
-    type: "Wearable",
-    assignedTo: "Siti Aminah",
-    pairedAt: "2 Ags 2026",
-    status: "Terhubung",
-  },
-];
-
-const emptyForm = {
-  deviceId: "",
-  type: "Wearable" as DeviceType,
-  assignedTo: "",
-};
+const emptyForm = { deviceId: "", type: "Wearable" as DeviceType, assignedTo: "" };
 
 function DeviceManagement() {
-  const [devices, setDevices] = useState<ManagedDevice[]>(initialDevices);
+  const queryClient = useQueryClient();
+  const devicesQuery = useQuery({ queryKey: ["devices"], queryFn: getDevices });
+  const eldersQuery = useQuery({ queryKey: ["elders"], queryFn: getElders });
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [error, setError] = useState("");
-
-  const connectedCount = devices.filter((device) => device.status === "Terhubung").length;
+  const [success, setSuccess] = useState("");
+  const devices = devicesQuery.data ?? [];
+  const connectedCount = devices.filter((device) => ["terhubung", "connected", "aktif", "online"].includes((device.status ?? "").toLowerCase())).length;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -79,181 +34,38 @@ function DeviceManagement() {
     setError("");
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
-
-    if (form.deviceId.trim().length === 0) {
-      setError("ID perangkat wajib diisi.");
-      return;
+    setSuccess("");
+    if (!form.deviceId.trim()) return setError("ID perangkat wajib diisi.");
+    if (!form.assignedTo) return setError("Lansia tujuan wajib dipilih.");
+    const elder = eldersQuery.data?.find((item) => item.id === form.assignedTo);
+    if (!elder) return setError("Lansia tidak ditemukan.");
+    try {
+      const created = form.type === "Wearable"
+        ? await createWearable({ deviceId: form.deviceId.trim(), id_wearable: form.deviceId.trim(), elderId: elder.id, id_lansia: elder.id })
+        : await createCamera({ deviceId: form.deviceId.trim(), id_kamera: form.deviceId.trim(), elderId: elder.id, id_lansia: elder.id });
+      const createdId = created.id || form.deviceId.trim();
+      await pairDevice(createdId, elder.id);
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["devices"] }),
+        queryClient.invalidateQueries({ queryKey: ["elder-care"] }),
+      ]);
+      setForm(emptyForm);
+      setIsFormOpen(false);
+      setSuccess(`${form.type} berhasil didaftarkan dan dipasangkan ke ${elder.name}.`);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Gagal mendaftarkan perangkat.");
     }
-
-    if (form.assignedTo.trim().length === 0) {
-      setError("Perangkat harus dipasangkan ke lansia tertentu.");
-      return;
-    }
-
-    const newDevice: ManagedDevice = {
-      id: `d-${Date.now()}`,
-      deviceId: form.deviceId,
-      type: form.type,
-      assignedTo: form.assignedTo,
-      pairedAt: "Baru saja",
-      status: "Terhubung",
-    };
-
-    setDevices((current) => [newDevice, ...current]);
-    setForm(emptyForm);
-    setIsFormOpen(false);
   };
 
-  const toggleStatus = (id: string) => {
-    setDevices((current) =>
-      current.map((device) =>
-        device.id === id
-          ? {
-              ...device,
-              status: device.status === "Terhubung" ? "Terputus" : "Terhubung",
-            }
-          : device,
-      ),
-    );
-  };
-
-  const unpairDevice = (id: string) => {
-    setDevices((current) => current.filter((device) => device.id !== id));
-  };
-
-  return (
-    <div className="min-h-screen bg-paper">
-      <TopNav />
-
-      <main className="min-w-0">
-        <div className="p-4 sm:p-6 lg:p-8">
-          <ManagementHeader
-            title="Manajemen Perangkat"
-            description="Kelola pemasangan (pairing) wearable dan sensor IoT ke setiap lansia."
-            isFormOpen={isFormOpen}
-            onToggleForm={() => {
-              setError("");
-              setIsFormOpen((open) => !open);
-            }}
-            openLabel="+ Pasangkan Perangkat"
-          />
-
-          {isFormOpen && (
-            <Card className="mb-6 p-5 sm:p-6">
-              <h2 className="mb-4 font-serif text-base text-ink">Pasangkan Perangkat Baru</h2>
-
-              <form onSubmit={handleSubmit} noValidate className="space-y-4">
-                {error && (
-                  <div
-                    className="flex items-start gap-3 rounded-lg border border-danger/25 bg-danger/6 px-4 py-3 text-sm text-danger"
-                    role="alert"
-                  >
-                    <span aria-hidden="true">!</span>
-                    <p>{error}</p>
-                  </div>
-                )}
-
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <TextField
-                    id="deviceId"
-                    name="deviceId"
-                    label="ID Perangkat"
-                    type="text"
-                    value={form.deviceId}
-                    onChange={handleChange}
-                    placeholder="Contoh: WRB-030"
-                  />
-
-                  <SelectField
-                    id="type"
-                    name="type"
-                    label="Tipe Perangkat"
-                    value={form.type}
-                    onChange={handleChange}
-                  >
-                    <option value="Wearable">Wearable</option>
-                    <option value="Sensor Gerak">Sensor Gerak</option>
-                    <option value="Sensor Pintu">Sensor Pintu</option>
-                  </SelectField>
-
-                  <TextField
-                    id="assignedTo"
-                    name="assignedTo"
-                    label="Dipasangkan ke Lansia"
-                    type="text"
-                    value={form.assignedTo}
-                    onChange={handleChange}
-                    placeholder="Nama lansia"
-                  />
-                </div>
-
-                <div className="flex justify-end">
-                  <Button type="submit" variant="accent" size="sm">
-                    Simpan Perangkat
-                  </Button>
-                </div>
-              </form>
-            </Card>
-          )}
-
-          <Card className="p-6">
-            <header className="mb-4">
-              <h2 className="font-serif text-lg text-ink">Daftar Perangkat</h2>
-              <p className="mt-1 text-sm text-muted">
-                {connectedCount} dari {devices.length} perangkat sedang terhubung.
-              </p>
-            </header>
-
-            {devices.length > 0 ? (
-              <ol className="divide-y divide-border">
-                {devices.map((device) => (
-                  <li
-                    key={device.id}
-                    className="flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
-                  >
-                    <div>
-                      <p className="text-sm font-semibold text-ink-soft">
-                        {device.deviceId} · {device.type}
-                      </p>
-                      <p className="mt-0.5 text-xs text-muted">
-                        Dipasangkan ke {device.assignedTo} · {device.pairedAt}
-                      </p>
-                    </div>
-
-                    <div className="flex items-center gap-2 sm:shrink-0">
-                      <Badge variant={device.status === "Terhubung" ? "success" : "danger"}>
-                        {device.status}
-                      </Badge>
-
-                      <Button variant="secondary" size="sm" onClick={() => toggleStatus(device.id)}>
-                        {device.status === "Terhubung" ? "Putuskan" : "Sambungkan"}
-                      </Button>
-
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => unpairDevice(device.id)}
-                        className="!text-danger"
-                      >
-                        Lepas Pairing
-                      </Button>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            ) : (
-              <EmptyStateMessage message="Belum ada perangkat terdaftar." />
-            )}
-          </Card>
-        </div>
-
-        <Footer />
-      </main>
-    </div>
-  );
+  return <div className="min-h-screen bg-paper"><TopNav /><main className="min-w-0"><div className="p-4 sm:p-6 lg:p-8">
+    <ManagementHeader title="Manajemen Perangkat" description="Kelola wearable dan kamera CCTV sesuai endpoint devices pada backend." isFormOpen={isFormOpen} onToggleForm={() => { setError(""); setSuccess(""); setIsFormOpen((open) => !open); }} openLabel="+ Pasangkan Perangkat" />
+    {success && <div className="mb-5 rounded-lg border-l-4 border-safe bg-safe/8 p-4 text-sm text-safe" role="status">{success}</div>}
+    {error && <div className="mb-5 rounded-lg border border-danger/25 bg-danger/6 px-4 py-3 text-sm text-danger" role="alert">{error}</div>}
+    {isFormOpen && <Card className="mb-6 p-5 sm:p-6"><h2 className="mb-4 font-serif text-base text-ink">Daftarkan & Pasangkan Perangkat</h2><form onSubmit={handleSubmit} className="space-y-4"><div className="grid gap-4 sm:grid-cols-3"><TextField id="deviceId" name="deviceId" label="ID Perangkat" value={form.deviceId} onChange={handleChange} placeholder="Contoh: WRB-030" /><SelectField id="type" name="type" label="Tipe Perangkat" value={form.type} onChange={handleChange}><option value="Wearable">Wearable</option><option value="Kamera CCTV">Kamera CCTV</option></SelectField><SelectField id="assignedTo" name="assignedTo" label="Dipasangkan ke Lansia" value={form.assignedTo} onChange={handleChange}><option value="">Pilih lansia</option>{(eldersQuery.data ?? []).map((elder) => <option key={elder.id} value={elder.id}>{elder.name}</option>)}</SelectField></div><div className="flex justify-end"><Button type="submit" variant="accent" size="sm" disabled={eldersQuery.isPending}>Simpan & Pair</Button></div></form></Card>}
+    <Card className="p-6"><header className="mb-4"><h2 className="font-serif text-lg text-ink">Daftar Perangkat</h2><p className="mt-1 text-sm text-muted">{connectedCount} dari {devices.length} perangkat terhubung. Status dan last_seen berasal dari backend.</p></header>{devicesQuery.isPending ? <p className="text-sm text-muted">Memuat perangkat...</p> : devices.length ? <ol className="divide-y divide-border">{devices.map((device) => { const connected=["terhubung","connected","aktif","online"].includes((device.status??"").toLowerCase()); return <li key={device.id} className="flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"><div><p className="text-sm font-semibold text-ink-soft">{device.deviceId ?? device.name ?? device.id} · {device.type ?? device.kind ?? "Perangkat"}</p><p className="mt-0.5 text-xs text-muted">{device.elderName ? `Lansia: ${device.elderName}` : "Belum ada nama lansia"}{device.lastSeen ? ` · Terakhir terlihat ${device.lastSeen}` : ""}{typeof device.battery === "number" ? ` · Baterai ${device.battery}%` : ""}</p></div><div className="flex items-center gap-2 sm:shrink-0"><Badge variant={connected?"success":"danger"}>{device.status ?? "Terputus"}</Badge></div></li>})}</ol> : <EmptyStateMessage message="Belum ada perangkat terdaftar." />}</Card>
+  </div><Footer /></main></div>;
 }
-
 export default DeviceManagement;

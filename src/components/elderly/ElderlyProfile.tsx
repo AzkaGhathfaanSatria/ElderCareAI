@@ -22,7 +22,7 @@ function ElderlyProfile({ elderly }: ElderlyProfileProps) {
           <h1 className="font-serif text-3xl text-ink sm:text-4xl">{elderly.name}</h1>
 
           <p className="mt-2 text-sm text-muted">
-            {elderly.age} tahun, dipantau melalui wearable dan sensor rumah.
+            {elderly.age} tahun, dipantau melalui wearable dan kamera CCTV.
           </p>
 
           <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
@@ -46,15 +46,6 @@ function ElderlyProfile({ elderly }: ElderlyProfileProps) {
               Wearable {elderly.wearableStatus}
             </span>
 
-            <span className="inline-flex items-center gap-2 text-sm text-ink-soft">
-              <span
-                className={`h-1.5 w-1.5 rounded-full ${
-                  elderly.iotStatus === "Aktif" ? "bg-safe" : "bg-muted"
-                }`}
-                aria-hidden="true"
-              />
-              IoT {elderly.iotStatus}
-            </span>
           </div>
         </div>
       </div>

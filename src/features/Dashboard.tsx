@@ -9,6 +9,7 @@ import Footer from "../components/layout/Footer";
 import TopNav from "../components/layout/TopNav";
 import QueryStateScreen from "../components/ui/QueryStateScreen";
 import { useElderCareQuery } from "../hooks/useElderCareQuery";
+import { useElderRealtime } from "../hooks/useElderRealtime";
 import { useUIStore } from "../store/useUIStore";
 
 function Dashboard() {
@@ -19,6 +20,7 @@ function Dashboard() {
   const setSelectedActivityDay = useUIStore((state) => state.setSelectedActivityDay);
 
   const monitoringQuery = useElderCareQuery();
+  useElderRealtime(monitoringQuery.data?.elderly.id);
 
   if (monitoringQuery.isPending || monitoringQuery.isError || !monitoringQuery.data) {
     return (

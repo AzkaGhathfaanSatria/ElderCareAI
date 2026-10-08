@@ -5,9 +5,8 @@ import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
 
 import { type LoginInput, LoginSchema } from "../schemas/authSchema";
-import type { PublicUser } from "../types/auth";
 import TextField from "../components/ui/TextField";
-import { extractErrorMessage } from "../lib/apiError";
+import { login } from "../services/backendApi";
 
 type LoginFormState =
   | { status: "idle" }
@@ -54,30 +53,9 @@ function LoginPage() {
     setFormState({ status: "submitting" });
 
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(validation.data),
-      });
-
-      const data: unknown = await response.json().catch(() => null);
-
-      if (!response.ok) {
-        const message = extractErrorMessage(data, "Email atau password salah.");
-
-        setFormState({ status: "error", message });
-        return;
-      }
-
+      const user = await login(validation.data);
       setFormState({ status: "success" });
-
-      // Langsung isi cache sesi dengan data yang baru login, jangan nunggu
-      // refetch otomatis — supaya navbar nggak sempat kelihatan "nyangkut"
-      // nampilin identitas/role user sebelumnya (misal abis logout dari
-      // akun Keluarga terus login sebagai Admin).
-      const user = data as PublicUser;
       queryClient.setQueryData(["session"], user);
-
       router.push(user.role === "admin" ? "/admin" : "/dashboard");
     } catch {
       setFormState({
@@ -186,36 +164,9 @@ function LoginPage() {
             </p>
           </div>
 
-          <div className="mt-7 space-y-2 rounded-xl border border-dashed border-border bg-paper px-4 py-3">
-            <div className="flex items-start gap-3">
-              <span className="text-base" aria-hidden="true">
-                🔑
-              </span>
-              <div>
-                <p className="text-xs font-semibold text-ink-soft">Akun demo Keluarga</p>
-                <p className="mt-0.5 text-xs text-muted">dian@eldercare.ai · keluarga123</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <span className="text-base" aria-hidden="true">
-                🩺
-              </span>
-              <div>
-                <p className="text-xs font-semibold text-ink-soft">Akun demo Tenaga Medis</p>
-                <p className="mt-0.5 text-xs text-muted">amelia@eldercare.ai · medis123</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <span className="text-base" aria-hidden="true">
-                🛡️
-              </span>
-              <div>
-                <p className="text-xs font-semibold text-ink-soft">Akun demo Admin</p>
-                <p className="mt-0.5 text-xs text-muted">admin@eldercare.ai · admin123</p>
-              </div>
-            </div>
+          <div className="mt-7 rounded-xl border border-dashed border-border bg-paper px-4 py-3">
+            <p className="text-xs font-semibold text-ink-soft">Autentikasi backend</p>
+            <p className="mt-1 text-xs leading-5 text-muted">Gunakan akun yang terdaftar pada Express API. Kredensial demo tidak lagi disimpan di frontend.</p>
           </div>
         </div>
 

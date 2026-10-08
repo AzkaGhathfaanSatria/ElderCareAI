@@ -25,8 +25,8 @@ function ElderlyRegistration() {
     healthNotes: "",
     wearableType: "",
     wearableId: "",
-    sensorType: "",
-    sensorLocation: "",
+    cameraType: "",
+    cameraId: "",
   });
 
   const [error, setError] = useState("");
@@ -110,7 +110,7 @@ function ElderlyRegistration() {
             <h1 className="font-serif text-2xl text-ink sm:text-3xl">Tambah Data Lansia</h1>
 
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-              Lengkapi informasi lansia serta perangkat wearable dan sensor IoT yang akan digunakan
+              Lengkapi informasi lansia serta perangkat wearable dan kamera CCTV yang akan digunakan
               untuk pemantauan.
             </p>
           </div>
@@ -268,7 +268,7 @@ function ElderlyRegistration() {
             </Card>
 
             {/* ========================= */}
-            {/* SENSOR IOT */}
+            {/* KAMERA CCTV */}
             {/* ========================= */}
             <Card className="overflow-hidden">
               <div className="border-b border-border px-5 py-5 sm:px-6">
@@ -278,10 +278,10 @@ function ElderlyRegistration() {
                   </div>
 
                   <div>
-                    <h2 className="font-serif text-base text-ink">Sensor IoT Rumah</h2>
+                    <h2 className="font-serif text-base text-ink">Kamera CCTV</h2>
 
                     <p className="mt-1 text-xs text-muted">
-                      Tambahkan sensor untuk memantau aktivitas lansia di lingkungan rumah.
+                      Hubungkan kamera CCTV untuk deteksi visual jatuh di lingkungan rumah.
                     </p>
                   </div>
                 </div>
@@ -289,25 +289,24 @@ function ElderlyRegistration() {
 
               <div className="grid gap-5 p-5 sm:grid-cols-2 sm:p-6">
                 <SelectField
-                  id="sensorType"
-                  name="sensorType"
-                  label="Tipe Sensor"
-                  value={form.sensorType}
+                  id="cameraType"
+                  name="cameraType"
+                  label="Tipe Kamera"
+                  value={form.cameraType}
                   onChange={handleChange}
                 >
-                  <option value="">Pilih tipe sensor</option>
-                  <option value="gerak">Sensor Gerak</option>
-                  <option value="pintu">Sensor Pintu</option>
+                  <option value="">Pilih tipe kamera</option>
+                  <option value="cctv">Kamera CCTV</option>
                 </SelectField>
 
                 <TextField
-                  id="sensorLocation"
-                  name="sensorLocation"
-                  label="Lokasi Pemasangan"
+                  id="cameraId"
+                  name="cameraId"
+                  label="ID Kamera"
                   type="text"
-                  value={form.sensorLocation}
+                  value={form.cameraId}
                   onChange={handleChange}
-                  placeholder="Contoh: Kamar tidur"
+                  placeholder="Contoh: CAM-001"
                 />
               </div>
             </Card>

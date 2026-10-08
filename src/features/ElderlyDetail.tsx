@@ -7,13 +7,12 @@ import CurrentAlert from "../components/elderly/CurrentAlert";
 import DeviceStatus from "../components/elderly/DeviceStatus";
 import ElderlyProfile from "../components/elderly/ElderlyProfile";
 import HealthOverview from "../components/elderly/HealthOverview";
-import MedicalRecommendation from "../components/elderly/MedicalRecommendation";
 import Footer from "../components/layout/Footer";
 import TopNav from "../components/layout/TopNav";
 import Button from "../components/ui/Button";
 import QueryStateScreen from "../components/ui/QueryStateScreen";
 import { useElderCareQuery } from "../hooks/useElderCareQuery";
-import { useSession } from "../hooks/useSession";
+import { useElderRealtime } from "../hooks/useElderRealtime";
 import { useUIStore } from "../store/useUIStore";
 
 function ElderlyDetail() {
@@ -23,10 +22,8 @@ function ElderlyDetail() {
 
   const setSelectedPeriod = useUIStore((state) => state.setSelectedPeriod);
 
-  const sessionQuery = useSession();
-  const role = sessionQuery.data?.role;
-
   const monitoringQuery = useElderCareQuery();
+  useElderRealtime(monitoringQuery.data?.elderly.id);
 
   if (monitoringQuery.isPending || monitoringQuery.isError || !monitoringQuery.data) {
     return (
@@ -95,7 +92,6 @@ function ElderlyDetail() {
             onPeriodChange={setSelectedPeriod}
           />
 
-          {role === "tenaga_medis" && <MedicalRecommendation />}
         </div>
 
         <Footer />

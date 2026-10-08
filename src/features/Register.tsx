@@ -5,7 +5,7 @@ import { type ChangeEvent, type FormEvent, useState } from "react";
 
 import Button from "../components/ui/Button";
 import TextField from "../components/ui/TextField";
-import { extractErrorMessage } from "../lib/apiError";
+import { register } from "../services/backendApi";
 import { type RegisterInput, RegisterSchema } from "../schemas/registerSchema";
 
 function Register() {
@@ -61,21 +61,12 @@ function Register() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(result.data),
+      await register({
+        name: result.data.name,
+        email: result.data.email,
+        password: result.data.password,
+        role: result.data.role,
       });
-
-      const data: unknown = await response.json().catch(() => null);
-
-      if (!response.ok) {
-        const message = extractErrorMessage(data, "Registrasi gagal. Silakan coba lagi.");
-
-        setError(message);
-        setIsLoading(false);
-        return;
-      }
 
       setSuccess("Registrasi berhasil. Mengarahkan ke halaman login...");
 
@@ -158,7 +149,7 @@ function Register() {
                   <p className="text-sm font-semibold">Monitoring terintegrasi</p>
 
                   <p className="mt-1 text-xs text-paper/55">
-                    Data wearable dan sensor IoT dapat dipantau bersama.
+                    Data wearable dan kamera CCTV dapat dipantau bersama.
                   </p>
                 </div>
               </div>

@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import { useSession } from "../../hooks/useSession";
+import { logout } from "../../services/backendApi";
 import { getInitials } from "../../lib/initials";
 import { roleLabel } from "../../lib/userDisplay";
 
@@ -22,6 +23,17 @@ function TopNav({ hasNotification = false }: TopNavProps) {
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  useEffect(() => {
+    if (sessionQuery.isPending) return;
+    if (!user) {
+      router.replace(`/login?redirectTo=${encodeURIComponent(pathname)}`);
+      return;
+    }
+    if (pathname.startsWith("/admin") && user.role !== "admin") router.replace("/dashboard");
+    if ((pathname.startsWith("/dashboard") || pathname.startsWith("/elderly") || pathname.startsWith("/notifications") || pathname.startsWith("/access")) && user.role === "admin") router.replace("/admin");
+    if (pathname.startsWith("/access") && user.role !== "keluarga") router.replace("/dashboard");
+  }, [pathname, router, sessionQuery.isPending, user]);
 
   const profileRef = useRef<HTMLDivElement>(null);
 
@@ -91,7 +103,7 @@ function TopNav({ hasNotification = false }: TopNavProps) {
     setIsProfileOpen(false);
 
     try {
-      await fetch("/api/auth/logout", { method: "POST" });
+      await logout();
     } finally {
       // Buang cache sesi lama SEBELUM pindah halaman, biar TopNav di
       // halaman login/dashboard berikutnya nggak sempat nampilin identitas

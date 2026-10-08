@@ -8,7 +8,6 @@ const ElderlyIdSchema = z
 
 const MonitoringStatusSchema = z.enum(["Aktif", "Tidak Aktif"]);
 const WearableStatusSchema = z.enum(["Terhubung", "Terputus"]);
-const IoTStatusSchema = z.enum(["Aktif", "Tidak Aktif"]);
 const AlertLevelSchema = z.enum(["Rendah", "Sedang", "Tinggi"]);
 const PeriodSchema = z.enum(["7 Hari", "30 Hari", "3 Bulan"]);
 
@@ -18,7 +17,6 @@ const ElderlySchema = z.object({
   age: z.number().int().nonnegative(),
   monitoringStatus: MonitoringStatusSchema,
   wearableStatus: WearableStatusSchema,
-  iotStatus: IoTStatusSchema,
 });
 
 const HealthSchema = z.object({

@@ -13,9 +13,9 @@ export const ElderlyRegistrationSchema = z.object({
 
   wearableId: z.string().trim().min(1, "ID perangkat wearable wajib diisi."),
 
-  sensorType: z.string().min(1, "Tipe sensor wajib dipilih."),
+  cameraType: z.string().min(1, "Tipe kamera wajib dipilih."),
 
-  sensorLocation: z.string().trim().min(1, "Lokasi sensor wajib diisi."),
+  cameraId: z.string().trim().min(1, "ID kamera wajib diisi."),
 });
 
 export type ElderlyRegistrationInput = z.infer<typeof ElderlyRegistrationSchema>;
