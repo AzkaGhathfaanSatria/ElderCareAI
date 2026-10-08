@@ -11,54 +11,54 @@ type JsonObject = Record<string, unknown>;
 export interface BackendElder {
   id: string;
   name: string;
-  birthDate?: string;
-  age?: number;
-  address?: string;
-  healthNotes?: string;
-  monitoringStatus?: string;
+  birthDate?: string | undefined;
+  age?: number | undefined;
+  address?: string | undefined;
+  healthNotes?: string | undefined;
+  monitoringStatus?: string | undefined;
 }
 
 export interface BackendDevice {
   id: string;
-  deviceId?: string;
-  type?: string;
-  kind?: string;
-  name?: string;
-  status?: string;
-  battery?: number | null;
-  lastSeen?: string | null;
-  elderId?: string;
-  elderName?: string;
-  pairedAt?: string;
+  deviceId?: string | undefined;
+  type?: string | undefined;
+  kind?: string | undefined;
+  name?: string | undefined;
+  status?: string | undefined;
+  battery?: number | null | undefined;
+  lastSeen?: string | null | undefined;
+  elderId?: string | undefined;
+  elderName?: string | undefined;
+  pairedAt?: string | undefined;
 }
 
 export interface BackendNotification {
   id: string;
-  title?: string;
-  type?: string;
-  description?: string;
-  message?: string;
-  level?: AlertLevel | string;
-  createdAt?: string;
-  timestamp?: string;
-  readAt?: string | null;
-  elderId?: string;
-  elderName?: string;
+  title?: string | undefined;
+  type?: string | undefined;
+  description?: string | undefined;
+  message?: string | undefined;
+  level?: AlertLevel | string | undefined;
+  createdAt?: string | undefined;
+  timestamp?: string | undefined;
+  readAt?: string | null | undefined;
+  elderId?: string | undefined;
+  elderName?: string | undefined;
 }
 
 export interface BackendAccessGrant {
   id: string;
-  userId?: string;
-  name?: string;
-  email?: string;
-  specialization?: string;
-  status?: string;
-  grantedAt?: string;
+  userId?: string | undefined;
+  name?: string | undefined;
+  email?: string | undefined;
+  specialization?: string | undefined;
+  status?: string | undefined;
+  grantedAt?: string | undefined;
 }
 
 export interface BackendUser extends PublicUser {
   status?: "Aktif" | "Nonaktif" | string;
-  createdAt?: string;
+  createdAt?: string | undefined;
 }
 
 function isObject(value: unknown): value is JsonObject {
@@ -178,7 +178,7 @@ export async function getMe(): Promise<PublicUser> {
   return normalizeUser(isObject(body) && isObject(body.user) ? body.user : body);
 }
 
-export async function updateMe(input: { name?: string; email?: string }) {
+export async function updateMe(input: { name?: string | undefined; email?: string }) {
   const body = await backendFetch<unknown>("/me", { method: "PATCH", body: JSON.stringify(input) });
   return normalizeUser(isObject(body) && isObject(body.user) ? body.user : body);
 }
@@ -389,6 +389,8 @@ export async function fetchElderCareData(): Promise<ElderCareData> {
   if (elders.length === 0) throw new Error("Belum ada data lansia.");
 
   const elder = elders[0];
+  if (!elder) throw new Error("Belum ada data lansia.");
+
   const [summary, devices, history] = await Promise.all([
     getElderSummary(elder.id),
     getDevices(),
