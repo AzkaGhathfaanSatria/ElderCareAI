@@ -38,7 +38,7 @@ function UserManagement() {
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); setError(""); setSuccess("");
-    if (!form.name.trim() || !form.email.trim() || form.password.length < 6) return setError("Nama, email, dan password minimal 6 karakter wajib diisi.");
+    if (!form.name.trim() || !form.email.trim() || form.password.length < 8) return setError("Nama, email, dan password minimal 8 karakter wajib diisi.");
     try {
       await createUser(form);
       await queryClient.invalidateQueries({ queryKey: ["users"] });

@@ -73,8 +73,14 @@ function Register() {
       window.setTimeout(() => {
         router.push("/login");
       }, 1000);
-    } catch {
-      setError("Tidak dapat terhubung ke server. Coba lagi.");
+    } catch (err) {
+      setError(
+        err instanceof TypeError
+          ? "Tidak dapat terhubung ke server. Pastikan backend berjalan."
+          : err instanceof Error
+            ? err.message
+            : "Registrasi gagal. Coba lagi.",
+      );
       setIsLoading(false);
     }
   };
@@ -273,7 +279,7 @@ function Register() {
                   type="password"
                   value={form.password}
                   onChange={handleChange}
-                  placeholder="Minimal 6 karakter"
+                  placeholder="Minimal 8 karakter"
                   autoComplete="new-password"
                 />
 

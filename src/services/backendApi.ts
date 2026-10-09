@@ -3,6 +3,7 @@ import type { AlertLevel, ElderCareData, ElderlyId } from "../types/elderCare";
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000").replace(/\/$/, "");
 const ACCESS_TOKEN_KEY = "eldercare_access_token";
+const REFRESH_TOKEN_KEY = "eldercare_refresh_token";
 
 export function getBackendBaseUrl() { return API_BASE_URL; }
 
@@ -69,6 +70,7 @@ function pickString(value: unknown, ...keys: string[]): string | undefined {
   if (!isObject(value)) return undefined;
   for (const key of keys) {
     if (typeof value[key] === "string") return value[key] as string;
+    if (typeof value[key] === "number") return String(value[key]);
   }
   return undefined;
 }
@@ -114,10 +116,27 @@ function saveToken(token: string | null) {
   else window.sessionStorage.removeItem(ACCESS_TOKEN_KEY);
 }
 
+// Backend membungkus respons dalam { success, message, data: {...} }
+function unwrap(body: unknown): unknown {
+  return isObject(body) && isObject(body.data) ? body.data : body;
+}
+
 function extractAccessToken(body: unknown): string | null {
-  if (!isObject(body)) return null;
-  const direct = body.accessToken ?? body.access_token ?? body.token;
+  const src = unwrap(body);
+  if (!isObject(src)) return null;
+  const direct = src.accessToken ?? src.access_token ?? src.token;
   return typeof direct === "string" ? direct : null;
+}
+
+function getRefreshToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return window.sessionStorage.getItem(REFRESH_TOKEN_KEY);
+}
+
+function saveRefreshToken(token: string | null) {
+  if (typeof window === "undefined") return;
+  if (token) window.sessionStorage.setItem(REFRESH_TOKEN_KEY, token);
+  else window.sessionStorage.removeItem(REFRESH_TOKEN_KEY);
 }
 
 export async function backendFetch<T = unknown>(path: string, init: RequestInit = {}, retry = true): Promise<T> {
@@ -145,26 +164,30 @@ export async function backendFetch<T = unknown>(path: string, init: RequestInit 
 
 export async function login(input: { email: string; password: string }): Promise<PublicUser> {
   const body = await backendFetch<unknown>("/auth/login", { method: "POST", body: JSON.stringify(input) }, false);
+  const data = unwrap(body);
   saveToken(extractAccessToken(body));
-  const value = isObject(body) && isObject(body.user) ? body.user : body;
+  if (isObject(data) && typeof data.refreshToken === "string") saveRefreshToken(data.refreshToken);
+  const value = isObject(data) && isObject(data.user) ? data.user : data;
   return normalizeUser(value);
 }
 
 export async function register(input: { name: string; email: string; password: string; role: UserRole }) {
-  return backendFetch<unknown>("/auth/register", { method: "POST", body: JSON.stringify(input) }, false);
+  const payload = { nama: input.name, email: input.email, password: input.password, role: input.role };
+  return backendFetch<unknown>("/auth/register", { method: "POST", body: JSON.stringify(payload) }, false);
 }
 
 export async function logout() {
   try {
-    await backendFetch("/auth/logout", { method: "POST" }, false);
+    await backendFetch("/auth/logout", { method: "POST", body: JSON.stringify({ refreshToken: getRefreshToken() }) }, false);
   } finally {
     saveToken(null);
+    saveRefreshToken(null);
   }
 }
 
 export async function refreshSession(): Promise<boolean> {
   try {
-    const body = await backendFetch<unknown>("/auth/refresh", { method: "POST" }, false);
+    const body = await backendFetch<unknown>("/auth/refresh", { method: "POST", body: JSON.stringify({ refreshToken: getRefreshToken() }) }, false);
     const token = extractAccessToken(body);
     if (token) saveToken(token);
     return true;
@@ -174,8 +197,9 @@ export async function refreshSession(): Promise<boolean> {
 }
 
 export async function getMe(): Promise<PublicUser> {
-  const body = await backendFetch<unknown>("/me");
-  return normalizeUser(isObject(body) && isObject(body.user) ? body.user : body);
+  const body = await backendFetch<unknown>("/auth/me");
+  const data = unwrap(body);
+  return normalizeUser(isObject(data) && isObject(data.user) ? data.user : data);
 }
 
 export async function updateMe(input: { name?: string | undefined; email?: string }) {

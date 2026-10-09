@@ -57,10 +57,15 @@ function LoginPage() {
       setFormState({ status: "success" });
       queryClient.setQueryData(["session"], user);
       router.push(user.role === "admin" ? "/admin" : "/dashboard");
-    } catch {
+    } catch (err) {
+      const isNetwork = err instanceof TypeError;
       setFormState({
         status: "error",
-        message: "Tidak dapat terhubung ke server. Coba lagi.",
+        message: isNetwork
+          ? "Tidak dapat terhubung ke server. Pastikan backend berjalan."
+          : err instanceof Error
+            ? err.message
+            : "Login gagal. Coba lagi.",
       });
     }
   };
