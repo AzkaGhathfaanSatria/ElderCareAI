@@ -10,6 +10,7 @@ import HealthOverview from "../components/elderly/HealthOverview";
 import Footer from "../components/layout/Footer";
 import TopNav from "../components/layout/TopNav";
 import Button from "../components/ui/Button";
+import Card from "../components/ui/Card";
 import QueryStateScreen from "../components/ui/QueryStateScreen";
 import { useElderCareQuery } from "../hooks/useElderCareQuery";
 import { useElderRealtime } from "../hooks/useElderRealtime";
@@ -38,6 +39,7 @@ function ElderlyDetail() {
   }
 
   const { elderly, health, alert, devices, anomalyHistory } = monitoringQuery.data;
+  const hasElder = Boolean(elderly.id);
 
   return (
     <div className="min-h-screen bg-paper">
@@ -74,23 +76,36 @@ function ElderlyDetail() {
             </Button>
           </div>
 
-          <ElderlyProfile elderly={elderly} />
+          {!hasElder && (
+            <Card className="p-6 text-center">
+              <h2 className="font-serif text-lg text-ink">Belum ada data lansia</h2>
+              <p className="mt-1 text-sm text-muted">
+                Tambahkan lansia terlebih dahulu agar profil, kondisi kesehatan, dan riwayat anomali bisa ditampilkan.
+              </p>
+            </Card>
+          )}
 
-          <CurrentAlert alert={alert} />
+          {hasElder && (
+            <>
+              <ElderlyProfile elderly={elderly} />
 
-          <HealthOverview health={health} />
+              <CurrentAlert alert={alert} />
 
-          <section className="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
-            <BehaviorBaseline />
+              <HealthOverview health={health} />
 
-            <DeviceStatus devices={devices} />
-          </section>
+              <section className="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+                <BehaviorBaseline />
 
-          <AnomalyHistory
-            anomalyHistory={anomalyHistory}
-            selectedPeriod={selectedPeriod}
-            onPeriodChange={setSelectedPeriod}
-          />
+                <DeviceStatus devices={devices} />
+              </section>
+
+              <AnomalyHistory
+                anomalyHistory={anomalyHistory}
+                selectedPeriod={selectedPeriod}
+                onPeriodChange={setSelectedPeriod}
+              />
+            </>
+          )}
 
         </div>
 

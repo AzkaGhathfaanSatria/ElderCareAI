@@ -408,16 +408,26 @@ function normalizeGrant(value: unknown): BackendAccessGrant {
   };
 }
 
+/** Data kosong untuk akun yang belum punya lansia: halaman tetap terbuka, angka 0, tanpa error. */
+export function emptyElderCareData(): ElderCareData {
+  return {
+    elderly: { id: "" as ElderlyId, name: "", age: 0, monitoringStatus: "Tidak Aktif", wearableStatus: "Terputus" },
+    health: { heartRate: 0, heartRateUnit: "BPM", activity: 0, activityUnit: "%", sleep: 0, sleepUnit: "Jam", risk: "Rendah" },
+    activityHistory: ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"].map((day) => ({ day, value: 0 })),
+    alert: { hasAlert: false, type: "", description: "", detected: "", level: "Rendah" },
+    devices: [],
+    anomalyHistory: [],
+  };
+}
+
 export async function fetchElderCareData(): Promise<ElderCareData> {
   const elders = await getElders();
-  if (elders.length === 0) throw new Error("Belum ada data lansia.");
-
   const elder = elders[0];
-  if (!elder) throw new Error("Belum ada data lansia.");
+  if (!elder) return emptyElderCareData();
 
   const [summary, devices, history] = await Promise.all([
-    getElderSummary(elder.id),
-    getDevices(),
+    getElderSummary(elder.id).catch(() => null),
+    getDevices().catch(() => [] as BackendDevice[]),
     getElderHistory(elder.id).catch(() => null),
   ]);
 

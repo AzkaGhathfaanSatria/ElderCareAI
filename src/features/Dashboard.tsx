@@ -7,6 +7,9 @@ import ElderlyMonitoringCard from "../components/dashboard/ElderlyMonitoringCard
 import HealthSummary from "../components/dashboard/HealthSummary";
 import Footer from "../components/layout/Footer";
 import TopNav from "../components/layout/TopNav";
+import Button from "../components/ui/Button";
+import Card from "../components/ui/Card";
+import InlineNotice from "../components/ui/InlineNotice";
 import QueryStateScreen from "../components/ui/QueryStateScreen";
 import { useElderCareQuery } from "../hooks/useElderCareQuery";
 import { useElderRealtime } from "../hooks/useElderRealtime";
@@ -35,6 +38,7 @@ function Dashboard() {
   }
 
   const { elderly, health, activityHistory, alert } = monitoringQuery.data;
+  const hasElder = Boolean(elderly.id);
 
   return (
     <div className="min-h-screen bg-paper">
@@ -50,6 +54,13 @@ function Dashboard() {
             </p>
           </section>
 
+          {!hasElder && (
+            <InlineNotice variant="warning" className="mb-6">
+              Belum ada lansia terdaftar, jadi data pemantauan belum tersedia. Daftarkan lansia dan perangkatnya
+              untuk mulai memantau.
+            </InlineNotice>
+          )}
+
           <HealthSummary health={health} />
 
           <section className="grid grid-cols-1 gap-6 xl:grid-cols-3">
@@ -62,7 +73,21 @@ function Dashboard() {
             <AlertSummary alert={alert} onViewDetail={() => router.push("/elderly")} />
           </section>
 
-          <ElderlyMonitoringCard elderly={elderly} onViewDetail={() => router.push("/elderly")} />
+          {hasElder ? (
+            <ElderlyMonitoringCard elderly={elderly} onViewDetail={() => router.push("/elderly")} />
+          ) : (
+            <section className="mt-6">
+              <Card className="flex flex-col items-start gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h2 className="font-serif text-lg text-ink">Lansia yang Dipantau</h2>
+                  <p className="mt-1 text-sm text-muted">Belum ada lansia yang dipantau.</p>
+                </div>
+                <Button variant="primary" size="sm" onClick={() => router.push("/elderly/register")}>
+                  Tambah Data Lansia
+                </Button>
+              </Card>
+            </section>
+          )}
         </div>
 
         <Footer />

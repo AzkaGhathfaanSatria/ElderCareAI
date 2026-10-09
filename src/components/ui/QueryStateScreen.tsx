@@ -1,5 +1,6 @@
 "use client";
 
+import TopNav from "../layout/TopNav";
 import Button from "./Button";
 
 interface QueryStateScreenProps {
@@ -51,7 +52,9 @@ function QueryStateScreen(props: QueryStateScreenProps & { query: QueryLikeState
 
   if (query.isError) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-paper px-4">
+      <div className="min-h-screen bg-paper">
+      <TopNav />
+      <main className="flex min-h-[calc(100vh-113px)] items-center justify-center px-4">
         <section
           className="w-full max-w-md rounded-xl border border-danger/25 bg-surface p-6 text-center shadow-sm"
           role="alert"
@@ -77,12 +80,15 @@ function QueryStateScreen(props: QueryStateScreenProps & { query: QueryLikeState
           </Button>
         </section>
       </main>
+      </div>
     );
   }
 
   if (!query.data) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-paper px-4">
+      <div className="min-h-screen bg-paper">
+      <TopNav />
+      <main className="flex min-h-[calc(100vh-113px)] items-center justify-center px-4">
         <section
           className="w-full max-w-md rounded-xl border border-border bg-surface p-6 text-center shadow-sm"
           role="status"
@@ -92,6 +98,7 @@ function QueryStateScreen(props: QueryStateScreenProps & { query: QueryLikeState
           <p className="mt-2 text-sm text-muted">{emptyMessage}</p>
         </section>
       </main>
+      </div>
     );
   }
 
